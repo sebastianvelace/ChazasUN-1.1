@@ -6,7 +6,7 @@ const steps = [
   {
     number: "1",
     title: "REGISTRATE",
-    description: "Crea tu cuenta con tu correo institucional @unal.edu.co y verifica tu identidad.",
+    description: "Crea tu cuenta en pocos segundos y empieza a explorar todas las chazas disponibles.",
     icon: (
       <svg viewBox="0 0 80 80" className="w-20 h-20" aria-hidden="true">
         {/* User with device icon */}
