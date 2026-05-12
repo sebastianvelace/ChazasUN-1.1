@@ -1,9 +1,11 @@
 "use client"
 
+import { useScrollReveal } from "@/hooks/use-scroll-reveal"
+
 const steps = [
   {
     number: "1",
-    title: "REGÍSTRATE",
+    title: "REGISTRATE",
     description: "Crea tu cuenta con tu correo institucional @unal.edu.co y verifica tu identidad.",
     icon: (
       <svg viewBox="0 0 80 80" className="w-20 h-20" aria-hidden="true">
@@ -18,7 +20,7 @@ const steps = [
   {
     number: "2",
     title: "PUBLICA",
-    description: "Sube fotos, describe tu producto y establece un precio justo para tus compañeros.",
+    description: "Sube fotos, describe tu producto y establece un precio justo para tus companeros.",
     icon: (
       <svg viewBox="0 0 80 80" className="w-20 h-20" aria-hidden="true">
         {/* Tablet/posting icon */}
@@ -50,14 +52,24 @@ const steps = [
 ]
 
 export function HowItWorksSection() {
+  const { ref: sectionRef, isVisible } = useScrollReveal<HTMLElement>({ threshold: 0.2 })
+
   return (
-    <section id="como-funciona" className="py-12 sm:py-20 px-4">
+    <section 
+      ref={sectionRef}
+      id="como-funciona" 
+      className="py-12 sm:py-20 px-4 overflow-hidden"
+    >
       <div className="mx-auto max-w-6xl">
-        <div className="bg-gray-50 rounded-3xl shadow-xl p-8 sm:p-12">
+        <div 
+          className={`bg-gray-50 rounded-3xl shadow-xl p-8 sm:p-12 scroll-reveal-scale ${isVisible ? "visible" : ""}`}
+        >
           {/* Section Title */}
-          <div className="text-center mb-12 sm:mb-16">
+          <div 
+            className={`text-center mb-12 sm:mb-16 scroll-reveal-up stagger-1 ${isVisible ? "visible" : ""}`}
+          >
             <h2 className="font-stencil text-3xl sm:text-4xl md:text-5xl text-brand-red mb-4 text-balance">
-              CÓMO FUNCIONA
+              COMO FUNCIONA
             </h2>
             <p className="text-gray-600 text-lg max-w-xl mx-auto">
               Tres simples pasos para empezar a comprar y vender en tu universidad
@@ -65,22 +77,34 @@ export function HowItWorksSection() {
           </div>
 
           {/* Steps */}
-          <div className="flex flex-col md:flex-row justify-between items-start gap-8 md:gap-4">
+          <div className="flex flex-col md:flex-row justify-between items-start gap-8 md:gap-4 relative">
+            {/* Connecting line for desktop */}
+            <div 
+              className={`hidden md:block absolute top-24 left-1/4 right-1/4 h-0.5 bg-brand-red/20 scroll-reveal ${isVisible ? "visible" : ""}`}
+              style={{ transitionDelay: "0.5s" }}
+              aria-hidden="true"
+            >
+              <div 
+                className="h-full bg-brand-red transition-all duration-1000 ease-out"
+                style={{ width: isVisible ? "100%" : "0%" }}
+              />
+            </div>
+
             {steps.map((step, index) => (
               <div
                 key={step.number}
                 className={`
-                  flex-1 flex flex-col items-center text-center
-                  opacity-0 animate-fade-in-up
+                  flex-1 flex flex-col items-center text-center relative
+                  scroll-reveal-up ${isVisible ? "visible" : ""}
                 `}
-                style={{ animationDelay: `${index * 0.15}s`, animationFillMode: 'forwards' }}
+                style={{ transitionDelay: `${0.2 + index * 0.2}s` }}
               >
                 {/* Step number */}
-                <div className="relative mb-6">
-                  <span className="font-stencil text-7xl sm:text-8xl text-brand-red/20">
+                <div className="relative mb-6 group">
+                  <span className="font-stencil text-7xl sm:text-8xl text-brand-red/20 group-hover:text-brand-red/30 transition-colors duration-500">
                     {step.number}
                   </span>
-                  <div className="absolute inset-0 flex items-center justify-center text-brand-red">
+                  <div className="absolute inset-0 flex items-center justify-center text-brand-red group-hover:scale-110 transition-transform duration-500">
                     {step.icon}
                   </div>
                 </div>
@@ -93,10 +117,10 @@ export function HowItWorksSection() {
                   {step.description}
                 </p>
 
-                {/* Connector arrow (not on last item) */}
+                {/* Mobile arrow (not on last item) */}
                 {index < steps.length - 1 && (
-                  <div className="hidden md:block absolute right-0 top-1/2 transform translate-x-1/2 -translate-y-1/2">
-                    <svg width="24" height="24" viewBox="0 0 24 24" className="text-brand-red/40">
+                  <div className="md:hidden my-4 text-brand-red/40">
+                    <svg width="24" height="24" viewBox="0 0 24 24" className="rotate-90">
                       <path d="M5 12h14M12 5l7 7-7 7" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
                   </div>

@@ -1,6 +1,7 @@
 "use client"
 
 import { SquiggleIcon } from "./squiggle-icon"
+import { useScrollReveal } from "@/hooks/use-scroll-reveal"
 
 const essenceItems = [
   {
@@ -12,7 +13,7 @@ const essenceItems = [
     description: "Transacciones seguras entre miembros verificados de la UN."
   },
   {
-    title: "ECONOMÍA",
+    title: "ECONOMIA",
     description: "Precios justos y accesibles para estudiantes universitarios."
   },
   {
@@ -22,17 +23,27 @@ const essenceItems = [
 ]
 
 export function EssenceSection() {
+  const { ref: sectionRef, isVisible } = useScrollReveal<HTMLElement>({ threshold: 0.2 })
+
   return (
-    <section id="esencia" className="py-12 sm:py-20 px-4">
+    <section 
+      ref={sectionRef}
+      id="esencia" 
+      className="py-12 sm:py-20 px-4 overflow-hidden"
+    >
       <div className="mx-auto max-w-5xl">
-        <div className="bg-gray-50 rounded-3xl shadow-xl p-8 sm:p-12">
+        <div 
+          className={`bg-gray-50 rounded-3xl shadow-xl p-8 sm:p-12 scroll-reveal-scale ${isVisible ? "visible" : ""}`}
+        >
           {/* Section Title */}
-          <div className="text-center mb-12">
+          <div 
+            className={`text-center mb-12 scroll-reveal-up stagger-1 ${isVisible ? "visible" : ""}`}
+          >
             <h2 className="font-stencil text-3xl sm:text-4xl md:text-5xl text-brand-red mb-4 text-balance">
               NUESTRA ESENCIA
             </h2>
             <div className="flex justify-center">
-              <SquiggleIcon width={100} height={30} className="text-brand-red opacity-60" />
+              <SquiggleIcon width={100} height={30} className="text-brand-red opacity-60 animate-wave" />
             </div>
           </div>
 
@@ -46,12 +57,13 @@ export function EssenceSection() {
                   bg-white/60 backdrop-blur-sm
                   border-2 border-brand-red/10
                   hover:border-brand-red/30 hover:shadow-lg
-                  transition-all duration-300
-                  opacity-0 animate-fade-in-up
+                  transition-all duration-500
+                  hover-lift
+                  scroll-reveal-up ${isVisible ? "visible" : ""}
                 `}
-                style={{ animationDelay: `${index * 0.1}s`, animationFillMode: 'forwards' }}
+                style={{ transitionDelay: `${0.15 + index * 0.1}s` }}
               >
-                <div className="flex-shrink-0 mt-1">
+                <div className="flex-shrink-0 mt-1 hover:scale-110 hover:rotate-6 transition-transform">
                   <SquiggleIcon 
                     width={40} 
                     height={20} 
