@@ -2,6 +2,8 @@ import {
   Navbar,
   HeroSection,
   ChazaSwiper,
+  CategoriesSection,
+  BlogSection,
   ReviewsSection,
   HowItWorksSection,
   Footer,
@@ -15,17 +17,23 @@ export default function Home() {
 
       {/* Main content */}
       <main className="flex flex-col">
-        {/* Hero: rojo sólido, texto claro, CTAs */}
+        {/* Hero: rojo solido, texto claro, CTAs */}
         <HeroSection />
 
         {/* Swiper tipo Tinder con chazas de ejemplo */}
         <ChazaSwiper />
 
-        {/* Cómo funciona la plataforma */}
+        {/* Todas las categorias de chazas */}
+        <CategoriesSection />
+
+        {/* Como funciona la plataforma */}
         <HowItWorksSection />
 
-        {/* Comentarios y reseñas de la comunidad */}
+        {/* Comentarios y resenas de la comunidad */}
         <ReviewsSection />
+
+        {/* Blog con noticias y consejos */}
+        <BlogSection />
       </main>
 
       {/* Footer */}

@@ -2,6 +2,7 @@
 
 import { SquiggleIcon } from "./squiggle-icon"
 import { useScrollReveal } from "@/hooks/use-scroll-reveal"
+import { Instagram, Twitter, Facebook } from "lucide-react"
 
 export function Footer() {
   const { ref: footerRef, isVisible } = useScrollReveal<HTMLElement>({ threshold: 0.2 })
@@ -42,31 +43,44 @@ export function Footer() {
             El marketplace de los estudiantes de la Universidad Nacional
           </p>
 
-          {/* Social/Contact Links */}
+          {/* Social Links */}
           <div 
-            className={`flex items-center gap-6 mb-8 scroll-reveal-up stagger-3 ${isVisible ? "visible" : ""}`}
+            className={`flex items-center gap-4 mb-8 scroll-reveal-up stagger-3 ${isVisible ? "visible" : ""}`}
           >
             <a 
-              href="mailto:contacto@chazasun.com" 
-              className="text-white/70 hover:text-white transition-all text-sm hover:scale-105"
+              href="#" 
+              className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white/70 hover:text-white hover:bg-white/20 transition-all duration-300 hover:scale-110"
+              aria-label="Instagram"
             >
-              contacto@chazasun.com
+              <Instagram className="w-5 h-5" />
             </a>
-            <span className="text-white/30">|</span>
             <a 
               href="#" 
-              className="text-white/70 hover:text-white transition-all text-sm hover:scale-105"
+              className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white/70 hover:text-white hover:bg-white/20 transition-all duration-300 hover:scale-110"
+              aria-label="Twitter"
             >
-              Instagram
+              <Twitter className="w-5 h-5" />
+            </a>
+            <a 
+              href="#" 
+              className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white/70 hover:text-white hover:bg-white/20 transition-all duration-300 hover:scale-110"
+              aria-label="Facebook"
+            >
+              <Facebook className="w-5 h-5" />
             </a>
           </div>
 
+          {/* Description */}
+          <p className={`text-white/60 text-center text-sm max-w-sm mb-8 scroll-reveal-up stagger-4 ${isVisible ? "visible" : ""}`}>
+            Proyecto creado por estudiantes para estudiantes. No es un proyecto oficial de la universidad.
+          </p>
+
           {/* CTA */}
           <a
-            href="#registro"
-            className={`font-stencil text-base bg-white text-brand-red px-8 py-3 rounded-full hover:bg-gray-100 transition-all hover:scale-105 hover:shadow-xl scroll-reveal-scale stagger-4 ${isVisible ? "visible" : ""}`}
+            href="#explorar"
+            className={`font-stencil text-base bg-white text-brand-red px-8 py-3 rounded-full hover:bg-gray-100 transition-all hover:scale-105 hover:shadow-xl scroll-reveal-scale stagger-5 ${isVisible ? "visible" : ""}`}
           >
-            ¡UNETE AHORA!
+            EXPLORAR CHAZAS
           </a>
         </div>
 
@@ -74,14 +88,17 @@ export function Footer() {
         <div className="border-t border-white/20 py-6">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-white/60 text-sm">
             <p>
-              2024 ChazasUN. Todos los derechos reservados.
+              2024 ChazasUN. Proyecto estudiantil independiente.
             </p>
             <div className="flex items-center gap-4">
-              <a href="#" className="hover:text-white transition-colors">
+              <a href="#" className="hover:text-white transition-colors hover:scale-105">
                 Terminos
               </a>
-              <a href="#" className="hover:text-white transition-colors">
+              <a href="#" className="hover:text-white transition-colors hover:scale-105">
                 Privacidad
+              </a>
+              <a href="#" className="hover:text-white transition-colors hover:scale-105">
+                Contacto
               </a>
             </div>
           </div>

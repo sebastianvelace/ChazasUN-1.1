@@ -7,8 +7,9 @@ import { Menu, X } from "lucide-react"
 const navLinks = [
   { href: "#inicio", label: "Inicio" },
   { href: "#explorar", label: "Explorar" },
-  { href: "#como-funciona", label: "Cómo Funciona" },
+  { href: "#categorias", label: "Categorias" },
   { href: "#comentarios", label: "Comentarios" },
+  { href: "#blog", label: "Blog" },
 ]
 
 export function Navbar() {
@@ -43,7 +44,7 @@ export function Navbar() {
             ))}
             <a
               href="#registro"
-              className="font-stencil text-sm bg-brand-red text-white px-5 py-2 rounded-full hover:bg-brand-red-dark transition-colors"
+              className="font-stencil text-sm bg-brand-red text-white px-5 py-2 rounded-full hover:bg-brand-red-dark transition-all duration-300 hover:scale-105 hover:shadow-lg active:scale-95 btn-ripple"
             >
               REGISTRARSE
             </a>
@@ -76,7 +77,7 @@ export function Navbar() {
               ))}
               <a
                 href="#registro"
-                className="font-stencil text-sm bg-brand-red text-white px-5 py-2 rounded-full text-center hover:bg-brand-red-dark transition-colors"
+                className="font-stencil text-sm bg-brand-red text-white px-5 py-2 rounded-full text-center hover:bg-brand-red-dark transition-all duration-300 hover:scale-105 active:scale-95"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 REGISTRARSE
