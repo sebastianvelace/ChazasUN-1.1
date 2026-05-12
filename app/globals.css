@@ -4,79 +4,92 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --destructive-foreground: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
+  /* Brand Colors - ChazasUN */
+  --brand-red: #A31E1E;
+  --brand-red-dark: #7A1515;
+  --brand-cream: #F5EBDC;
+  --brand-cream-dark: #E8DBC8;
+  
+  --background: var(--brand-cream);
+  --foreground: var(--brand-red);
+  --card: var(--brand-cream);
+  --card-foreground: var(--brand-red);
+  --popover: var(--brand-cream);
+  --popover-foreground: var(--brand-red);
+  --primary: var(--brand-red);
+  --primary-foreground: var(--brand-cream);
+  --secondary: var(--brand-cream-dark);
+  --secondary-foreground: var(--brand-red);
+  --muted: var(--brand-cream-dark);
+  --muted-foreground: var(--brand-red-dark);
+  --accent: var(--brand-cream-dark);
+  --accent-foreground: var(--brand-red);
+  --destructive: var(--brand-red-dark);
+  --destructive-foreground: var(--brand-cream);
+  --border: var(--brand-red);
+  --input: var(--brand-cream-dark);
+  --ring: var(--brand-red);
+  --chart-1: var(--brand-red);
+  --chart-2: var(--brand-red-dark);
+  --chart-3: var(--brand-cream-dark);
+  --chart-4: var(--brand-red);
+  --chart-5: var(--brand-red-dark);
   --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --sidebar: var(--brand-cream);
+  --sidebar-foreground: var(--brand-red);
+  --sidebar-primary: var(--brand-red);
+  --sidebar-primary-foreground: var(--brand-cream);
+  --sidebar-accent: var(--brand-cream-dark);
+  --sidebar-accent-foreground: var(--brand-red);
+  --sidebar-border: var(--brand-red);
+  --sidebar-ring: var(--brand-red);
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.145 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.145 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.985 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.396 0.141 25.723);
-  --destructive-foreground: oklch(0.637 0.237 25.331);
-  --border: oklch(0.269 0 0);
-  --input: oklch(0.269 0 0);
-  --ring: oklch(0.439 0 0);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(0.269 0 0);
-  --sidebar-ring: oklch(0.439 0 0);
+  --background: var(--brand-red-dark);
+  --foreground: var(--brand-cream);
+  --card: var(--brand-red);
+  --card-foreground: var(--brand-cream);
+  --popover: var(--brand-red);
+  --popover-foreground: var(--brand-cream);
+  --primary: var(--brand-cream);
+  --primary-foreground: var(--brand-red);
+  --secondary: var(--brand-red-dark);
+  --secondary-foreground: var(--brand-cream);
+  --muted: var(--brand-red-dark);
+  --muted-foreground: var(--brand-cream-dark);
+  --accent: var(--brand-red-dark);
+  --accent-foreground: var(--brand-cream);
+  --destructive: var(--brand-cream);
+  --destructive-foreground: var(--brand-red);
+  --border: var(--brand-cream-dark);
+  --input: var(--brand-red-dark);
+  --ring: var(--brand-cream);
+  --chart-1: var(--brand-cream);
+  --chart-2: var(--brand-cream-dark);
+  --chart-3: var(--brand-red);
+  --chart-4: var(--brand-cream);
+  --chart-5: var(--brand-cream-dark);
+  --sidebar: var(--brand-red);
+  --sidebar-foreground: var(--brand-cream);
+  --sidebar-primary: var(--brand-cream);
+  --sidebar-primary-foreground: var(--brand-red);
+  --sidebar-accent: var(--brand-red-dark);
+  --sidebar-accent-foreground: var(--brand-cream);
+  --sidebar-border: var(--brand-cream-dark);
+  --sidebar-ring: var(--brand-cream);
 }
 
 @theme inline {
-  --font-sans: 'Geist', 'Geist Fallback';
+  --font-sans: var(--font-sans), 'Inter', system-ui, sans-serif;
+  --font-stencil: var(--font-stencil), 'Black Ops One', Impact, sans-serif;
   --font-mono: 'Geist Mono', 'Geist Mono Fallback';
+  
+  /* Brand color classes */
+  --color-brand-red: var(--brand-red);
+  --color-brand-red-dark: var(--brand-red-dark);
+  --color-brand-cream: var(--brand-cream);
+  --color-brand-cream-dark: var(--brand-cream-dark);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -119,7 +132,50 @@
   * {
     @apply border-border outline-ring/50;
   }
+  html {
+    scroll-behavior: smooth;
+  }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-brand-cream text-brand-red;
   }
 }
+
+/* Stencil font utility */
+.font-stencil {
+  font-family: var(--font-stencil), 'Black Ops One', Impact, sans-serif;
+}
+
+/* Animations */
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes wave-distort {
+  0%, 100% {
+    transform: scale(1) rotate(0deg);
+  }
+  50% {
+    transform: scale(1.02) rotate(0.5deg);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.6s ease-out forwards;
+}
+
+.animate-wave {
+  animation: wave-distort 8s ease-in-out infinite;
+}
+
+/* Stagger delays for children */
+.stagger-1 { animation-delay: 0.1s; }
+.stagger-2 { animation-delay: 0.2s; }
+.stagger-3 { animation-delay: 0.3s; }
+.stagger-4 { animation-delay: 0.4s; }

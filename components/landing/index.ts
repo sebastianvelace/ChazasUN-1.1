@@ -1,0 +1,7 @@
+export { WavyBackground } from "./wavy-background"
+export { Navbar } from "./navbar"
+export { HeroSection } from "./hero-section"
+export { EssenceSection } from "./essence-section"
+export { HowItWorksSection } from "./how-it-works-section"
+export { Footer } from "./footer"
+export { SquiggleIcon } from "./squiggle-icon"

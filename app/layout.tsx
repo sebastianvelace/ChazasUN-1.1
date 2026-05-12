@@ -1,14 +1,22 @@
 import type { Metadata } from 'next'
-import { Geist, Geist_Mono } from 'next/font/google'
+import { Inter, Black_Ops_One } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
 
-const _geist = Geist({ subsets: ["latin"] });
-const _geistMono = Geist_Mono({ subsets: ["latin"] });
+const inter = Inter({ 
+  subsets: ["latin"],
+  variable: '--font-sans'
+})
+
+const stencil = Black_Ops_One({ 
+  weight: '400',
+  subsets: ["latin"],
+  variable: '--font-stencil'
+})
 
 export const metadata: Metadata = {
-  title: 'v0 App',
-  description: 'Created with v0',
+  title: 'CHAZAS UN - Marketplace Universitario',
+  description: 'El marketplace de los estudiantes de la Universidad Nacional. Compra, vende e intercambia con tu comunidad universitaria.',
   generator: 'v0.app',
   icons: {
     icon: [
@@ -35,8 +43,8 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en">
-      <body className="font-sans antialiased">
+    <html lang="es" className={`${inter.variable} ${stencil.variable}`}>
+      <body className="font-sans antialiased bg-brand-cream">
         {children}
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>
