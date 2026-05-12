@@ -53,13 +53,13 @@ export function HowItWorksSection() {
   return (
     <section id="como-funciona" className="py-12 sm:py-20 px-4">
       <div className="mx-auto max-w-6xl">
-        <div className="bg-brand-cream rounded-3xl shadow-xl p-8 sm:p-12">
+        <div className="bg-gray-50 rounded-3xl shadow-xl p-8 sm:p-12">
           {/* Section Title */}
           <div className="text-center mb-12 sm:mb-16">
             <h2 className="font-stencil text-3xl sm:text-4xl md:text-5xl text-brand-red mb-4 text-balance">
               CÓMO FUNCIONA
             </h2>
-            <p className="text-brand-red-dark text-lg max-w-xl mx-auto">
+            <p className="text-gray-600 text-lg max-w-xl mx-auto">
               Tres simples pasos para empezar a comprar y vender en tu universidad
             </p>
           </div>
@@ -89,7 +89,7 @@ export function HowItWorksSection() {
                 <h3 className="font-stencil text-xl sm:text-2xl text-brand-red mb-3">
                   {step.title}
                 </h3>
-                <p className="text-brand-red-dark text-sm sm:text-base leading-relaxed max-w-xs">
+                <p className="text-gray-600 text-sm sm:text-base leading-relaxed max-w-xs">
                   {step.description}
                 </p>
 

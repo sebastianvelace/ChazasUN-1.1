@@ -15,7 +15,7 @@ export function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   return (
-    <header className="sticky top-0 z-50 bg-brand-cream/95 backdrop-blur-sm shadow-md">
+    <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm shadow-md">
       <nav className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
@@ -43,7 +43,7 @@ export function Navbar() {
             ))}
             <a
               href="#registro"
-              className="font-stencil text-sm bg-brand-red text-brand-cream px-5 py-2 rounded-full hover:bg-brand-red-dark transition-colors"
+              className="font-stencil text-sm bg-brand-red text-white px-5 py-2 rounded-full hover:bg-brand-red-dark transition-colors"
             >
               REGISTRARSE
             </a>
@@ -76,7 +76,7 @@ export function Navbar() {
               ))}
               <a
                 href="#registro"
-                className="font-stencil text-sm bg-brand-red text-brand-cream px-5 py-2 rounded-full text-center hover:bg-brand-red-dark transition-colors"
+                className="font-stencil text-sm bg-brand-red text-white px-5 py-2 rounded-full text-center hover:bg-brand-red-dark transition-colors"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 REGISTRARSE

@@ -44,7 +44,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es" className={`${inter.variable} ${stencil.variable}`}>
-      <body className="font-sans antialiased bg-brand-cream">
+      <body className="font-sans antialiased bg-white">
         {children}
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>

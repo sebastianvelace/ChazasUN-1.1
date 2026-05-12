@@ -1,110 +1,87 @@
 "use client"
 
 import { SquiggleIcon } from "./squiggle-icon"
+import { Store, Users, Zap } from "lucide-react"
 
 export function HeroSection() {
   return (
-    <section id="inicio" className="relative py-12 sm:py-20 px-4">
-      <div className="mx-auto max-w-4xl">
-        {/* Main Hero Card */}
-        <div className="relative bg-brand-cream rounded-3xl shadow-2xl overflow-hidden animate-fade-in-up">
-          {/* Decorative squiggles */}
-          <div className="absolute top-4 left-4 opacity-20">
-            <SquiggleIcon width={120} height={60} className="text-brand-red" />
-          </div>
-          <div className="absolute bottom-4 right-4 opacity-20 rotate-180">
-            <SquiggleIcon width={120} height={60} className="text-brand-red" />
-          </div>
-
-          <div className="relative z-10 flex flex-col items-center py-12 sm:py-20 px-6 sm:px-12">
-            {/* Silhouette with text */}
-            <div className="relative mb-8">
-              <svg
-                viewBox="0 0 300 380"
-                className="w-64 sm:w-80 h-auto"
-                aria-hidden="true"
-              >
-                <defs>
-                  <clipPath id="silhouette-clip">
-                    {/* Stylized head silhouette path */}
-                    <path d="M150,20 
-                      C200,20 240,50 250,100 
-                      C260,150 260,200 250,250 
-                      C245,280 230,310 200,340 
-                      C180,360 160,370 150,370 
-                      C140,370 120,360 100,340 
-                      C70,310 55,280 50,250 
-                      C40,200 40,150 50,100 
-                      C60,50 100,20 150,20 Z
-                      M80,180 C60,200 55,230 65,260 C50,240 45,210 60,180 Z
-                      M220,180 C240,200 245,230 235,260 C250,240 255,210 240,180 Z" />
-                  </clipPath>
-                </defs>
-                
-                {/* White silhouette background */}
-                <path 
-                  d="M150,20 
-                    C200,20 240,50 250,100 
-                    C260,150 260,200 250,250 
-                    C245,280 230,310 200,340 
-                    C180,360 160,370 150,370 
-                    C140,370 120,360 100,340 
-                    C70,310 55,280 50,250 
-                    C40,200 40,150 50,100 
-                    C60,50 100,20 150,20 Z"
-                  fill="white"
-                  stroke="#A31E1E"
-                  strokeWidth="3"
-                />
-                
-                {/* Ear details */}
-                <ellipse cx="45" cy="200" rx="20" ry="35" fill="white" stroke="#A31E1E" strokeWidth="2" />
-                <ellipse cx="255" cy="200" rx="20" ry="35" fill="white" stroke="#A31E1E" strokeWidth="2" />
-                
-                {/* Text inside silhouette */}
-                <text 
-                  x="150" 
-                  y="170" 
-                  textAnchor="middle" 
-                  className="font-stencil"
-                  style={{ 
-                    fontFamily: 'var(--font-stencil), "Black Ops One", Impact, sans-serif',
-                    fontSize: '42px',
-                    fontWeight: 'bold'
-                  }}
-                  fill="#A31E1E"
-                >
-                  CHAZAS
-                </text>
-                <text 
-                  x="150" 
-                  y="230" 
-                  textAnchor="middle" 
-                  className="font-stencil"
-                  style={{ 
-                    fontFamily: 'var(--font-stencil), "Black Ops One", Impact, sans-serif',
-                    fontSize: '48px',
-                    fontWeight: 'bold'
-                  }}
-                  fill="#A31E1E"
-                >
-                  UN
-                </text>
-              </svg>
+    <section id="inicio" className="relative py-16 sm:py-24 px-4">
+      <div className="mx-auto max-w-6xl">
+        <div className="flex flex-col lg:flex-row items-center gap-12">
+          {/* Left Content */}
+          <div className="flex-1 text-center lg:text-left">
+            {/* Logo Title */}
+            <div className="flex items-center justify-center lg:justify-start gap-4 mb-6">
+              <SquiggleIcon width={50} height={25} className="text-brand-red" />
+              <h1 className="font-stencil text-5xl sm:text-6xl lg:text-7xl text-brand-red">
+                CHAZAS UN
+              </h1>
             </div>
 
             {/* Tagline */}
-            <p className="text-center text-brand-red-dark text-lg sm:text-xl max-w-md mb-8 leading-relaxed opacity-0 animate-fade-in-up stagger-1">
-              El marketplace de la comunidad universitaria. Compra, vende e intercambia con tus compañeros.
+            <p className="text-xl sm:text-2xl text-gray-700 mb-6 leading-relaxed animate-fade-in-up">
+              El marketplace de la comunidad universitaria de la Universidad Nacional.
             </p>
 
-            {/* CTA Button */}
-            <a
-              href="#registro"
-              className="font-stencil text-lg sm:text-xl bg-brand-red text-brand-cream px-8 sm:px-12 py-4 rounded-full border-2 border-brand-red hover:bg-transparent hover:text-brand-red transition-all duration-300 transform hover:scale-105 shadow-lg opacity-0 animate-fade-in-up stagger-2"
-            >
-              ¡ÚNETE AHORA!
-            </a>
+            {/* Description */}
+            <p className="text-gray-500 text-lg mb-8 max-w-xl mx-auto lg:mx-0 animate-fade-in-up stagger-1">
+              Descubre las mejores chazas del campus: comida, servicios, libros y mucho más. 
+              Conecta con emprendedores estudiantes y encuentra todo lo que necesitas sin salir de la U.
+            </p>
+
+            {/* CTA Buttons */}
+            <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start animate-fade-in-up stagger-2">
+              <a
+                href="#explorar"
+                className="font-stencil text-lg bg-brand-red text-white px-8 py-4 rounded-full hover:bg-brand-red-dark transition-all transform hover:scale-105 shadow-lg text-center"
+              >
+                EXPLORAR CHAZAS
+              </a>
+              <a
+                href="#registro"
+                className="font-stencil text-lg border-2 border-brand-red text-brand-red px-8 py-4 rounded-full hover:bg-brand-red hover:text-white transition-all text-center"
+              >
+                REGISTRAR MI CHAZA
+              </a>
+            </div>
+          </div>
+
+          {/* Right Content - Feature Cards */}
+          <div className="flex-1 w-full max-w-md">
+            <div className="grid gap-4 animate-fade-in-up stagger-3">
+              {/* Feature 1 */}
+              <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100 flex items-start gap-4">
+                <div className="w-12 h-12 rounded-full bg-brand-red/10 flex items-center justify-center flex-shrink-0">
+                  <Store className="w-6 h-6 text-brand-red" />
+                </div>
+                <div>
+                  <h3 className="font-stencil text-lg text-brand-red mb-1">+50 CHAZAS</h3>
+                  <p className="text-gray-500 text-sm">Encuentra comida, servicios, libros y más en un solo lugar.</p>
+                </div>
+              </div>
+
+              {/* Feature 2 */}
+              <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100 flex items-start gap-4">
+                <div className="w-12 h-12 rounded-full bg-brand-red/10 flex items-center justify-center flex-shrink-0">
+                  <Users className="w-6 h-6 text-brand-red" />
+                </div>
+                <div>
+                  <h3 className="font-stencil text-lg text-brand-red mb-1">COMUNIDAD UN</h3>
+                  <p className="text-gray-500 text-sm">Apoya a emprendedores estudiantes de tu propia universidad.</p>
+                </div>
+              </div>
+
+              {/* Feature 3 */}
+              <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100 flex items-start gap-4">
+                <div className="w-12 h-12 rounded-full bg-brand-red/10 flex items-center justify-center flex-shrink-0">
+                  <Zap className="w-6 h-6 text-brand-red" />
+                </div>
+                <div>
+                  <h3 className="font-stencil text-lg text-brand-red mb-1">RÁPIDO Y FÁCIL</h3>
+                  <p className="text-gray-500 text-sm">Desliza, descubre y contacta en segundos desde tu celular.</p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

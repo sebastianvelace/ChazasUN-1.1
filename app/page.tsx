@@ -2,6 +2,7 @@ import {
   WavyBackground,
   Navbar,
   HeroSection,
+  ChazaSwiper,
   EssenceSection,
   HowItWorksSection,
   Footer,
@@ -9,7 +10,7 @@ import {
 
 export default function Home() {
   return (
-    <div className="relative min-h-screen">
+    <div className="relative min-h-screen bg-white">
       {/* Wavy checkerboard background - fixed behind everything */}
       <WavyBackground />
 
@@ -17,8 +18,9 @@ export default function Home() {
       <Navbar />
 
       {/* Main content - positioned above background */}
-      <main className="relative z-10 flex flex-col gap-8 sm:gap-12">
+      <main className="relative z-10 flex flex-col">
         <HeroSection />
+        <ChazaSwiper />
         <EssenceSection />
         <HowItWorksSection />
       </main>

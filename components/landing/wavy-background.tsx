@@ -11,10 +11,10 @@ export function WavyBackground() {
         <defs>
           {/* Checkerboard pattern */}
           <pattern id="checker" width="80" height="80" patternUnits="userSpaceOnUse">
-            <rect width="40" height="40" fill="#F5EBDC" />
+            <rect width="40" height="40" fill="#FFFFFF" />
             <rect x="40" width="40" height="40" fill="#A31E1E" />
             <rect y="40" width="40" height="40" fill="#A31E1E" />
-            <rect x="40" y="40" width="40" height="40" fill="#F5EBDC" />
+            <rect x="40" y="40" width="40" height="40" fill="#FFFFFF" />
           </pattern>
           
           {/* Turbulence filter for wavy distortion */}
@@ -46,7 +46,7 @@ export function WavyBackground() {
       </svg>
       
       {/* Subtle overlay for better text readability */}
-      <div className="absolute inset-0 bg-brand-cream/30" />
+      <div className="absolute inset-0 bg-white/40" />
     </div>
   )
 }

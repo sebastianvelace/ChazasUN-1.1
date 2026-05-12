@@ -25,7 +25,7 @@ export function EssenceSection() {
   return (
     <section id="esencia" className="py-12 sm:py-20 px-4">
       <div className="mx-auto max-w-5xl">
-        <div className="bg-brand-cream rounded-3xl shadow-xl p-8 sm:p-12">
+        <div className="bg-gray-50 rounded-3xl shadow-xl p-8 sm:p-12">
           {/* Section Title */}
           <div className="text-center mb-12">
             <h2 className="font-stencil text-3xl sm:text-4xl md:text-5xl text-brand-red mb-4 text-balance">
@@ -62,7 +62,7 @@ export function EssenceSection() {
                   <h3 className="font-stencil text-xl sm:text-2xl text-brand-red mb-2">
                     {item.title}
                   </h3>
-                  <p className="text-brand-red-dark text-sm sm:text-base leading-relaxed">
+                  <p className="text-gray-600 text-sm sm:text-base leading-relaxed">
                     {item.description}
                   </p>
                 </div>

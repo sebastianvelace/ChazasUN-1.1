@@ -7,77 +7,78 @@
   /* Brand Colors - ChazasUN */
   --brand-red: #A31E1E;
   --brand-red-dark: #7A1515;
-  --brand-cream: #F5EBDC;
-  --brand-cream-dark: #E8DBC8;
+  --brand-white: #FFFFFF;
+  --brand-gray: #F5F5F5;
+  --brand-gray-dark: #E5E5E5;
   
-  --background: var(--brand-cream);
+  --background: var(--brand-white);
   --foreground: var(--brand-red);
-  --card: var(--brand-cream);
+  --card: var(--brand-white);
   --card-foreground: var(--brand-red);
-  --popover: var(--brand-cream);
+  --popover: var(--brand-white);
   --popover-foreground: var(--brand-red);
   --primary: var(--brand-red);
-  --primary-foreground: var(--brand-cream);
-  --secondary: var(--brand-cream-dark);
+  --primary-foreground: var(--brand-white);
+  --secondary: var(--brand-gray);
   --secondary-foreground: var(--brand-red);
-  --muted: var(--brand-cream-dark);
+  --muted: var(--brand-gray);
   --muted-foreground: var(--brand-red-dark);
-  --accent: var(--brand-cream-dark);
+  --accent: var(--brand-gray);
   --accent-foreground: var(--brand-red);
   --destructive: var(--brand-red-dark);
-  --destructive-foreground: var(--brand-cream);
-  --border: var(--brand-red);
-  --input: var(--brand-cream-dark);
+  --destructive-foreground: var(--brand-white);
+  --border: var(--brand-gray-dark);
+  --input: var(--brand-gray);
   --ring: var(--brand-red);
   --chart-1: var(--brand-red);
   --chart-2: var(--brand-red-dark);
-  --chart-3: var(--brand-cream-dark);
+  --chart-3: var(--brand-gray-dark);
   --chart-4: var(--brand-red);
   --chart-5: var(--brand-red-dark);
   --radius: 0.625rem;
-  --sidebar: var(--brand-cream);
+  --sidebar: var(--brand-white);
   --sidebar-foreground: var(--brand-red);
   --sidebar-primary: var(--brand-red);
-  --sidebar-primary-foreground: var(--brand-cream);
-  --sidebar-accent: var(--brand-cream-dark);
+  --sidebar-primary-foreground: var(--brand-white);
+  --sidebar-accent: var(--brand-gray);
   --sidebar-accent-foreground: var(--brand-red);
-  --sidebar-border: var(--brand-red);
+  --sidebar-border: var(--brand-gray-dark);
   --sidebar-ring: var(--brand-red);
 }
 
 .dark {
   --background: var(--brand-red-dark);
-  --foreground: var(--brand-cream);
+  --foreground: var(--brand-white);
   --card: var(--brand-red);
-  --card-foreground: var(--brand-cream);
+  --card-foreground: var(--brand-white);
   --popover: var(--brand-red);
-  --popover-foreground: var(--brand-cream);
-  --primary: var(--brand-cream);
+  --popover-foreground: var(--brand-white);
+  --primary: var(--brand-white);
   --primary-foreground: var(--brand-red);
   --secondary: var(--brand-red-dark);
-  --secondary-foreground: var(--brand-cream);
+  --secondary-foreground: var(--brand-white);
   --muted: var(--brand-red-dark);
-  --muted-foreground: var(--brand-cream-dark);
+  --muted-foreground: var(--brand-gray);
   --accent: var(--brand-red-dark);
-  --accent-foreground: var(--brand-cream);
-  --destructive: var(--brand-cream);
+  --accent-foreground: var(--brand-white);
+  --destructive: var(--brand-white);
   --destructive-foreground: var(--brand-red);
-  --border: var(--brand-cream-dark);
+  --border: var(--brand-gray-dark);
   --input: var(--brand-red-dark);
-  --ring: var(--brand-cream);
-  --chart-1: var(--brand-cream);
-  --chart-2: var(--brand-cream-dark);
+  --ring: var(--brand-white);
+  --chart-1: var(--brand-white);
+  --chart-2: var(--brand-gray);
   --chart-3: var(--brand-red);
-  --chart-4: var(--brand-cream);
-  --chart-5: var(--brand-cream-dark);
+  --chart-4: var(--brand-white);
+  --chart-5: var(--brand-gray);
   --sidebar: var(--brand-red);
-  --sidebar-foreground: var(--brand-cream);
-  --sidebar-primary: var(--brand-cream);
+  --sidebar-foreground: var(--brand-white);
+  --sidebar-primary: var(--brand-white);
   --sidebar-primary-foreground: var(--brand-red);
   --sidebar-accent: var(--brand-red-dark);
-  --sidebar-accent-foreground: var(--brand-cream);
-  --sidebar-border: var(--brand-cream-dark);
-  --sidebar-ring: var(--brand-cream);
+  --sidebar-accent-foreground: var(--brand-white);
+  --sidebar-border: var(--brand-gray-dark);
+  --sidebar-ring: var(--brand-white);
 }
 
 @theme inline {
@@ -88,8 +89,9 @@
   /* Brand color classes */
   --color-brand-red: var(--brand-red);
   --color-brand-red-dark: var(--brand-red-dark);
-  --color-brand-cream: var(--brand-cream);
-  --color-brand-cream-dark: var(--brand-cream-dark);
+  --color-brand-white: var(--brand-white);
+  --color-brand-gray: var(--brand-gray);
+  --color-brand-gray-dark: var(--brand-gray-dark);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -136,7 +138,7 @@
     scroll-behavior: smooth;
   }
   body {
-    @apply bg-brand-cream text-brand-red;
+    @apply bg-brand-white text-brand-red;
   }
 }
 
