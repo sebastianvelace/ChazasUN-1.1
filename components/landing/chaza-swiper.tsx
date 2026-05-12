@@ -1,7 +1,7 @@
 "use client"
 
-import { useState } from "react"
-import { Heart, X, MapPin, Star, ChevronLeft, ChevronRight } from "lucide-react"
+import { useState, useRef, useCallback } from "react"
+import { Heart, X, MapPin, Star, MessageCircle, Clock } from "lucide-react"
 
 interface Chaza {
   id: number
@@ -10,210 +10,317 @@ interface Chaza {
   category: string
   location: string
   rating: number
+  reviews: number
   image: string
   tags: string[]
+  schedule: string
+  price: string
 }
 
 const mockChazas: Chaza[] = [
   {
     id: 1,
     name: "El Rincón del Tinto",
-    description: "El mejor café de la Universidad. Tintos a $1.500 y arepas con queso que te hacen el día.",
-    category: "Comida",
-    location: "Edificio de Ingeniería",
+    description: "El mejor café de la Universidad. Tintos a $1.500 y arepas con queso que te hacen el día. Más de 5 años endulzando mañanas universitarias.",
+    category: "Cafe & Desayunos",
+    location: "Edificio de Ingeniería, piso 1",
     rating: 4.8,
-    image: "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=400&h=500&fit=crop",
-    tags: ["Café", "Desayunos", "Económico"]
+    reviews: 142,
+    image: "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=500&h=600&fit=crop",
+    tags: ["Café", "Arepas", "Económico", "Desayunos"],
+    schedule: "Lun–Vie 6am–3pm",
+    price: "Desde $1.500",
   },
   {
     id: 2,
     name: "Fotocopias Express",
-    description: "Impresiones a color y B/N. Anillados en 5 minutos. El salvavidas antes de entregar trabajos.",
+    description: "Impresiones a color y B/N, anillados en 5 minutos. El salvavidas antes de entregar trabajos a última hora.",
     category: "Servicios",
-    location: "Frente a Biblioteca",
+    location: "Frente a Biblioteca Central",
     rating: 4.5,
-    image: "https://images.unsplash.com/photo-1586281380349-632531db7ed4?w=400&h=500&fit=crop",
-    tags: ["Impresiones", "Anillados", "Rápido"]
+    reviews: 89,
+    image: "https://images.unsplash.com/photo-1586281380349-632531db7ed4?w=500&h=600&fit=crop",
+    tags: ["Impresiones", "Anillados", "Urgente"],
+    schedule: "Lun–Sáb 7am–7pm",
+    price: "Copias desde $80",
   },
   {
     id: 3,
     name: "Don Empanada",
-    description: "Empanadas de carne, pollo y hawaiana. Las más grandes del campus a solo $2.000.",
+    description: "Empanadas de carne, pollo y hawaiana hechas a mano. Las más grandes del campus a solo $2.000. ¡Ya son una tradición!",
     category: "Comida",
     location: "Plazoleta Central",
     rating: 4.9,
-    image: "https://images.unsplash.com/photo-1601050690597-df0568f70950?w=400&h=500&fit=crop",
-    tags: ["Empanadas", "Almuerzo", "Popular"]
+    reviews: 231,
+    image: "https://images.unsplash.com/photo-1601050690597-df0568f70950?w=500&h=600&fit=crop",
+    tags: ["Empanadas", "Almuerzo", "Popular", "Casero"],
+    schedule: "Lun–Vie 10am–4pm",
+    price: "Desde $2.000",
   },
   {
     id: 4,
     name: "Tech Repair UN",
-    description: "Reparamos tu celular o portátil. Pantallas, baterías y software. Garantía de 30 días.",
-    category: "Servicios",
-    location: "Edificio de Ciencias",
+    description: "Reparamos tu celular o portátil en el campus. Pantallas, baterías y software. Presupuesto gratis y garantía de 30 días.",
+    category: "Tecnología",
+    location: "Edificio de Ciencias, oficina 204",
     rating: 4.6,
-    image: "https://images.unsplash.com/photo-1597872200969-2b65d56bd16b?w=400&h=500&fit=crop",
-    tags: ["Tecnología", "Reparaciones", "Garantía"]
+    reviews: 67,
+    image: "https://images.unsplash.com/photo-1597872200969-2b65d56bd16b?w=500&h=600&fit=crop",
+    tags: ["Celulares", "Portátiles", "Garantía"],
+    schedule: "Lun–Vie 9am–6pm",
+    price: "Diagnóstico gratis",
   },
   {
     id: 5,
     name: "Librería El Saber",
-    description: "Libros nuevos y usados. Conseguimos ese texto que no encuentras en ningún lado.",
-    category: "Tienda",
-    location: "Entrada Principal",
+    description: "Libros nuevos y de segunda mano. Conseguimos ese texto que no encuentras en ningún lado. También recibimos libros usados.",
+    category: "Librería",
+    location: "Entrada Principal, local 3",
     rating: 4.7,
-    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=500&fit=crop",
-    tags: ["Libros", "Textos", "Usado"]
-  }
+    reviews: 108,
+    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=500&h=600&fit=crop",
+    tags: ["Libros", "Textos", "Usados", "Intercambio"],
+    schedule: "Lun–Sáb 8am–5pm",
+    price: "Usados desde $5.000",
+  },
 ]
+
+const SWIPE_THRESHOLD = 80
 
 export function ChazaSwiper() {
   const [currentIndex, setCurrentIndex] = useState(0)
-  const [direction, setDirection] = useState<"left" | "right" | null>(null)
-  const [liked, setLiked] = useState<number[]>([])
+  const [offset, setOffset] = useState(0)
+  const [isDragging, setIsDragging] = useState(false)
+  const [likedIds, setLikedIds] = useState<number[]>([])
+  const [lastAction, setLastAction] = useState<"like" | "skip" | null>(null)
+
+  const startX = useRef(0)
+  const currentX = useRef(0)
+  const cardRef = useRef<HTMLDivElement>(null)
 
   const currentChaza = mockChazas[currentIndex]
+  const nextChaza = mockChazas[(currentIndex + 1) % mockChazas.length]
 
-  const handleSwipe = (swipeDirection: "left" | "right") => {
-    setDirection(swipeDirection)
-    
-    if (swipeDirection === "right") {
-      setLiked([...liked, currentChaza.id])
+  const advance = useCallback((direction: "like" | "skip") => {
+    setLastAction(direction)
+    if (direction === "like") {
+      setLikedIds((prev) => [...prev, currentChaza.id])
     }
-    
+    setOffset(direction === "like" ? 600 : -600)
     setTimeout(() => {
-      setDirection(null)
       setCurrentIndex((prev) => (prev + 1) % mockChazas.length)
-    }, 300)
+      setOffset(0)
+      setLastAction(null)
+    }, 350)
+  }, [currentChaza])
+
+  // Pointer events for unified mouse + touch handling
+  const onPointerDown = (e: React.PointerEvent) => {
+    if (e.pointerType === "mouse" && e.button !== 0) return
+    setIsDragging(true)
+    startX.current = e.clientX
+    currentX.current = e.clientX
+    cardRef.current?.setPointerCapture(e.pointerId)
   }
 
-  const handlePrev = () => {
-    setCurrentIndex((prev) => (prev - 1 + mockChazas.length) % mockChazas.length)
+  const onPointerMove = (e: React.PointerEvent) => {
+    if (!isDragging) return
+    currentX.current = e.clientX
+    setOffset(currentX.current - startX.current)
   }
 
-  const handleNext = () => {
-    setCurrentIndex((prev) => (prev + 1) % mockChazas.length)
+  const onPointerUp = () => {
+    if (!isDragging) return
+    setIsDragging(false)
+    const delta = currentX.current - startX.current
+    if (delta > SWIPE_THRESHOLD) {
+      advance("like")
+    } else if (delta < -SWIPE_THRESHOLD) {
+      advance("skip")
+    } else {
+      setOffset(0)
+    }
   }
+
+  const rotation = offset / 20
+  const likeOpacity = Math.min(Math.max(offset / SWIPE_THRESHOLD, 0), 1)
+  const skipOpacity = Math.min(Math.max(-offset / SWIPE_THRESHOLD, 0), 1)
 
   return (
-    <section id="explorar" className="py-16 px-4 bg-white">
+    <section id="explorar" className="py-20 px-4 bg-white">
       <div className="mx-auto max-w-6xl">
-        <div className="text-center mb-12">
-          <h2 className="font-stencil text-3xl sm:text-4xl text-brand-red mb-4">
+        {/* Header */}
+        <div className="text-center mb-14">
+          <h2 className="font-stencil text-4xl sm:text-5xl text-brand-red mb-3 tracking-wide">
             EXPLORA LAS CHAZAS
           </h2>
-          <p className="text-gray-600 max-w-xl mx-auto">
-            Desliza para descubrir las mejores chazas del campus. Dale like a tus favoritas.
+          <p className="text-gray-500 max-w-md mx-auto text-base leading-relaxed">
+            Desliza a la derecha si te interesa, a la izquierda si no. Descubre lo que tu campus tiene para ofrecerte.
           </p>
         </div>
 
-        <div className="flex flex-col lg:flex-row items-center justify-center gap-8">
-          {/* Card Stack */}
-          <div className="relative w-full max-w-sm h-[520px]">
-            {/* Background cards for depth effect */}
-            <div className="absolute inset-0 bg-gray-100 rounded-3xl transform translate-x-4 translate-y-4 opacity-50" />
-            <div className="absolute inset-0 bg-gray-200 rounded-3xl transform translate-x-2 translate-y-2 opacity-70" />
-            
-            {/* Main Card */}
-            <div 
-              className={`relative w-full h-full bg-white rounded-3xl shadow-2xl overflow-hidden transition-transform duration-300 ${
-                direction === "left" ? "-translate-x-full rotate-[-20deg] opacity-0" : ""
-              } ${
-                direction === "right" ? "translate-x-full rotate-[20deg] opacity-0" : ""
-              }`}
+        <div className="flex flex-col lg:flex-row items-center justify-center gap-12">
+
+          {/* Card stack */}
+          <div className="relative w-80 sm:w-96 h-[580px] select-none">
+            {/* Background card (next) */}
+            <div
+              className="absolute inset-0 bg-white rounded-3xl shadow-md border border-gray-100 overflow-hidden scale-95 opacity-70"
+              aria-hidden="true"
             >
-              {/* Image */}
-              <div className="relative h-64 bg-gray-200">
-                <img 
-                  src={currentChaza.image} 
+              <img
+                src={nextChaza.image}
+                alt=""
+                className="w-full h-64 object-cover"
+                draggable={false}
+              />
+            </div>
+
+            {/* Main draggable card */}
+            <div
+              ref={cardRef}
+              className="absolute inset-0 bg-white rounded-3xl shadow-2xl overflow-hidden cursor-grab active:cursor-grabbing border border-gray-100"
+              style={{
+                transform: `translateX(${offset}px) rotate(${rotation}deg)`,
+                transition: isDragging ? "none" : "transform 0.35s cubic-bezier(.25,.8,.25,1), opacity 0.35s",
+                opacity: Math.abs(offset) > 400 ? 0 : 1,
+                touchAction: "none",
+              }}
+              onPointerDown={onPointerDown}
+              onPointerMove={onPointerMove}
+              onPointerUp={onPointerUp}
+              onPointerCancel={onPointerUp}
+            >
+              {/* Image area */}
+              <div className="relative h-64 overflow-hidden bg-gray-100">
+                <img
+                  src={currentChaza.image}
                   alt={currentChaza.name}
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover pointer-events-none"
+                  draggable={false}
                 />
-                <div className="absolute top-4 left-4">
-                  <span className="bg-brand-red text-white px-3 py-1 rounded-full text-sm font-medium">
-                    {currentChaza.category}
-                  </span>
+                {/* Gradient overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+
+                {/* Category badge */}
+                <span className="absolute top-4 left-4 bg-brand-red text-white text-xs font-semibold px-3 py-1.5 rounded-full">
+                  {currentChaza.category}
+                </span>
+
+                {/* Rating */}
+                <div className="absolute top-4 right-4 flex items-center gap-1 bg-white/95 px-2.5 py-1.5 rounded-full shadow">
+                  <Star className="w-3.5 h-3.5 fill-yellow-400 text-yellow-400" />
+                  <span className="text-xs font-semibold text-gray-800">{currentChaza.rating}</span>
+                  <span className="text-xs text-gray-400">({currentChaza.reviews})</span>
                 </div>
-                <div className="absolute top-4 right-4 flex items-center gap-1 bg-white/90 px-2 py-1 rounded-full">
-                  <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                  <span className="text-sm font-medium">{currentChaza.rating}</span>
+
+                {/* Like indicator */}
+                <div
+                  className="absolute inset-0 flex items-center justify-center bg-green-500/20 rounded-3xl transition-opacity"
+                  style={{ opacity: likeOpacity }}
+                  aria-hidden="true"
+                >
+                  <div className="border-4 border-green-500 rounded-2xl px-6 py-2 rotate-[-20deg]">
+                    <span className="text-green-500 font-stencil text-3xl tracking-widest">QUIERO</span>
+                  </div>
+                </div>
+
+                {/* Skip indicator */}
+                <div
+                  className="absolute inset-0 flex items-center justify-center bg-red-500/20 rounded-3xl transition-opacity"
+                  style={{ opacity: skipOpacity }}
+                  aria-hidden="true"
+                >
+                  <div className="border-4 border-brand-red rounded-2xl px-6 py-2 rotate-[20deg]">
+                    <span className="text-brand-red font-stencil text-3xl tracking-widest">PASO</span>
+                  </div>
                 </div>
               </div>
 
               {/* Content */}
               <div className="p-6">
-                <h3 className="font-stencil text-2xl text-brand-red mb-2">
+                <h3 className="font-stencil text-2xl text-brand-red mb-2 tracking-wide">
                   {currentChaza.name}
                 </h3>
-                
-                <div className="flex items-center gap-2 text-gray-500 text-sm mb-3">
-                  <MapPin className="w-4 h-4" />
-                  <span>{currentChaza.location}</span>
+
+                <div className="flex items-center gap-4 mb-3">
+                  <div className="flex items-center gap-1.5 text-gray-400 text-xs">
+                    <MapPin className="w-3.5 h-3.5" />
+                    <span>{currentChaza.location}</span>
+                  </div>
+                  <div className="flex items-center gap-1.5 text-gray-400 text-xs">
+                    <Clock className="w-3.5 h-3.5" />
+                    <span>{currentChaza.schedule}</span>
+                  </div>
                 </div>
-                
+
                 <p className="text-gray-600 text-sm leading-relaxed mb-4">
                   {currentChaza.description}
                 </p>
-                
-                <div className="flex flex-wrap gap-2">
-                  {currentChaza.tags.map((tag) => (
-                    <span 
-                      key={tag}
-                      className="bg-gray-100 text-gray-600 px-3 py-1 rounded-full text-xs"
-                    >
-                      {tag}
-                    </span>
-                  ))}
+
+                <div className="flex items-center justify-between">
+                  <div className="flex flex-wrap gap-1.5">
+                    {currentChaza.tags.slice(0, 3).map((tag) => (
+                      <span
+                        key={tag}
+                        className="bg-gray-100 text-gray-500 px-2.5 py-1 rounded-full text-xs"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                  <span className="text-brand-red font-semibold text-sm">
+                    {currentChaza.price}
+                  </span>
                 </div>
               </div>
             </div>
-
-            {/* Navigation arrows */}
-            <button 
-              onClick={handlePrev}
-              className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-12 w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center text-gray-400 hover:text-brand-red transition-colors hidden sm:flex"
-              aria-label="Anterior"
-            >
-              <ChevronLeft className="w-6 h-6" />
-            </button>
-            <button 
-              onClick={handleNext}
-              className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-12 w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center text-gray-400 hover:text-brand-red transition-colors hidden sm:flex"
-              aria-label="Siguiente"
-            >
-              <ChevronRight className="w-6 h-6" />
-            </button>
           </div>
 
-          {/* Action Buttons */}
-          <div className="flex lg:flex-col gap-6">
+          {/* Action buttons + info column */}
+          <div className="flex flex-col items-center gap-6">
+            {/* Skip button */}
             <button
-              onClick={() => handleSwipe("left")}
+              onClick={() => advance("skip")}
               className="w-16 h-16 rounded-full bg-white border-2 border-gray-200 flex items-center justify-center shadow-lg hover:border-gray-400 hover:scale-110 transition-all"
-              aria-label="No me interesa"
+              aria-label="Pasar"
             >
-              <X className="w-8 h-8 text-gray-400" />
+              <X className="w-7 h-7 text-gray-400" />
             </button>
-            <button
-              onClick={() => handleSwipe("right")}
-              className="w-16 h-16 rounded-full bg-brand-red flex items-center justify-center shadow-lg hover:bg-brand-red-dark hover:scale-110 transition-all"
-              aria-label="Me gusta"
-            >
-              <Heart className="w-8 h-8 text-white" />
-            </button>
-          </div>
-        </div>
 
-        {/* Counter */}
-        <div className="text-center mt-8">
-          <span className="text-gray-400 text-sm">
-            {currentIndex + 1} / {mockChazas.length} chazas
-          </span>
-          {liked.length > 0 && (
-            <span className="text-brand-red text-sm ml-4">
-              {liked.length} favoritas
-            </span>
-          )}
+            {/* Card counter */}
+            <div className="flex gap-2">
+              {mockChazas.map((_, i) => (
+                <div
+                  key={i}
+                  className={`h-1.5 rounded-full transition-all duration-300 ${
+                    i === currentIndex ? "w-6 bg-brand-red" : "w-1.5 bg-gray-200"
+                  }`}
+                />
+              ))}
+            </div>
+
+            {/* Like button */}
+            <button
+              onClick={() => advance("like")}
+              className="w-16 h-16 rounded-full bg-brand-red flex items-center justify-center shadow-lg hover:bg-brand-red-dark hover:scale-110 transition-all"
+              aria-label="Me interesa"
+            >
+              <Heart className="w-7 h-7 text-white" />
+            </button>
+
+            {/* Liked count */}
+            {likedIds.length > 0 && (
+              <p className="text-gray-400 text-xs text-center">
+                <span className="text-brand-red font-semibold">{likedIds.length}</span> guardadas
+              </p>
+            )}
+
+            {/* Keyboard hint */}
+            <p className="text-gray-300 text-xs text-center mt-2 max-w-[120px] leading-relaxed">
+              Arrastra la tarjeta o usa los botones
+            </p>
+          </div>
         </div>
       </div>
     </section>

@@ -82,8 +82,8 @@
 }
 
 @theme inline {
-  --font-sans: var(--font-sans), 'Inter', system-ui, sans-serif;
-  --font-stencil: var(--font-stencil), 'Black Ops One', Impact, sans-serif;
+  --font-sans: var(--font-sans), 'DM Sans', system-ui, sans-serif;
+  --font-stencil: var(--font-stencil), 'Barlow Condensed', Impact, sans-serif;
   --font-mono: 'Geist Mono', 'Geist Mono Fallback';
   
   /* Brand color classes */
@@ -142,9 +142,11 @@
   }
 }
 
-/* Stencil font utility */
+/* Display/stencil font utility */
 .font-stencil {
-  font-family: var(--font-stencil), 'Black Ops One', Impact, sans-serif;
+  font-family: var(--font-stencil), 'Barlow Condensed', Impact, sans-serif;
+  letter-spacing: 0.04em;
+  font-weight: 800;
 }
 
 /* Animations */

@@ -1,9 +1,8 @@
 import {
-  WavyBackground,
   Navbar,
   HeroSection,
   ChazaSwiper,
-  EssenceSection,
+  ReviewsSection,
   HowItWorksSection,
   Footer,
 } from "@/components/landing"
@@ -11,18 +10,22 @@ import {
 export default function Home() {
   return (
     <div className="relative min-h-screen bg-white">
-      {/* Wavy checkerboard background - fixed behind everything */}
-      <WavyBackground />
-
       {/* Sticky navigation */}
       <Navbar />
 
-      {/* Main content - positioned above background */}
-      <main className="relative z-10 flex flex-col">
+      {/* Main content */}
+      <main className="flex flex-col">
+        {/* Hero: rojo sólido, texto claro, CTAs */}
         <HeroSection />
+
+        {/* Swiper tipo Tinder con chazas de ejemplo */}
         <ChazaSwiper />
-        <EssenceSection />
+
+        {/* Cómo funciona la plataforma */}
         <HowItWorksSection />
+
+        {/* Comentarios y reseñas de la comunidad */}
+        <ReviewsSection />
       </main>
 
       {/* Footer */}

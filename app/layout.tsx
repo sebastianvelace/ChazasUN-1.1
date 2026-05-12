@@ -1,15 +1,16 @@
 import type { Metadata } from 'next'
-import { Inter, Black_Ops_One } from 'next/font/google'
+import { DM_Sans, Barlow_Condensed } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
 
-const inter = Inter({ 
+const dmSans = DM_Sans({ 
   subsets: ["latin"],
-  variable: '--font-sans'
+  variable: '--font-sans',
+  weight: ['400', '500', '600', '700']
 })
 
-const stencil = Black_Ops_One({ 
-  weight: '400',
+const barlowCondensed = Barlow_Condensed({ 
+  weight: ['600', '700', '800'],
   subsets: ["latin"],
   variable: '--font-stencil'
 })
@@ -43,7 +44,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="es" className={`${inter.variable} ${stencil.variable}`}>
+    <html lang="es" className={`${dmSans.variable} ${barlowCondensed.variable}`}>
       <body className="font-sans antialiased bg-white">
         {children}
         {process.env.NODE_ENV === 'production' && <Analytics />}
