@@ -1,6 +1,8 @@
 import type { Metadata } from 'next'
 import { DM_Sans, Barlow_Condensed } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
+import { Toaster } from 'sonner'
+import { AnalyticsProvider } from '@/components/analytics/analytics-provider'
 import './globals.css'
 
 const dmSans = DM_Sans({ 
@@ -46,7 +48,8 @@ export default function RootLayout({
   return (
     <html lang="es" className={`${dmSans.variable} ${barlowCondensed.variable}`}>
       <body className="font-sans antialiased bg-white">
-        {children}
+        <AnalyticsProvider>{children}</AnalyticsProvider>
+        <Toaster richColors position="top-center" />
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>
     </html>

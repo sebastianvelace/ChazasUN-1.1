@@ -1,5 +1,6 @@
 "use client"
 
+import Link from "next/link"
 import { SquiggleIcon } from "./squiggle-icon"
 import { useScrollReveal } from "@/hooks/use-scroll-reveal"
 import { Instagram, Twitter, Facebook } from "lucide-react"
@@ -91,13 +92,13 @@ export function Footer() {
               2024 ChazasUN. Proyecto estudiantil independiente.
             </p>
             <div className="flex items-center gap-4">
-              <a href="#" className="hover:text-white transition-colors hover:scale-105">
+              <Link href="/terminos" className="hover:text-white transition-colors hover:scale-105">
                 Terminos
-              </a>
-              <a href="#" className="hover:text-white transition-colors hover:scale-105">
+              </Link>
+              <Link href="/privacidad" className="hover:text-white transition-colors hover:scale-105">
                 Privacidad
-              </a>
-              <a href="#" className="hover:text-white transition-colors hover:scale-105">
+              </Link>
+              <a href="#contacto" className="hover:text-white transition-colors hover:scale-105">
                 Contacto
               </a>
             </div>

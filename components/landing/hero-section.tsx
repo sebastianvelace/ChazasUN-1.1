@@ -1,20 +1,9 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { Store, Users, Zap, ArrowDown } from "lucide-react"
 
-const stats = [
-  { value: "+50", label: "Chazas activas" },
-  { value: "+2k", label: "Estudiantes" },
-  { value: "4.8", label: "Valoracion promedio" },
-]
-
-const features = [
-  {
-    icon: Store,
-    title: "+50 Chazas",
-    description: "Comida, servicios, libros y mas en un solo lugar.",
-  },
+const baseFeatures = [
   {
     icon: Users,
     title: "Comunidad UN",
@@ -25,10 +14,34 @@ const features = [
     title: "Rapido y facil",
     description: "Desliza, descubre y contacta en segundos.",
   },
-]
+] as const
 
-export function HeroSection() {
+export function HeroSection({
+  chazasPublished = 50,
+  reviewsPublished = 120,
+}: {
+  chazasPublished?: number
+  reviewsPublished?: number
+}) {
   const [mounted, setMounted] = useState(false)
+
+  const stats = useMemo(
+    () => [
+      { value: String(chazasPublished), label: "Chazas publicadas" },
+      { value: String(reviewsPublished), label: "Resenas" },
+      { value: "4.8", label: "Objetivo de calidad" },
+    ],
+    [chazasPublished, reviewsPublished]
+  )
+
+  const features = useMemo(() => {
+    const first = {
+      icon: Store,
+      title: `${chazasPublished} en el mapa`,
+      description: "Comida, servicios, libros y mas en un solo lugar.",
+    }
+    return [first, ...baseFeatures]
+  }, [chazasPublished])
 
   useEffect(() => {
     setMounted(true)
@@ -100,13 +113,13 @@ export function HeroSection() {
               }`}
             >
               <a
-                href="#explorar"
+                href="/explorar"
                 className="font-stencil text-lg bg-white text-brand-red px-8 py-4 rounded-2xl hover:bg-gray-100 transition-all transform hover:scale-105 hover:shadow-2xl shadow-xl text-center tracking-wide hover-lift"
               >
                 EXPLORAR CHAZAS
               </a>
               <a
-                href="#registro"
+                href="/publicar-chaza"
                 className="font-stencil text-lg border-2 border-white/50 text-white px-8 py-4 rounded-2xl hover:bg-white/10 hover:border-white transition-all text-center tracking-wide"
               >
                 REGISTRAR MI CHAZA

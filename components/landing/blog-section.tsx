@@ -1,50 +1,9 @@
 "use client"
 
+import Link from "next/link"
 import { useScrollReveal } from "@/hooks/use-scroll-reveal"
-import { Calendar, User, ArrowRight, Clock } from "lucide-react"
-
-const blogPosts = [
-  {
-    id: 1,
-    title: "5 tips para iniciar tu chaza en la Universidad",
-    excerpt: "Consejos practicos para estudiantes emprendedores que quieren comenzar su negocio dentro del campus universitario.",
-    image: "https://images.unsplash.com/photo-1556761175-b413da4baf72?w=600&h=400&fit=crop",
-    author: "Maria Lopez",
-    date: "15 Mar 2024",
-    readTime: "5 min",
-    category: "Emprendimiento",
-  },
-  {
-    id: 2,
-    title: "Las mejores chazas de comida segun los estudiantes",
-    excerpt: "Ranking de las chazas mas populares basado en las reseñas de la comunidad. Descubre donde comen los estudiantes.",
-    image: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=600&h=400&fit=crop",
-    author: "Carlos Ruiz",
-    date: "10 Mar 2024",
-    readTime: "4 min",
-    category: "Recomendaciones",
-  },
-  {
-    id: 3,
-    title: "Historia de las chazas en la Universidad Nacional",
-    excerpt: "Un recorrido por la tradicion de los pequeños negocios estudiantiles que han sido parte de la vida universitaria por decadas.",
-    image: "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=600&h=400&fit=crop",
-    author: "Ana Martinez",
-    date: "5 Mar 2024",
-    readTime: "7 min",
-    category: "Historia",
-  },
-  {
-    id: 4,
-    title: "Como ahorrar dinero comprando en chazas",
-    excerpt: "Guia practica para estudiantes sobre como maximizar tu presupuesto aprovechando los precios de las chazas del campus.",
-    image: "https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=600&h=400&fit=crop",
-    author: "Juan Perez",
-    date: "1 Mar 2024",
-    readTime: "3 min",
-    category: "Tips",
-  },
-]
+import { User, ArrowRight, Clock } from "lucide-react"
+import { blogPosts } from "@/lib/constants/blog-posts"
 
 export function BlogSection() {
   const { ref, isVisible } = useScrollReveal<HTMLElement>({ threshold: 0.1 })
@@ -69,23 +28,25 @@ export function BlogSection() {
               Articulos, tips y historias de la comunidad universitaria.
             </p>
           </div>
-          <a 
-            href="#" 
+          <Link
+            href="/blog"
             className="inline-flex items-center gap-2 font-stencil text-brand-red hover:gap-4 transition-all duration-300 group"
           >
             <span>VER TODOS</span>
             <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-          </a>
+          </Link>
         </div>
 
         {/* Blog grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
           {blogPosts.map((post, index) => (
-            <article
+            <Link
               key={post.id}
-              className={`group bg-white rounded-2xl border border-gray-100 overflow-hidden hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 scroll-reveal-up ${isVisible ? "visible" : ""}`}
+              href={`/blog/${post.slug}`}
+              className={`group block bg-white rounded-2xl border border-gray-100 overflow-hidden hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 scroll-reveal-up focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-red focus-visible:ring-offset-2 ${isVisible ? "visible" : ""}`}
               style={{ transitionDelay: `${index * 100}ms` }}
             >
+              <article className="h-full flex flex-col">
               {/* Image */}
               <div className="relative h-48 overflow-hidden">
                 <img
@@ -125,14 +86,15 @@ export function BlogSection() {
                 </div>
               </div>
 
-              {/* Read more hover overlay */}
-              <div className="px-5 pb-5">
-                <button className="w-full py-2.5 border border-gray-200 rounded-xl text-sm font-medium text-gray-600 hover:border-brand-red hover:text-brand-red hover:bg-brand-red/5 transition-all duration-300 flex items-center justify-center gap-2 group/btn">
+              {/* Read more */}
+              <div className="px-5 pb-5 mt-auto">
+                <div className="w-full py-2.5 border border-gray-200 rounded-xl text-sm font-medium text-gray-600 group-hover:border-brand-red group-hover:text-brand-red group-hover:bg-brand-red/5 transition-all duration-300 flex items-center justify-center gap-2">
                   <span>Leer mas</span>
-                  <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
-                </button>
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                </div>
               </div>
-            </article>
+              </article>
+            </Link>
           ))}
         </div>
 
