@@ -4,130 +4,123 @@ import { useScrollReveal } from "@/hooks/use-scroll-reveal"
 
 const steps = [
   {
-    number: "1",
+    number: "01",
     title: "REGISTRATE",
-    description: "Crea tu cuenta en pocos segundos y empieza a explorar todas las chazas disponibles.",
+    description: "Crea tu cuenta en segundos. Sin carnet, sin datos sensibles — solo un correo.",
     icon: (
-      <svg viewBox="0 0 80 80" className="w-20 h-20" aria-hidden="true">
-        {/* User with device icon */}
-        <circle cx="40" cy="25" r="12" fill="none" stroke="currentColor" strokeWidth="3" />
-        <path d="M20,65 Q20,45 40,45 Q60,45 60,65" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
-        <rect x="50" y="50" width="18" height="22" rx="2" fill="none" stroke="currentColor" strokeWidth="2" />
-        <line x1="59" y1="68" x2="59" y2="68" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
+      <svg viewBox="0 0 64 64" className="w-14 h-14" aria-hidden="true">
+        <circle cx="32" cy="20" r="10" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+        <path d="M14,54 Q14,38 32,38 Q50,38 50,54" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+        <circle cx="48" cy="48" r="8" fill="none" stroke="currentColor" strokeWidth="2" />
+        <path d="M44,48 L47,51 L52,45" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none" />
       </svg>
-    )
+    ),
   },
   {
-    number: "2",
-    title: "PUBLICA",
-    description: "Sube fotos, describe tu producto y establece un precio justo para tus companeros.",
+    number: "02",
+    title: "EXPLORA",
+    description: "Desliza tarjetas de chazas como si fueran flashcards. Da like a las que te interesan.",
     icon: (
-      <svg viewBox="0 0 80 80" className="w-20 h-20" aria-hidden="true">
-        {/* Tablet/posting icon */}
-        <rect x="15" y="10" width="50" height="60" rx="4" fill="none" stroke="currentColor" strokeWidth="3" />
-        <line x1="30" y1="25" x2="50" y2="25" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-        <line x1="25" y1="35" x2="55" y2="35" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-        <line x1="25" y1="45" x2="45" y2="45" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-        <circle cx="40" cy="60" r="4" fill="none" stroke="currentColor" strokeWidth="2" />
+      <svg viewBox="0 0 64 64" className="w-14 h-14" aria-hidden="true">
+        <rect x="14" y="10" width="36" height="44" rx="6" fill="none" stroke="currentColor" strokeWidth="2.5" />
+        <path d="M22,22 L42,22" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+        <path d="M22,30 L38,30" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+        <path d="M22,38 L34,38" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+        <path d="M38,46 L46,54 M46,46 L38,54" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+        <path d="M40,34 L52,34 M46,28 L52,34 L46,40" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none" />
       </svg>
-    )
+    ),
   },
   {
-    number: "3",
+    number: "03",
     title: "CONECTA",
-    description: "Coordina con el comprador o vendedor y realiza el intercambio en el campus.",
+    description: "Contacta al vendedor y coordina el intercambio en el campus. Rápido y sin complicaciones.",
     icon: (
-      <svg viewBox="0 0 80 80" className="w-20 h-20" aria-hidden="true">
-        {/* Two people connecting icon */}
-        <circle cx="25" cy="25" r="10" fill="none" stroke="currentColor" strokeWidth="3" />
-        <path d="M10,55 Q10,40 25,40 Q35,40 38,48" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
-        <circle cx="55" cy="25" r="10" fill="none" stroke="currentColor" strokeWidth="3" />
-        <path d="M42,48 Q45,40 55,40 Q70,40 70,55" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
-        {/* Connection line */}
-        <path d="M35,30 Q40,35 45,30" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-        <path d="M36,50 L44,50" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
+      <svg viewBox="0 0 64 64" className="w-14 h-14" aria-hidden="true">
+        <circle cx="20" cy="22" r="8" fill="none" stroke="currentColor" strokeWidth="2.5" />
+        <path d="M8,48 Q8,36 20,36 Q28,36 31,42" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+        <circle cx="44" cy="22" r="8" fill="none" stroke="currentColor" strokeWidth="2.5" />
+        <path d="M33,42 Q36,36 44,36 Q56,36 56,48" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+        <path d="M28,26 Q32,30 36,26" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
       </svg>
-    )
-  }
+    ),
+  },
 ]
 
 export function HowItWorksSection() {
-  const { ref: sectionRef, isVisible } = useScrollReveal<HTMLElement>({ threshold: 0.2 })
+  const { ref: sectionRef, isVisible } = useScrollReveal<HTMLElement>({ threshold: 0.15 })
 
   return (
-    <section 
+    <section
       ref={sectionRef}
-      id="como-funciona" 
-      className="py-12 sm:py-20 px-4 overflow-hidden"
+      id="como-funciona"
+      className="relative py-20 sm:py-28 px-4 bg-brand-red overflow-hidden"
     >
-      <div className="mx-auto max-w-6xl">
-        <div 
-          className={`bg-gray-50 rounded-3xl shadow-xl p-8 sm:p-12 scroll-reveal-scale ${isVisible ? "visible" : ""}`}
-        >
-          {/* Section Title */}
-          <div 
-            className={`text-center mb-12 sm:mb-16 scroll-reveal-up stagger-1 ${isVisible ? "visible" : ""}`}
-          >
-            <h2 className="font-stencil text-3xl sm:text-4xl md:text-5xl text-brand-red mb-4 text-balance">
-              COMO FUNCIONA
-            </h2>
-            <p className="text-gray-600 text-lg max-w-xl mx-auto">
-              Tres simples pasos para empezar a comprar y vender en tu universidad
-            </p>
-          </div>
+      {/* Grid pattern */}
+      <div
+        className="absolute inset-0 opacity-10"
+        style={{
+          backgroundImage:
+            "repeating-linear-gradient(0deg,transparent,transparent 39px,rgba(255,255,255,0.4) 39px,rgba(255,255,255,0.4) 40px),repeating-linear-gradient(90deg,transparent,transparent 39px,rgba(255,255,255,0.4) 39px,rgba(255,255,255,0.4) 40px)",
+        }}
+        aria-hidden="true"
+      />
+      {/* Floating blobs */}
+      <div className="absolute top-16 right-16 w-56 h-56 bg-white/5 rounded-full blur-3xl animate-float" aria-hidden="true" />
+      <div className="absolute bottom-16 left-12 w-72 h-72 bg-white/5 rounded-full blur-3xl animate-float" style={{ animationDelay: "2s" }} aria-hidden="true" />
 
-          {/* Steps */}
-          <div className="flex flex-col md:flex-row justify-between items-start gap-8 md:gap-4 relative">
-            {/* Connecting line for desktop */}
-            <div 
-              className={`hidden md:block absolute top-24 left-1/4 right-1/4 h-0.5 bg-brand-red/20 scroll-reveal ${isVisible ? "visible" : ""}`}
-              style={{ transitionDelay: "0.5s" }}
-              aria-hidden="true"
+      <div className="relative z-10 mx-auto max-w-6xl">
+        {/* Header */}
+        <div className={`text-center mb-16 sm:mb-20 scroll-reveal-up ${isVisible ? "visible" : ""}`}>
+          <span className="inline-block bg-white/20 text-white text-xs font-semibold uppercase tracking-widest px-4 py-1.5 rounded-full mb-6">
+            Simple y directo
+          </span>
+          <h2 className="font-stencil text-5xl sm:text-6xl md:text-7xl text-white leading-none mb-4">
+            COMO FUNCIONA
+          </h2>
+          <p className="text-white/60 text-lg max-w-md mx-auto">
+            Tres pasos para comprar y vender en tu universidad
+          </p>
+        </div>
+
+        {/* Steps grid — gap-px trick: the white/15 bg shows as thin dividers */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-px bg-white/15 rounded-3xl overflow-hidden">
+          {steps.map((step, i) => (
+            <div
+              key={step.number}
+              className={`relative p-10 sm:p-12 bg-brand-red hover:bg-white/5 transition-colors duration-500 group scroll-reveal-up ${isVisible ? "visible" : ""}`}
+              style={{ transitionDelay: `${0.2 + i * 0.15}s` }}
             >
-              <div 
-                className="h-full bg-brand-red transition-all duration-1000 ease-out"
-                style={{ width: isVisible ? "100%" : "0%" }}
-              />
-            </div>
+              {/* Decorative number */}
+              <p className="font-stencil text-[9rem] leading-none text-white/8 absolute -top-2 -left-1 select-none pointer-events-none">
+                {step.number}
+              </p>
 
-            {steps.map((step, index) => (
-              <div
-                key={step.number}
-                className={`
-                  flex-1 flex flex-col items-center text-center relative
-                  scroll-reveal-up ${isVisible ? "visible" : ""}
-                `}
-                style={{ transitionDelay: `${0.2 + index * 0.2}s` }}
-              >
-                {/* Step number */}
-                <div className="relative mb-6 group">
-                  <span className="font-stencil text-7xl sm:text-8xl text-brand-red/20 group-hover:text-brand-red/30 transition-colors duration-500">
-                    {step.number}
-                  </span>
-                  <div className="absolute inset-0 flex items-center justify-center text-brand-red group-hover:scale-110 transition-transform duration-500">
-                    {step.icon}
-                  </div>
-                </div>
-
-                {/* Step content */}
-                <h3 className="font-stencil text-xl sm:text-2xl text-brand-red mb-3">
-                  {step.title}
-                </h3>
-                <p className="text-gray-600 text-sm sm:text-base leading-relaxed max-w-xs">
-                  {step.description}
-                </p>
-
-                {/* Mobile arrow (not on last item) */}
-                {index < steps.length - 1 && (
-                  <div className="md:hidden my-4 text-brand-red/40">
-                    <svg width="24" height="24" viewBox="0 0 24 24" className="rotate-90">
-                      <path d="M5 12h14M12 5l7 7-7 7" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                  </div>
-                )}
+              {/* Icon */}
+              <div className="relative z-10 text-white/50 group-hover:text-white/80 transition-colors duration-500 mb-7">
+                {step.icon}
               </div>
-            ))}
-          </div>
+
+              {/* Title */}
+              <h3 className="relative z-10 font-stencil text-2xl sm:text-3xl text-white mb-3 tracking-wide">
+                {step.title}
+              </h3>
+
+              {/* Description */}
+              <p className="relative z-10 text-white/55 text-base leading-relaxed group-hover:text-white/75 transition-colors duration-500">
+                {step.description}
+              </p>
+
+              {/* Mobile separator arrow */}
+              {i < steps.length - 1 && (
+                <div className="md:hidden mt-8 text-white/20" aria-hidden="true">
+                  <svg width="24" height="24" viewBox="0 0 24 24">
+                    <path d="M12 5v14M5 12l7 7 7-7" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </div>
+              )}
+            </div>
+          ))}
         </div>
       </div>
     </section>

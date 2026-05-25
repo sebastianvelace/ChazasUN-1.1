@@ -8,10 +8,11 @@ import {
   Footer,
 } from "@/components/landing"
 import { ChazaSwiper } from "@/components/chazas"
+import { getChazasAction } from "@/lib/actions/chazas"
 import { getPublicStatsAction } from "@/lib/actions/stats"
 
 export default async function HomePage() {
-  const stats = await getPublicStatsAction()
+  const [stats, chazas] = await Promise.all([getPublicStatsAction(), getChazasAction()])
   return (
     <div className="relative min-h-screen bg-white">
       <Navbar />
@@ -20,7 +21,7 @@ export default async function HomePage() {
           chazasPublished={stats.chazasPublished}
           reviewsPublished={stats.reviewsPublished}
         />
-        <ChazaSwiper sectionId="explorar" showViewAllLink />
+        <ChazaSwiper sectionId="explorar" showViewAllLink items={chazas} />
         <CategoriesSection />
         <HowItWorksSection />
         <ReviewsSection />

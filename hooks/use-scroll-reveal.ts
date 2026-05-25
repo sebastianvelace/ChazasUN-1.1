@@ -35,6 +35,13 @@ export function useScrollReveal<T extends HTMLElement = HTMLDivElement>(
 
     observer.observe(element)
 
+    // Si la seccion ya esta en pantalla al montar, revelar de inmediato.
+    const rect = element.getBoundingClientRect()
+    const viewportHeight = window.innerHeight || document.documentElement.clientHeight
+    if (rect.top < viewportHeight && rect.bottom > 0) {
+      setIsVisible(true)
+    }
+
     return () => {
       observer.unobserve(element)
     }

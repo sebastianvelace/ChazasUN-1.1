@@ -8,11 +8,13 @@ import { SquiggleIcon } from "@/components/landing/squiggle-icon"
 import { siteConfig } from "@/config/site"
 import { cn } from "@/lib/utils"
 import { useSession } from "@/hooks/use-session"
+import { useScrolled } from "@/hooks/use-scrolled"
 
 export function PlatformHeader() {
   const pathname = usePathname()
   const [open, setOpen] = useState(false)
   const { user, isLoggedIn, logout } = useSession()
+  const scrolled = useScrolled()
 
   const navItems = useMemo(() => {
     const base: { href: string; label: string }[] = [
@@ -29,11 +31,22 @@ export function PlatformHeader() {
   }, [isLoggedIn])
 
   return (
-    <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm shadow-md">
+    <header
+      className={cn(
+        "sticky top-0 z-50 transition-[background-color,box-shadow,border-color] duration-300",
+        scrolled
+          ? "bg-white/90 backdrop-blur-md shadow-sm border-b border-brand-red/10"
+          : "bg-white/95 backdrop-blur-sm shadow-md"
+      )}
+    >
       <nav className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           <Link href="/" className="flex items-center gap-3 group">
-            <SquiggleIcon width={40} height={20} className="text-brand-red transition-transform group-hover:scale-110" />
+            <SquiggleIcon
+              width={40}
+              height={20}
+              className="text-brand-red transition-transform duration-300 group-hover:scale-105"
+            />
             <span className="font-stencil text-xl sm:text-2xl text-brand-red tracking-wider">CHAZAS UN</span>
           </Link>
 
@@ -43,7 +56,7 @@ export function PlatformHeader() {
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  "text-sm font-medium transition-colors",
+                  "text-sm font-medium transition-colors duration-200 link-underline",
                   pathname === item.href ? "text-brand-red-dark" : "text-brand-red hover:text-brand-red-dark"
                 )}
               >
@@ -52,7 +65,7 @@ export function PlatformHeader() {
             ))}
             <Link
               href={siteConfig.urls.publicarChaza}
-              className="font-stencil text-sm bg-brand-red text-white px-5 py-2 rounded-full hover:bg-brand-red-dark transition-all hover:scale-105"
+              className="font-stencil text-sm bg-brand-red text-white px-5 py-2 rounded-full hover:bg-brand-red-dark transition-colors duration-300 active:scale-[0.98]"
             >
               PUBLICAR CHAZA
             </Link>
@@ -64,13 +77,16 @@ export function PlatformHeader() {
                 <button
                   type="button"
                   onClick={logout}
-                  className="text-sm text-gray-500 hover:text-brand-red"
+                  className="text-sm text-gray-500 hover:text-brand-red transition-colors"
                 >
                   Salir
                 </button>
               </div>
             ) : (
-              <Link href={siteConfig.urls.login} className="text-sm text-gray-500 hover:text-brand-red">
+              <Link
+                href={siteConfig.urls.login}
+                className="text-sm text-gray-500 hover:text-brand-red transition-colors"
+              >
                 Entrar
               </Link>
             )}
@@ -81,13 +97,14 @@ export function PlatformHeader() {
             className="md:hidden p-2 text-brand-red"
             onClick={() => setOpen(!open)}
             aria-label={open ? "Cerrar menu" : "Abrir menu"}
+            aria-expanded={open}
           >
             {open ? <X size={24} /> : <Menu size={24} />}
           </button>
         </div>
 
         {open && (
-          <div className="md:hidden py-4 border-t border-brand-red/20 flex flex-col gap-3">
+          <div className="md:hidden py-4 border-t border-brand-red/20 flex flex-col gap-3 animate-menu-in">
             {navItems.map((item) => (
               <Link
                 key={item.href}
@@ -100,7 +117,7 @@ export function PlatformHeader() {
             ))}
             <Link
               href={siteConfig.urls.publicarChaza}
-              className="font-stencil text-center bg-brand-red text-white px-5 py-2 rounded-full"
+              className="font-stencil text-center bg-brand-red text-white px-5 py-2 rounded-full transition-colors hover:bg-brand-red-dark"
               onClick={() => setOpen(false)}
             >
               PUBLICAR CHAZA

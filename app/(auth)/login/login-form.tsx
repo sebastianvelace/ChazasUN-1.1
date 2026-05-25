@@ -104,7 +104,7 @@ export function LoginForm() {
           {...form.register("email")}
         />
         {form.formState.errors.email && (
-          <p className="text-red-600 text-xs mt-1">{form.formState.errors.email.message}</p>
+          <p className="text-red-600 text-xs mt-1 form-error-in">{form.formState.errors.email.message}</p>
         )}
       </div>
       <div>
@@ -119,7 +119,7 @@ export function LoginForm() {
           {...form.register("password")}
         />
         {form.formState.errors.password && (
-          <p className="text-red-600 text-xs mt-1">{form.formState.errors.password.message}</p>
+          <p className="text-red-600 text-xs mt-1 form-error-in">{form.formState.errors.password.message}</p>
         )}
         {getSupabaseBrowserEnv() ? (
           <div className="text-right">

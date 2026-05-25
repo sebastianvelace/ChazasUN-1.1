@@ -1,6 +1,7 @@
 "use server"
 
 import type { ChazaCard } from "@/types/chaza"
+import { getSeedChazaCards } from "@/lib/data/chaza-repository"
 import { getSupabaseBrowserEnv } from "@/lib/supabase/env"
 import { createServerSupabaseClient } from "@/lib/supabase/server"
 import {
@@ -10,7 +11,7 @@ import {
 } from "@/lib/data/supabase-chaza-repository"
 
 export async function getChazasAction(): Promise<ChazaCard[]> {
-  if (!getSupabaseBrowserEnv()) return []
+  if (!getSupabaseBrowserEnv()) return getSeedChazaCards()
   const supabase = await createServerSupabaseClient()
   return listPublishedChazas(supabase)
 }

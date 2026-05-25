@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { Star, ChevronLeft, ChevronRight, Quote } from "lucide-react"
+import { Star, ChevronLeft, ChevronRight } from "lucide-react"
 import { useScrollReveal } from "@/hooks/use-scroll-reveal"
 
 interface Review {
@@ -78,7 +78,7 @@ const reviews: Review[] = [
   },
 ]
 
-const colorMap: Record<string, string> = {
+const avatarColor: Record<string, string> = {
   LG: "bg-rose-500",
   ST: "bg-blue-500",
   VR: "bg-emerald-500",
@@ -91,14 +91,7 @@ function StarRow({ rating }: { rating: number }) {
   return (
     <div className="flex items-center gap-0.5">
       {Array.from({ length: 5 }).map((_, i) => (
-        <Star
-          key={i}
-          className={`w-4 h-4 transition-all duration-300 ${
-            i < rating
-              ? "fill-yellow-400 text-yellow-400"
-              : "fill-gray-200 text-gray-200"
-          }`}
-        />
+        <Star key={i} className={`w-3.5 h-3.5 ${i < rating ? "fill-yellow-400 text-yellow-400" : "fill-gray-200 text-gray-200"}`} />
       ))}
     </div>
   )
@@ -106,101 +99,85 @@ function StarRow({ rating }: { rating: number }) {
 
 export function ReviewsSection() {
   const [page, setPage] = useState(0)
-  const [isAnimating, setIsAnimating] = useState(false)
+  const [animating, setAnimating] = useState(false)
   const perPage = 3
   const totalPages = Math.ceil(reviews.length / perPage)
   const visible = reviews.slice(page * perPage, page * perPage + perPage)
+  const { ref, isVisible } = useScrollReveal<HTMLElement>({ threshold: 0.1 })
 
-  const { ref: sectionRef, isVisible } = useScrollReveal<HTMLElement>({ threshold: 0.15 })
-
-  const changePage = (newPage: number) => {
-    if (isAnimating) return
-    setIsAnimating(true)
-    setPage(newPage)
-    setTimeout(() => setIsAnimating(false), 500)
+  const go = (next: number) => {
+    if (animating) return
+    setAnimating(true)
+    setPage(next)
+    setTimeout(() => setAnimating(false), 400)
   }
 
   return (
-    <section 
-      ref={sectionRef}
-      id="comentarios" 
-      className="py-20 px-4 bg-gray-50 overflow-hidden"
-    >
+    <section ref={ref} id="comentarios" className="py-20 sm:py-28 px-4 bg-white overflow-hidden">
       <div className="mx-auto max-w-6xl">
+
         {/* Header */}
-        <div 
-          className={`flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6 mb-14 scroll-reveal-up ${isVisible ? "visible" : ""}`}
-        >
+        <div className={`flex flex-col sm:flex-row sm:items-end sm:justify-between gap-8 mb-14 scroll-reveal-up ${isVisible ? "visible" : ""}`}>
           <div>
-            <h2 className="font-stencil text-4xl sm:text-5xl text-brand-red tracking-wide mb-2">
-              LO QUE DICEN
+            <span className="inline-block bg-brand-red/10 text-brand-red text-xs font-semibold uppercase tracking-widest px-4 py-1.5 rounded-full mb-5">
+              Comunidad
+            </span>
+            <h2 className="font-stencil text-5xl sm:text-6xl md:text-7xl text-brand-red leading-none tracking-wide">
+              LO QUE<br className="hidden sm:block" /> DICEN
             </h2>
-            <p className="text-gray-500 text-base">
-              Testimonios reales de la comunidad universitaria.
-            </p>
           </div>
 
-          {/* Pagination controls */}
-          <div className="flex items-center gap-3">
-            <button
-              onClick={() => changePage(Math.max(0, page - 1))}
-              disabled={page === 0 || isAnimating}
-              className="w-10 h-10 rounded-full border-2 border-gray-200 flex items-center justify-center text-gray-400 hover:border-brand-red hover:text-brand-red transition-all hover:scale-110 disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:scale-100"
-              aria-label="Anterior"
-            >
-              <ChevronLeft className="w-5 h-5" />
-            </button>
-            <span className="text-sm text-gray-400 min-w-[50px] text-center">
-              {page + 1} / {totalPages}
-            </span>
-            <button
-              onClick={() => changePage(Math.min(totalPages - 1, page + 1))}
-              disabled={page === totalPages - 1 || isAnimating}
-              className="w-10 h-10 rounded-full border-2 border-gray-200 flex items-center justify-center text-gray-400 hover:border-brand-red hover:text-brand-red transition-all hover:scale-110 disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:scale-100"
-              aria-label="Siguiente"
-            >
-              <ChevronRight className="w-5 h-5" />
-            </button>
+          <div className="flex flex-col gap-4 sm:items-end">
+            <p className="text-gray-400 text-sm max-w-xs sm:text-right">
+              Testimonios reales de la comunidad universitaria.
+            </p>
+            {/* Nav controls */}
+            <div className="flex items-center gap-3">
+              <button onClick={() => go(Math.max(0, page - 1))} disabled={page === 0 || animating} className="w-10 h-10 rounded-full border-2 border-gray-200 flex items-center justify-center text-gray-400 hover:border-brand-red hover:text-brand-red transition-all hover:scale-105 disabled:opacity-25 disabled:cursor-not-allowed disabled:hover:scale-100" aria-label="Anterior">
+                <ChevronLeft className="w-5 h-5" />
+              </button>
+              <span className="font-stencil text-sm text-gray-400 min-w-[44px] text-center">{page + 1}/{totalPages}</span>
+              <button onClick={() => go(Math.min(totalPages - 1, page + 1))} disabled={page === totalPages - 1 || animating} className="w-10 h-10 rounded-full border-2 border-gray-200 flex items-center justify-center text-gray-400 hover:border-brand-red hover:text-brand-red transition-all hover:scale-105 disabled:opacity-25 disabled:cursor-not-allowed disabled:hover:scale-100" aria-label="Siguiente">
+                <ChevronRight className="w-5 h-5" />
+              </button>
+            </div>
           </div>
         </div>
 
-        {/* Review grid */}
+        {/* Review cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {visible.map((review, i) => (
             <article
               key={review.id}
-              className={`bg-white rounded-3xl p-7 shadow-sm border border-gray-100 flex flex-col gap-4 hover-lift scroll-reveal-scale ${isVisible ? "visible" : ""}`}
-              style={{ transitionDelay: `${i * 0.15}s` }}
+              className={`group relative bg-white rounded-3xl p-7 border border-gray-100 hover:border-brand-red/20 hover:shadow-xl transition-all duration-500 flex flex-col gap-5 scroll-reveal-scale ${isVisible ? "visible" : ""}`}
+              style={{ transitionDelay: `${i * 0.12}s` }}
             >
-              {/* Quote icon */}
-              <Quote className="w-8 h-8 text-brand-red/20 flex-shrink-0 animate-pulse-soft" style={{ animationDuration: "4s" }} aria-hidden="true" />
-
-              {/* Comment */}
-              <p className="text-gray-700 text-sm leading-relaxed flex-1">
-                &ldquo;{review.comment}&rdquo;
-              </p>
+              {/* Large decorative quote mark */}
+              <span className="font-stencil text-[80px] leading-none text-brand-red/8 absolute top-4 right-6 select-none pointer-events-none" aria-hidden="true">
+                &ldquo;
+              </span>
 
               {/* Stars */}
               <StarRow rating={review.rating} />
 
+              {/* Comment */}
+              <p className="text-gray-600 text-base leading-relaxed flex-1">
+                &ldquo;{review.comment}&rdquo;
+              </p>
+
               {/* Chaza tag */}
-              <span className="inline-block text-xs text-brand-red bg-brand-red/10 px-3 py-1 rounded-full w-fit hover:bg-brand-red hover:text-white transition-colors cursor-default">
+              <span className="inline-block text-xs font-semibold text-brand-red bg-brand-red/8 px-3 py-1.5 rounded-full w-fit group-hover:bg-brand-red group-hover:text-white transition-colors duration-300">
                 {review.chaza}
               </span>
 
               {/* Author */}
-              <div className="flex items-center gap-3 pt-2 border-t border-gray-100">
-                <div
-                  className={`w-10 h-10 rounded-full flex items-center justify-center text-white text-sm font-bold flex-shrink-0 transition-transform hover:scale-110 ${
-                    colorMap[review.avatar] ?? "bg-gray-400"
-                  }`}
-                  aria-hidden="true"
-                >
+              <div className="flex items-center gap-3 pt-4 border-t border-gray-100">
+                <div className={`w-10 h-10 rounded-full flex items-center justify-center text-white text-sm font-bold flex-shrink-0 ${avatarColor[review.avatar] ?? "bg-gray-400"}`} aria-hidden="true">
                   {review.avatar}
                 </div>
                 <div>
                   <p className="font-semibold text-gray-800 text-sm">{review.author}</p>
-                  <p className="text-gray-400 text-xs">{review.faculty} &middot; {review.date}</p>
+                  <p className="text-gray-400 text-xs">{review.faculty} · {review.date}</p>
                 </div>
               </div>
             </article>
@@ -212,11 +189,9 @@ export function ReviewsSection() {
           {Array.from({ length: totalPages }).map((_, i) => (
             <button
               key={i}
-              onClick={() => changePage(i)}
-              disabled={isAnimating}
-              className={`h-2 rounded-full transition-all duration-500 hover:bg-brand-red/60 ${
-                i === page ? "w-8 bg-brand-red" : "w-2 bg-gray-300"
-              }`}
+              onClick={() => go(i)}
+              disabled={animating}
+              className={`h-1.5 rounded-full transition-all duration-500 ${i === page ? "w-8 bg-brand-red" : "w-1.5 bg-gray-200 hover:bg-brand-red/40"}`}
               aria-label={`Pagina ${i + 1}`}
             />
           ))}

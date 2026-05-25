@@ -455,6 +455,8 @@ Arbol y convenciones: **[docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)**.
 
 Checklist vivo: [`docs/BUILD_PLAN.md`](docs/BUILD_PLAN.md). **Siguiente:** [`docs/FASE_5_PLAN.md`](docs/FASE_5_PLAN.md).
 
+**Planificación en el tiempo (8 semanas, sin IA en código):** [`docs/CALENDARIO_8_SEMANAS.md`](docs/CALENDARIO_8_SEMANAS.md) — semanas 1–6 desarrollo alineado a Fases 0–5; semanas 7–8 marketing y publicidad en campus.
+
 ### Fase 0 — Estructura frontend
 
 - [x] Carpetas, rutas, swiper flashcards, analytics base
@@ -568,6 +570,7 @@ Pasos detallados (migraciones, variables `NEXT_PUBLIC_*`, **Site URL** y **Redir
 | Documento | Contenido |
 |-----------|-----------|
 | [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) | Carpetas, rutas, flujo de datos |
+| [`docs/CALENDARIO_8_SEMANAS.md`](docs/CALENDARIO_8_SEMANAS.md) | **Calendario 8 semanas** (desarrollo sin IA + marketing semanas 7–8) |
 | [`docs/BUILD_PLAN.md`](docs/BUILD_PLAN.md) | Fases 0–5, checklists |
 | [`docs/FASE_2_PLAN.md`](docs/FASE_2_PLAN.md) | Plan Fase 2 (referencia historica) |
 | [`docs/FASE_3_PLAN.md`](docs/FASE_3_PLAN.md) | Plan Fase 3 (moderacion, mis-chazas) |

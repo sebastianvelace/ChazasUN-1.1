@@ -1,22 +1,19 @@
-import Link from "next/link"
-import { siteConfig } from "@/config/site"
+import { AuthPageShell } from "@/components/auth/auth-page-shell"
 import { RegistroForm } from "./registro-form"
 
 export const metadata = { title: "Crear cuenta | ChazasUN" }
 
 export default function RegistroPage() {
   return (
-    <div className="w-full max-w-md bg-white rounded-3xl shadow-xl border border-gray-100 p-8">
-      <h1 className="font-stencil text-3xl text-brand-red text-center mb-2">CREAR CUENTA</h1>
-      <p className="text-gray-500 text-sm text-center mb-8">
-        Guarda likes, chazas favoritas y publica tu puesto. Sin carnet ni datos sensibles.
-      </p>
-      <RegistroForm />
-      <div className="text-center mt-6">
-        <Link href={siteConfig.urls.login} className="text-sm text-brand-red hover:underline">
-          Ya tengo cuenta
-        </Link>
+    <AuthPageShell>
+      <div className="mb-8">
+        <h1 className="font-stencil text-5xl text-brand-red mb-2 tracking-wide">CREAR CUENTA</h1>
+        <p className="text-gray-400 text-sm leading-relaxed">
+          Sin carnet ni datos sensibles.{" "}
+          <span className="text-gray-600">Guarda likes, favoritos y publica tu chaza.</span>
+        </p>
       </div>
-    </div>
+      <RegistroForm />
+    </AuthPageShell>
   )
 }

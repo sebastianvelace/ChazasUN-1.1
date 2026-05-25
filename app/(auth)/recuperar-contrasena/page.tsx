@@ -1,15 +1,19 @@
+import { AuthPageShell } from "@/components/auth/auth-page-shell"
 import { RecuperarContrasenaForm } from "./recuperar-form"
 
 export const metadata = { title: "Recuperar contraseña | ChazasUN" }
 
 export default function RecuperarContrasenaPage() {
   return (
-    <div className="w-full max-w-md bg-white rounded-3xl shadow-xl border border-gray-100 p-8">
-      <h1 className="font-stencil text-3xl text-brand-red text-center mb-2">RECUPERAR ACCESO</h1>
-      <p className="text-gray-500 text-sm text-center mb-8">
-        Te enviamos un enlace por correo. Las contrasenas no se pueden ver: solo restablecer con ese enlace.
-      </p>
+    <AuthPageShell>
+      <div className="mb-8">
+        <h1 className="font-stencil text-5xl text-brand-red mb-2 tracking-wide">RECUPERAR ACCESO</h1>
+        <p className="text-gray-400 text-sm leading-relaxed">
+          Te enviamos un enlace al correo.{" "}
+          <span className="text-gray-600">Las contraseñas no se pueden ver, solo restablecer.</span>
+        </p>
+      </div>
       <RecuperarContrasenaForm />
-    </div>
+    </AuthPageShell>
   )
 }

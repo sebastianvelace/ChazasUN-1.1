@@ -16,7 +16,7 @@ export function ChazaGridCard({ chaza, className = "" }: ChazaGridCardProps) {
   return (
     <Link
       href={`/chazas/${chaza.slug}`}
-      className={`group block rounded-3xl overflow-hidden border border-gray-100 bg-white shadow-md hover:shadow-xl transition-shadow ${className}`}
+      className={`group block rounded-3xl overflow-hidden border border-gray-100 bg-white shadow-sm hover:shadow-md hover:border-brand-red/10 transition-all duration-300 ${className}`}
     >
       <div className="relative aspect-[4/5]">
         <Image
