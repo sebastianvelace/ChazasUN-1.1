@@ -25,6 +25,16 @@
 6. **HTTPS** via Vercel; cookies de sesion `httpOnly` con `@supabase/ssr`.
 7. **Contacto del chazero** (WhatsApp): opt-in con aviso de visibilidad publica.
 
+## Endurecimiento aplicado (mayo 2026)
+
+| Riesgo | Mitigacion |
+|--------|------------|
+| Open redirect en `/auth/callback` | `safeNextPath()` en `lib/security/safe-redirect.ts` — solo rutas relativas `/...`; rechaza `//`, esquemas, `@`, `\` y trucos encoded |
+| Upload de portada no-imagen | Allowlist MIME + magic bytes en `lib/security/image-magic-bytes.ts` y `lib/actions/upload-cover.ts` (alineado al bucket `chaza-covers`) |
+| Contacto malformado (WhatsApp / Instagram) | Schemas Zod en `lib/validations/chaza.ts` (publicar y editar) |
+| `cover_image_url` arbitraria en DB | CHECK constraint en migracion `20260521120000_chaza_cover_url_check.sql` (null, vacio o `https://`) |
+| XSS / recursos externos | CSP en produccion via `next.config.mjs` (Supabase, OAuth Google, Vercel Analytics) |
+
 ## Filtro de palabras ofensivas
 
 - Implementacion inicial: `lib/security/profanity.ts`

@@ -403,7 +403,19 @@ El swiper y el mapa funcionan bien en movil desde el navegador; eso cubre el 90%
 
 ## Estado actual del codigo (mayo 2026)
 
-Resumen: **Fases 0–4 cerradas en codigo**; **Fase 5.1–5.3** (compartir/QR, verificada, destacados) implementadas en codigo con Supabase. La app funciona en local (puerto **3001**). **Deploy** opcional cuando quieras URL publica. Detalle: [`docs/BUILD_PLAN.md`](docs/BUILD_PLAN.md), [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
+Resumen: **Fases 0–4 cerradas en codigo**; **Fase 5.1–5.3** (compartir/QR, verificada, destacados) implementadas en codigo con Supabase. **Endurecimiento de seguridad** aplicado (redirect auth, uploads, validacion de contacto, CSP). La app funciona en local (puerto **3001**). **Deploy** opcional cuando quieras URL publica. Detalle: [`docs/BUILD_PLAN.md`](docs/BUILD_PLAN.md), [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md), [`docs/SECURITY.md`](docs/SECURITY.md).
+
+### Seguridad (code review, mayo 2026)
+
+| Fix | Archivo / migracion |
+|-----|---------------------|
+| Open redirect en callback OAuth | `lib/security/safe-redirect.ts`, `app/auth/callback/route.ts` |
+| Validacion MIME + magic bytes en portadas | `lib/security/image-magic-bytes.ts`, `lib/actions/upload-cover.ts` |
+| WhatsApp / Instagram mas estrictos | `lib/validations/chaza.ts` |
+| CHECK en `cover_image_url` | `supabase/migrations/20260521120000_chaza_cover_url_check.sql` |
+| Content-Security-Policy (produccion) | `next.config.mjs` |
+
+Guia completa: [`docs/SECURITY.md`](docs/SECURITY.md).
 
 ### Implementado
 
@@ -429,6 +441,7 @@ Resumen: **Fases 0–4 cerradas en codigo**; **Fase 5.1–5.3** (compartir/QR, v
 5. `20260518120000_profiles_oauth_display_name.sql` — trigger OAuth / nombre en `profiles`
 6. `20260519120000_chazas_verified_at.sql` — `verified_at`, RPC y trigger admin
 7. `20260520120000_chazas_featured.sql` — `featured_until`, `featured_rank`, RPC y trigger admin
+8. `20260521120000_chaza_cover_url_check.sql` — CHECK en `cover_image_url` (solo https)
 
 Orden: ejecuta en Supabase en ese orden si empiezas desde cero.
 
@@ -438,7 +451,7 @@ En la **ficha** `/chazas/[slug]` y en **Mis chazas**, el boton de compartir abre
 
 ### Siguiente (operacion)
 
-**Fase 5.4:** deploy Vercel, URLs Auth y smoke en produccion. Ver **[`docs/FASE_5_PLAN.md`](docs/FASE_5_PLAN.md)** y **[`docs/VERCEL_DEPLOY.md`](docs/VERCEL_DEPLOY.md)**.
+**Fase 5.4:** deploy Vercel, URLs Auth y smoke en produccion. Ejecutar migracion `20260521120000_chaza_cover_url_check.sql` en Supabase si aun no esta aplicada. Ver **[`docs/FASE_5_PLAN.md`](docs/FASE_5_PLAN.md)** y **[`docs/VERCEL_DEPLOY.md`](docs/VERCEL_DEPLOY.md)**.
 
 ### Deuda menor (no bloqueante)
 
@@ -569,6 +582,7 @@ Pasos detallados (migraciones, variables `NEXT_PUBLIC_*`, **Site URL** y **Redir
 
 | Documento | Contenido |
 |-----------|-----------|
+| [`docs/GUIA_COMPLETA.md`](docs/GUIA_COMPLETA.md) | **Guía completa del proyecto** — arquitectura, flujos, seguridad y FAQ para externos |
 | [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) | Carpetas, rutas, flujo de datos |
 | [`docs/CALENDARIO_8_SEMANAS.md`](docs/CALENDARIO_8_SEMANAS.md) | **Calendario 8 semanas** (desarrollo sin IA + marketing semanas 7–8) |
 | [`docs/BUILD_PLAN.md`](docs/BUILD_PLAN.md) | Fases 0–5, checklists |
@@ -592,6 +606,7 @@ Repositorio vinculado a [v0](https://v0.app). Merge a `main` despliega en Vercel
 | Fecha | Decision |
 |-------|----------|
 | 2026-05 | Documento de contexto consolidado con respuestas del fundador |
+| 2026-05 | Endurecimiento de seguridad: redirect auth, uploads, contacto, CSP, CHECK portada |
 | 2026-05 | Fase 4 en codigo: CSV admin, carta de productos, blog estatico por slug, vision carta opcional (Groq) |
 | — | Solo sede Bogota; plataforma abierta; sin chat in-app; swiper como UX principal |
 | — | Supabase + Vercel; blog estatico en MVP; siguiente foco operativo: Fase 5 (QR, confianza, campo) |

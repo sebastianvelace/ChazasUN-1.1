@@ -1,5 +1,10 @@
 "use server"
 
+import {
+  detectImageMimeFromBuffer,
+  isAllowedCoverMimeType,
+  normalizeCoverMimeType,
+} from "@/lib/security/image-magic-bytes"
 import { getSupabaseBrowserEnv } from "@/lib/supabase/env"
 import { createServerSupabaseClient } from "@/lib/supabase/server"
 
@@ -21,11 +26,20 @@ export async function uploadChazaCoverAction(formData: FormData): Promise<Upload
   if (!file || !(file instanceof File)) {
     return { ok: false, error: "Archivo no valido." }
   }
-  if (!file.type.startsWith("image/")) {
+  if (!isAllowedCoverMimeType(file.type)) {
     return { ok: false, error: "Solo imagenes (JPEG, PNG, WebP, GIF)." }
   }
   if (file.size > MAX_BYTES) {
     return { ok: false, error: "Imagen demasiado grande (max 5 MB)." }
+  }
+
+  const buffer = Buffer.from(await file.arrayBuffer())
+  const detectedMime = detectImageMimeFromBuffer(buffer)
+  if (
+    !detectedMime ||
+    normalizeCoverMimeType(detectedMime) !== normalizeCoverMimeType(file.type)
+  ) {
+    return { ok: false, error: "Archivo de imagen no valido o tipo no coincide." }
   }
 
   const supabase = await createServerSupabaseClient()
@@ -37,10 +51,9 @@ export async function uploadChazaCoverAction(formData: FormData): Promise<Upload
   }
 
   const path = `${user.id}/${Date.now()}-${safeFileName(file.name)}`
-  const buffer = Buffer.from(await file.arrayBuffer())
 
   const { error } = await supabase.storage.from(BUCKET).upload(path, buffer, {
-    contentType: file.type,
+    contentType: detectedMime,
     upsert: false,
   })
 
