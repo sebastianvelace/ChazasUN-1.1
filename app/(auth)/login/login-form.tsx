@@ -111,7 +111,7 @@ export function LoginForm() {
       </div>
       <div>
         <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
-          Contrasena
+          Contraseña
         </label>
         <input
           id="password"
@@ -129,7 +129,7 @@ export function LoginForm() {
               href={siteConfig.urls.recuperarContrasena}
               className="text-xs text-brand-red hover:underline"
             >
-              Olvide mi contrasena
+              Olvidé mi contraseña
             </Link>
           </div>
         ) : null}
@@ -143,8 +143,8 @@ export function LoginForm() {
       </button>
       <p className="text-xs text-gray-400 text-center">
         {getSupabaseBrowserEnv()
-          ? "Puedes usar Google o correo y contrasena (validacion en Supabase)."
-          : "Sin Supabase en .env.local: modo demo local (sin validar contrasena)."}
+          ? "Puedes usar Google o correo y contraseña (validación en Supabase)."
+          : "Sin Supabase en .env.local: modo demo local (sin validar contraseña)."}
       </p>
       <div className="text-center space-y-2">
         <Link href={`${siteConfig.urls.registro}?next=${encodeURIComponent(nextPath)}`} className="text-sm text-brand-red hover:underline block">

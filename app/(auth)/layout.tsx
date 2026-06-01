@@ -102,7 +102,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
         </main>
 
         <footer className="hidden lg:block px-10 pb-8">
-          <p className="text-xs text-gray-300">© 2024 ChazasUN</p>
+          <p className="text-xs text-gray-300">© 2026 ChazasUN</p>
         </footer>
       </div>
     </div>

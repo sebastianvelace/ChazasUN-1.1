@@ -369,7 +369,7 @@ export function ChazaSwiper({
 
             {/* Mobile-only header (above card) */}
             {showSectionHeader && (
-              <div className={`lg:hidden text-center mb-10 scroll-reveal-up ${isVisible ? "visible" : ""}`}>
+              <div className="lg:hidden text-center mb-6 animate-auth-in">
                 <span className="inline-block bg-brand-red/10 text-brand-red text-xs font-semibold uppercase tracking-widest px-4 py-1.5 rounded-full mb-4">
                   Descubre
                 </span>
