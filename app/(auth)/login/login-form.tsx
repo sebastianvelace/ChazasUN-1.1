@@ -12,10 +12,12 @@ import { getMockSession, setMockSession } from "@/lib/auth/mock-session"
 import { siteConfig } from "@/config/site"
 import { getSupabaseBrowserEnv } from "@/lib/supabase/env"
 import { createBrowserSupabaseClient } from "@/lib/supabase/client"
+import { safeNextPath } from "@/lib/security/safe-redirect"
 
 export function LoginForm() {
   const router = useRouter()
   const searchParams = useSearchParams()
+  const nextPath = safeNextPath(searchParams.get("next"))
   const form = useForm<LoginInput>({
     resolver: zodResolver(loginSchema),
     defaultValues: { email: "", password: "" },
@@ -38,7 +40,7 @@ export function LoginForm() {
     if (!env) {
       const existing = getMockSession()
       if (existing && existing.email === email) {
-        router.push(siteConfig.urls.explorar)
+        router.push(nextPath)
         router.refresh()
         return
       }
@@ -48,7 +50,7 @@ export function LoginForm() {
         email,
         displayName: email.split("@")[0] ?? "Usuario",
       })
-      router.push(siteConfig.urls.explorar)
+      router.push(nextPath)
       router.refresh()
       return
     }
@@ -70,7 +72,7 @@ export function LoginForm() {
         return
       }
       toast.success("Sesion iniciada")
-      router.push(siteConfig.urls.explorar)
+      router.push(nextPath)
       router.refresh()
     } catch (e) {
       toast.error(e instanceof Error ? e.message : "Error al iniciar sesion")
@@ -79,7 +81,7 @@ export function LoginForm() {
 
   return (
     <div className="space-y-5">
-      <GoogleOAuthButton />
+      <GoogleOAuthButton nextPath={nextPath} />
       {getSupabaseBrowserEnv() ? (
         <div className="relative py-2">
           <div className="absolute inset-0 flex items-center">
@@ -144,9 +146,12 @@ export function LoginForm() {
           ? "Puedes usar Google o correo y contrasena (validacion en Supabase)."
           : "Sin Supabase en .env.local: modo demo local (sin validar contrasena)."}
       </p>
-      <div className="text-center">
-        <Link href={siteConfig.urls.registro} className="text-sm text-brand-red hover:underline">
+      <div className="text-center space-y-2">
+        <Link href={`${siteConfig.urls.registro}?next=${encodeURIComponent(nextPath)}`} className="text-sm text-brand-red hover:underline block">
           Crear cuenta
+        </Link>
+        <Link href={siteConfig.urls.explorar} className="text-xs text-gray-400 hover:text-brand-red block">
+          Explorar chazas sin cuenta
         </Link>
       </div>
       </form>

@@ -2,11 +2,11 @@
 
 import { useEffect, useState } from "react"
 import Link from "next/link"
-import { MapPin, Star, Heart, Bookmark } from "lucide-react"
+import { TrendingUp } from "lucide-react"
 
 const enter = (mounted: boolean, delay = "") =>
-  `transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${delay} ${
-    mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"
+  `motion-enter ${delay} ${
+    mounted ? "is-visible" : ""
   }`
 
 export function HeroSection({
@@ -22,166 +22,120 @@ export function HeroSection({
   const stats = [
     { value: String(chazasPublished), label: "Chazas activas" },
     ...(reviewsPublished > 0 ? [{ value: String(reviewsPublished), label: "Reseñas" }] : []),
-    { value: "4.8", label: "Calidad promedio" },
+    { value: "4.8★", label: "Calidad promedio" },
   ]
+
+  const exploredPercent = chazasPublished > 0
+    ? Math.min(Math.round((reviewsPublished / (chazasPublished * 3)) * 100), 72)
+    : 0
 
   return (
     <section id="inicio" className="relative bg-brand-red overflow-hidden">
       {/* Grid pattern */}
       <div
-        className="absolute inset-0 opacity-10"
+        className="absolute inset-0 opacity-[0.07]"
         style={{
           backgroundImage:
-            "repeating-linear-gradient(0deg,transparent,transparent 39px,rgba(255,255,255,0.4) 39px,rgba(255,255,255,0.4) 40px),repeating-linear-gradient(90deg,transparent,transparent 39px,rgba(255,255,255,0.4) 39px,rgba(255,255,255,0.4) 40px)",
+            "repeating-linear-gradient(0deg,transparent,transparent 39px,rgba(255,255,255,0.6) 39px,rgba(255,255,255,0.6) 40px),repeating-linear-gradient(90deg,transparent,transparent 39px,rgba(255,255,255,0.6) 39px,rgba(255,255,255,0.6) 40px)",
         }}
         aria-hidden="true"
       />
-      {/* Floating blobs */}
-      <div className="absolute top-20 left-10 w-40 h-40 bg-white/5 rounded-full blur-3xl animate-float" aria-hidden="true" />
-      <div className="absolute bottom-32 right-12 w-56 h-56 bg-white/5 rounded-full blur-3xl animate-float" style={{ animationDelay: "2s" }} aria-hidden="true" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_40%,rgba(255,255,255,0.08)_0%,transparent_70%)]" aria-hidden="true" />
+      <div className="absolute top-20 left-1/4 w-48 h-48 bg-white/5 rounded-full blur-3xl animate-float" style={{ animationDuration: "9s" }} aria-hidden="true" />
+      <div className="absolute bottom-32 right-1/4 w-64 h-64 bg-white/5 rounded-full blur-3xl animate-float" style={{ animationDuration: "13s", animationDelay: "3.5s" }} aria-hidden="true" />
+      <div className="absolute top-1/2 left-10 w-32 h-32 bg-white/3 rounded-full blur-2xl animate-float" style={{ animationDuration: "11s", animationDelay: "1.2s" }} aria-hidden="true" />
 
       <div className="relative mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 pt-16 pb-0">
-        <div className="flex flex-col lg:flex-row lg:items-center gap-12 xl:gap-16">
+        <div className="flex flex-col items-center text-center">
 
-          {/* ── LEFT: Copy ── */}
-          <div className="flex-1 min-w-0 py-10 lg:py-20">
-            <span className={`inline-block bg-white/20 text-white text-xs font-semibold uppercase tracking-widest px-4 py-1.5 rounded-full mb-7 ${enter(mounted)}`}>
-              Marketplace universitario
+          {/* Headline — Cormorant Garamond editorial */}
+          <h1
+            className={`font-hero mb-7 ${enter(mounted, "motion-delay-1")}`}
+            aria-label="CHAZAS UN"
+          >
+            {/* Main word */}
+            <span className="block text-[2.8rem] sm:text-[3.6rem] lg:text-[4.4rem] leading-none text-white font-semibold tracking-[-0.01em]">
+              CHAZAS
             </span>
 
-            <h1 className={`font-stencil leading-[0.88] mb-7 ${enter(mounted, "delay-75")}`}>
-              <span className="block text-7xl sm:text-8xl lg:text-[7.5rem] xl:text-[8.5rem] text-white">
-                CHAZAS
-              </span>
-              <span className="block text-7xl sm:text-8xl lg:text-[7.5rem] xl:text-[8.5rem] text-white/40">
+            {/* Rule + UN + Rule — editorial flanking */}
+            <span className="flex items-center justify-center gap-3 mt-3">
+              <span className="flex-1 max-w-[72px] h-px bg-white/30" aria-hidden="true" />
+              <span className="font-hero text-[0.75rem] sm:text-[0.8rem] font-light tracking-[0.55em] text-white/55 uppercase">
                 UN
               </span>
-            </h1>
+              <span className="flex-1 max-w-[72px] h-px bg-white/30" aria-hidden="true" />
+            </span>
+          </h1>
 
-            <p className={`text-white/85 text-xl leading-relaxed mb-10 max-w-md font-sans ${enter(mounted, "delay-150")}`}>
-              El marketplace de los estudiantes de la{" "}
-              <strong className="text-white font-semibold">Universidad Nacional</strong>.
-              Comida, servicios, libros y más — todo en un mismo lugar.
-            </p>
+          <p className={`text-white/80 text-xl leading-relaxed mb-9 max-w-[480px] font-sans font-medium mx-auto ${enter(mounted, "motion-delay-2")}`}>
+            El marketplace de los estudiantes de la{" "}
+            <strong className="text-white font-bold">Universidad Nacional</strong>.
+            Comida, servicios, libros y más.
+          </p>
 
-            <div className={`flex flex-col sm:flex-row gap-3 mb-14 ${enter(mounted, "delay-300")}`}>
-              <Link
-                href="/explorar"
-                className="font-stencil text-lg bg-white text-brand-red px-8 py-4 rounded-2xl hover:bg-gray-50 transition-colors duration-300 shadow-xl text-center tracking-wide"
-              >
-                EXPLORAR CHAZAS
-              </Link>
-              <Link
-                href="/publicar-chaza"
-                className="font-stencil text-lg border-2 border-white/30 text-white px-8 py-4 rounded-2xl hover:bg-white/10 hover:border-white/50 transition-colors duration-300 text-center tracking-wide"
-              >
-                REGISTRAR MI CHAZA
-              </Link>
-            </div>
-
-            {/* Stats */}
-            <div className={`flex items-center gap-10 border-t border-white/15 pt-8 ${enter(mounted, "delay-500")}`}>
-              {stats.map((s) => (
-                <div key={s.label}>
-                  <p className="font-stencil text-3xl text-white">{s.value}</p>
-                  <p className="text-white/45 text-xs mt-0.5 uppercase tracking-wide">{s.label}</p>
-                </div>
-              ))}
-            </div>
+          {/* CTAs */}
+          <div className={`flex flex-col sm:flex-row gap-3 mb-10 justify-center ${enter(mounted, "motion-delay-3")}`}>
+            <Link
+              href="/explorar"
+              className="btn-white-shimmer font-stencil text-lg bg-white text-brand-red px-10 py-4 rounded-2xl
+                         hover:bg-gray-50 transition-colors duration-300
+                         shadow-xl shadow-black/10 hover:shadow-2xl hover:shadow-black/15
+                         text-center tracking-wide active:scale-[0.97]
+                         min-h-[56px] flex items-center justify-center hover-lift"
+            >
+              EXPLORAR CHAZAS
+            </Link>
+            <Link
+              href="/publicar-chaza"
+              className="glass-btn font-stencil text-lg text-white px-10 py-4 rounded-2xl
+                         text-center tracking-wide active:scale-[0.97]
+                         min-h-[56px] flex items-center justify-center hover-lift"
+            >
+              PUBLICAR MI CHAZA
+            </Link>
           </div>
 
-          {/* ── RIGHT: Floating chaza card preview ── */}
-          <div className={`hidden lg:block lg:flex-none lg:w-[290px] xl:w-[320px] relative py-16 self-center ${enter(mounted, "delay-200")}`}>
+          {/* Zeigarnik progress */}
+          <div className={`mb-8 w-full max-w-md mx-auto ${enter(mounted, "motion-delay-4")}`}>
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-white/50 text-xs font-medium flex items-center gap-1.5">
+                <TrendingUp className="w-3.5 h-3.5" />
+                Campus siendo explorado
+              </span>
+              <span className="text-white/70 text-xs font-bold">{exploredPercent}%</span>
+            </div>
+            <div className="zeigarnik-bar" style={{ "--progress-width": `${exploredPercent}%` } as React.CSSProperties} />
+          </div>
 
-            {/* Main card — tilted */}
-            <div className="-rotate-3 rounded-3xl overflow-hidden shadow-2xl border border-white/10">
-              {/* Image area — warm gradient simulating a food photo */}
+          {/* Stats — centered */}
+          <div className={`flex flex-wrap items-center justify-center gap-8 border-t border-white/10 pt-7 w-full max-w-lg mx-auto ${enter(mounted, "motion-delay-4")}`}>
+            {stats.map((s, i) => (
               <div
-                className="h-52 relative"
-                style={{
-                  background:
-                    "linear-gradient(155deg,#7c2d12 0%,#b91c1c 25%,#c2410c 55%,#ea580c 80%,#fb923c 100%)",
-                }}
+                key={s.label}
+                className={`${i < stats.length - 1 ? "sm:pr-8 sm:border-r sm:border-white/10" : ""} hover-scale`}
+                style={{ transitionDelay: `${500 + i * 80}ms` }}
               >
-                <div
-                  className="absolute inset-0 opacity-25"
-                  style={{
-                    backgroundImage:
-                      "radial-gradient(circle at 35% 30%, rgba(255,255,255,0.4) 0%, transparent 55%)",
-                  }}
-                  aria-hidden="true"
-                />
-                {/* Top badges */}
-                <div className="absolute top-4 left-4 right-4 flex items-start justify-between gap-2">
-                  <span className="bg-brand-red text-white text-xs font-semibold px-3 py-1.5 rounded-full shadow-lg">
-                    Cafe y Bebidas
-                  </span>
-                  <div className="flex items-center gap-1 bg-white/95 px-2.5 py-1.5 rounded-full shadow shrink-0">
-                    <Star className="w-3.5 h-3.5 fill-yellow-400 text-yellow-400" />
-                    <span className="text-xs font-semibold text-gray-800">4.8</span>
-                    <span className="text-xs text-gray-400">(142)</span>
-                  </div>
-                </div>
-                {/* LIKE stamp overlay */}
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="border-4 border-green-400 rounded-2xl px-6 py-2 -rotate-[15deg] bg-green-400/20 backdrop-blur-sm shadow-2xl">
-                    <span className="text-green-400 font-stencil text-3xl tracking-widest drop-shadow-lg">
-                      LIKE
-                    </span>
-                  </div>
-                </div>
+                <p className="font-stencil text-2xl sm:text-3xl text-white">{s.value}</p>
+                <p className="text-white/40 text-[11px] mt-0.5 uppercase tracking-wider font-medium">{s.label}</p>
               </div>
-
-              {/* Info area */}
-              <div className="bg-white px-5 pt-4 pb-5">
-                <h3 className="font-stencil text-xl text-gray-900 mb-1.5 tracking-wide">
-                  El Rincón del Tinto
-                </h3>
-                <div className="flex items-center gap-1.5 text-gray-400 text-xs mb-3">
-                  <MapPin className="w-3.5 h-3.5 flex-shrink-0" />
-                  <span>Edificio de Ingeniería, piso 1</span>
-                </div>
-                <span className="inline-block bg-gray-100 text-gray-700 text-sm font-semibold px-3 py-1 rounded-full">
-                  Desde $1.500
-                </span>
-              </div>
-            </div>
-
-            {/* Floating badge — Me interesa */}
-            <div
-              className="hidden lg:flex absolute -left-10 top-[42%] bg-white rounded-2xl shadow-2xl px-4 py-2.5 items-center gap-2 animate-float rotate-1"
-              style={{ animationDelay: "0.8s", animationDuration: "3.5s" }}
-              aria-hidden="true"
-            >
-              <Heart className="w-4 h-4 text-green-500 fill-green-500" />
-              <span className="text-sm font-semibold text-gray-800">Me interesa</span>
-            </div>
-
-            {/* Floating badge — Guardada */}
-            <div
-              className="hidden lg:flex absolute -right-8 bottom-24 bg-brand-red-dark rounded-2xl shadow-2xl px-4 py-2.5 items-center gap-2 animate-float -rotate-1"
-              style={{ animationDelay: "0.2s", animationDuration: "4.5s" }}
-              aria-hidden="true"
-            >
-              <Bookmark className="w-4 h-4 text-white/80" />
-              <span className="text-white text-xs font-semibold">Guardada</span>
-            </div>
+            ))}
           </div>
 
         </div>
       </div>
 
-      {/* Wave separator */}
-      <div className="relative h-16 bg-brand-red">
+      {/* Wave separator — block SVG + overlap avoids subpixel red seam */}
+      <div className="relative h-16 bg-brand-red leading-none -mb-px">
         <svg
-          viewBox="0 0 1440 64"
+          viewBox="0 0 1440 65"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
-          className="absolute bottom-0 w-full"
+          className="block w-full h-full"
           preserveAspectRatio="none"
           aria-hidden="true"
         >
-          <path d="M0 64 L0 32 Q360 0 720 32 Q1080 64 1440 32 L1440 64 Z" fill="white" />
+          <path d="M0 64 L0 32 Q360 0 720 32 Q1080 64 1440 32 L1440 64 L1440 65 L0 65 Z" fill="white" />
         </svg>
       </div>
     </section>

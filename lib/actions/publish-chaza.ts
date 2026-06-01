@@ -7,10 +7,8 @@ import { createServerSupabaseClient } from "@/lib/supabase/server"
 import { geoFromMapPercent } from "@/lib/data/publish-helpers"
 import { slugify } from "@/lib/utils/slugify"
 import { publishChazaSchema, type PublishChazaInput } from "@/lib/validations/chaza"
+import { CHAZA_COVER_PLACEHOLDER } from "@/lib/constants/chaza-images"
 import { categorySlugExists } from "@/lib/data/chaza-repository"
-
-const PLACEHOLDER_IMAGE =
-  "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=500&h=700&fit=crop"
 
 export type PublishChazaResult =
   | { ok: true; slug: string; id: string }
@@ -51,7 +49,7 @@ export async function publishChazaAction(raw: PublishChazaInput): Promise<Publis
     return { ok: false, error: catErr?.message ?? "No se pudieron resolver categorías." }
   }
 
-  const cover = data.coverImageUrl.trim() ? data.coverImageUrl : PLACEHOLDER_IMAGE
+  const cover = data.coverImageUrl.trim() ? data.coverImageUrl : CHAZA_COVER_PLACEHOLDER
   const geo = geoFromMapPercent(data.mapPosition.x, data.mapPosition.y)
   const names = categorySlugs
     .map((s) => categories.find((c) => c.slug === s)?.name)
@@ -66,6 +64,7 @@ export async function publishChazaAction(raw: PublishChazaInput): Promise<Publis
     priceFrom = first?.priceLabel?.trim() || "Consultar"
   }
 
+  const MAX_SLUG_ATTEMPTS = 10
   const baseSlug = slugify(data.name.trim()) || "chaza"
   let slug = baseSlug
   let suffix = 0
@@ -73,6 +72,10 @@ export async function publishChazaAction(raw: PublishChazaInput): Promise<Publis
   let lastErr: string | undefined
 
   while (!chazaId) {
+    if (suffix > MAX_SLUG_ATTEMPTS) {
+      return { ok: false, error: "No se pudo generar un slug único. Intenta con un nombre diferente." }
+    }
+
     const { data: inserted, error: insErr } = await supabase
       .from("chazas")
       .insert({
@@ -114,19 +117,22 @@ export async function publishChazaAction(raw: PublishChazaInput): Promise<Publis
     return { ok: false, error: lastErr ?? "No se pudo crear la chaza." }
   }
 
+  const resolvedId = chazaId
+
   const joinRows = catRows.map((c: { id: string; slug: string }) => ({
-    chaza_id: chazaId,
+    chaza_id: resolvedId,
     category_id: c.id,
   }))
   const { error: jErr } = await supabase.from("chaza_categories").insert(joinRows)
   if (jErr) {
     console.error("[publishChazaAction] chaza_categories", jErr.message)
+    return { ok: false, error: "La chaza se creó pero no se pudieron asignar categorías. Intenta editarla." }
   }
 
   const productRows = data.products
     .filter((p) => p.name.trim())
     .map((p, i) => ({
-      chaza_id: chazaId,
+      chaza_id: resolvedId,
       name: p.name.trim(),
       price_label: p.priceLabel.trim() || null,
       sort_order: i,
@@ -135,13 +141,6 @@ export async function publishChazaAction(raw: PublishChazaInput): Promise<Publis
   if (productRows.length) {
     const { error: pErr } = await supabase.from("chaza_products").insert(productRows)
     if (pErr) console.error("[publishChazaAction] chaza_products", pErr.message)
-  } else if (priceFrom !== "Consultar") {
-    await supabase.from("chaza_products").insert({
-      chaza_id: chazaId,
-      name: "Popular",
-      price_label: priceFrom,
-      sort_order: 0,
-    })
   }
 
   revalidatePath("/explorar")

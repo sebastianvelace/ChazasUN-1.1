@@ -19,12 +19,14 @@ import { getSupabaseBrowserEnv } from "@/lib/supabase/env"
 import { PinPicker } from "@/components/map/pin-picker"
 import { ProductListEditor } from "@/components/forms/product-list-editor"
 import { MenuVisionPicker } from "@/components/forms/menu-vision-picker"
+import { CoverUploadField } from "@/components/forms/cover-upload-field"
 import { Checkbox } from "@/components/ui/checkbox"
+import { CHAZA_COVER_PLACEHOLDER, hasChazaCover } from "@/lib/constants/chaza-images"
+import { ImageIcon } from "lucide-react"
 import type { ChazaCard } from "@/types/chaza"
 import { cn } from "@/lib/utils"
 
-const PLACEHOLDER_IMAGE =
-  "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=500&h=700&fit=crop"
+const publishAuthNext = encodeURIComponent(siteConfig.urls.publicarChaza)
 
 const defaultValues: PublishChazaInput = {
   name: "",
@@ -148,7 +150,7 @@ export function PublishChazaWizard({ menuVisionEnabled = false }: { menuVisionEn
       .filter(Boolean) as string[]
     const category = names[0] ?? "Chaza"
     const tags = [...names.slice(0, 3), ...data.products.map((p) => p.name).slice(0, 3)].slice(0, 6)
-    const cover = data.coverImageUrl.trim() ? data.coverImageUrl : PLACEHOLDER_IMAGE
+    const cover = hasChazaCover(data.coverImageUrl) ? data.coverImageUrl.trim() : CHAZA_COVER_PLACEHOLDER
     let price = "Consultar"
     if (data.products.length > 0) {
       const first = data.products.find((p) => p.priceLabel.trim())
@@ -271,18 +273,24 @@ export function PublishChazaWizard({ menuVisionEnabled = false }: { menuVisionEn
               </p>
               <div className="flex flex-wrap gap-3">
                 <Link
-                  href={siteConfig.urls.registro}
+                  href={`${siteConfig.urls.registro}?next=${publishAuthNext}`}
                   className="inline-flex font-stencil bg-brand-red text-white px-6 py-2.5 rounded-full hover:bg-brand-red-dark"
                 >
                   CREAR CUENTA
                 </Link>
                 <Link
-                  href={siteConfig.urls.login}
+                  href={`${siteConfig.urls.login}?next=${publishAuthNext}`}
                   className="inline-flex font-stencil border-2 border-brand-red text-brand-red px-6 py-2.5 rounded-full hover:bg-brand-red/5"
                 >
                   INICIAR SESION
                 </Link>
               </div>
+              <p className="text-xs text-gray-500">
+                Solo quieres mirar?{" "}
+                <Link href={siteConfig.urls.explorar} className="text-brand-red hover:underline">
+                  Explorar sin cuenta
+                </Link>
+              </p>
             </>
           )}
         </div>
@@ -312,26 +320,16 @@ export function PublishChazaWizard({ menuVisionEnabled = false }: { menuVisionEn
             )}
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Foto (URL o archivo)</label>
-            <input
-              type="url"
-              placeholder="https://..."
-              className="w-full rounded-xl border border-gray-200 px-4 py-3 text-sm focus:border-brand-red focus:ring-2 focus:ring-brand-red/20 outline-none mb-2"
-              {...form.register("coverImageUrl")}
+            <label className="block text-sm font-medium text-gray-700 mb-2">Foto de portada</label>
+            <CoverUploadField
+              value={form.watch("coverImageUrl")}
+              onChange={(url) => form.setValue("coverImageUrl", url, { shouldValidate: true })}
+              onFile={(file) => onCoverFile(file)}
+              uploading={coverUploading}
+              error={form.formState.errors.coverImageUrl?.message}
             />
-            <input
-              type="file"
-              accept="image/*"
-              disabled={coverUploading}
-              className="text-sm text-gray-600 disabled:opacity-50"
-              onChange={(e) => void onCoverFile(e.target.files?.[0] ?? null)}
-            />
-            {coverUploading && <p className="text-xs text-gray-500 mt-1">Subiendo foto…</p>}
             {useSupabase && isLoggedIn && (
-              <p className="text-xs text-gray-500 mt-1">Con cuenta: la foto se guarda en Supabase Storage (max 5 MB).</p>
-            )}
-            {form.formState.errors.coverImageUrl && (
-              <p className="text-red-600 text-xs mt-1">{form.formState.errors.coverImageUrl.message}</p>
+              <p className="text-xs text-gray-500 mt-2">Con cuenta: la foto se guarda en Supabase Storage (max 5 MB).</p>
             )}
           </div>
           <div>
@@ -426,7 +424,15 @@ export function PublishChazaWizard({ menuVisionEnabled = false }: { menuVisionEn
             <div className="max-w-sm mx-auto">
               <p className="text-center text-sm text-gray-500 mb-4">Asi se vera en el explorador (aprox.)</p>
               <div className="relative rounded-3xl overflow-hidden border border-gray-100 shadow-xl aspect-[4/5]">
-                <img src={previewCard.image} alt="" className="absolute inset-0 w-full h-full object-cover" />
+                {hasChazaCover(watched.coverImageUrl) ? (
+                  <img src={previewCard.image} alt="" className="absolute inset-0 w-full h-full object-cover" />
+                ) : (
+                  <div className="absolute inset-0 bg-gradient-to-br from-gray-100 via-gray-50 to-gray-200 flex flex-col items-center justify-center gap-2">
+                    <ImageIcon className="w-10 h-10 text-gray-300" aria-hidden />
+                    <span className="text-sm font-medium text-gray-400">Sin imagen</span>
+                    <span className="text-xs text-gray-400 px-6 text-center">Puedes publicar sin foto; se usara una portada generica.</span>
+                  </div>
+                )}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
                 <div className="absolute top-4 left-4">
                   <span className="bg-brand-red text-white text-xs font-semibold px-3 py-1.5 rounded-full">{previewCard.category}</span>

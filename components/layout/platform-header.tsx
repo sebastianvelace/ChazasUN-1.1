@@ -16,68 +16,77 @@ export function PlatformHeader() {
   const { user, isLoggedIn, logout } = useSession()
   const scrolled = useScrolled()
 
+  /* Hick's Law: max 3 links primarios. Si está logueado, mis chazas reemplaza blog */
   const navItems = useMemo(() => {
     const base: { href: string; label: string }[] = [
-      { href: siteConfig.urls.explorar, label: "Explorar" },
-      { href: siteConfig.urls.mapa, label: "Mapa" },
-      { href: siteConfig.urls.recomendados, label: "Recomendados" },
-      { href: siteConfig.urls.guardadas, label: "Guardadas" },
+      { href: siteConfig.urls.explorar,    label: "Explorar" },
+      { href: siteConfig.urls.mapa,        label: "Mapa"     },
     ]
     if (isLoggedIn) {
       base.push({ href: siteConfig.urls.misChazas, label: "Mis chazas" })
+    } else {
+      base.push({ href: siteConfig.urls.blog, label: "Blog" })
     }
-    base.push({ href: siteConfig.urls.blog, label: "Blog" })
     return base
   }, [isLoggedIn])
 
   return (
     <header
       className={cn(
-        "sticky top-0 z-50 transition-[background-color,box-shadow,border-color] duration-300",
-        scrolled
-          ? "bg-white/90 backdrop-blur-md shadow-sm border-b border-brand-red/10"
-          : "bg-white/95 backdrop-blur-sm shadow-md"
+        "sticky top-0 z-50 transition-all duration-300",
+        scrolled ? "glass-nav" : "bg-white/95 backdrop-blur-sm border-b border-brand-red/5"
       )}
     >
       <nav className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
-          <Link href="/" className="flex items-center gap-3 group">
+
+          <Link href="/" className="flex items-center gap-2.5 group shrink-0">
             <SquiggleIcon
-              width={40}
-              height={20}
-              className="text-brand-red transition-transform duration-300 group-hover:scale-105"
+              width={36}
+              height={18}
+              className="text-brand-red transition-transform duration-300 group-hover:scale-110"
             />
             <span className="font-stencil text-xl sm:text-2xl text-brand-red tracking-wider">CHAZAS UN</span>
           </Link>
 
+          {/* Desktop nav */}
           <div className="hidden md:flex items-center gap-6">
             {navItems.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  "text-sm font-medium transition-colors duration-200 link-underline",
-                  pathname === item.href ? "text-brand-red-dark" : "text-brand-red hover:text-brand-red-dark"
+                  "text-sm font-semibold transition-colors duration-200 link-underline",
+                  pathname === item.href
+                    ? "text-brand-red"
+                    : "text-brand-red/70 hover:text-brand-red"
                 )}
               >
                 {item.label}
               </Link>
             ))}
+
+            {/* Fitts: CTA con más área de clic */}
             <Link
               href={siteConfig.urls.publicarChaza}
-              className="font-stencil text-sm bg-brand-red text-white px-5 py-2 rounded-full hover:bg-brand-red-dark transition-colors duration-300 active:scale-[0.98]"
+              className="font-stencil text-sm bg-brand-red text-white px-6 py-2.5 rounded-xl
+                         hover:bg-brand-red-dark transition-all duration-300 active:scale-[0.97]
+                         shadow-md shadow-brand-red/20 hover:shadow-lg hover:shadow-brand-red/30
+                         hover:-translate-y-0.5"
             >
               PUBLICAR CHAZA
             </Link>
+
+            {/* Usuario — Gestalt: agrupado como unidad visual separada */}
             {isLoggedIn ? (
-              <div className="flex items-center gap-3">
-                <span className="text-sm text-gray-600 max-w-[120px] truncate" title={user?.email}>
+              <div className="flex items-center gap-2 pl-2 border-l border-brand-red/15">
+                <span className="text-xs font-semibold text-brand-red/70 max-w-[100px] truncate" title={user?.email}>
                   {user?.displayName}
                 </span>
                 <button
                   type="button"
                   onClick={logout}
-                  className="text-sm text-gray-500 hover:text-brand-red transition-colors"
+                  className="text-xs font-medium text-brand-red/50 hover:text-brand-red transition-colors px-2 py-1 rounded-lg hover:bg-brand-red/5"
                 >
                   Salir
                 </button>
@@ -85,63 +94,69 @@ export function PlatformHeader() {
             ) : (
               <Link
                 href={siteConfig.urls.login}
-                className="text-sm text-gray-500 hover:text-brand-red transition-colors"
+                className="text-sm font-semibold text-brand-red/60 hover:text-brand-red transition-colors pl-2 border-l border-brand-red/15"
               >
                 Entrar
               </Link>
             )}
           </div>
 
+          {/* Fitts: botón hamburguesa grande */}
           <button
             type="button"
-            className="md:hidden p-2 text-brand-red"
+            className="md:hidden p-3 -mr-1 text-brand-red rounded-xl hover:bg-brand-red/5 transition-colors"
             onClick={() => setOpen(!open)}
             aria-label={open ? "Cerrar menu" : "Abrir menu"}
             aria-expanded={open}
           >
-            {open ? <X size={24} /> : <Menu size={24} />}
+            {open ? <X size={22} /> : <Menu size={22} />}
           </button>
         </div>
 
         {open && (
-          <div className="md:hidden py-4 border-t border-brand-red/20 flex flex-col gap-3 animate-menu-in">
+          <div className="md:hidden py-5 border-t border-brand-red/10 flex flex-col gap-1 animate-menu-in">
             {navItems.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
-                className="text-brand-red font-medium px-2 py-1"
+                className={cn(
+                  "font-semibold px-3 py-3 rounded-xl transition-colors",
+                  pathname === item.href
+                    ? "text-brand-red bg-brand-red/5"
+                    : "text-brand-red/80 hover:bg-brand-red/5"
+                )}
                 onClick={() => setOpen(false)}
               >
                 {item.label}
               </Link>
             ))}
-            <Link
-              href={siteConfig.urls.publicarChaza}
-              className="font-stencil text-center bg-brand-red text-white px-5 py-2 rounded-full transition-colors hover:bg-brand-red-dark"
-              onClick={() => setOpen(false)}
-            >
-              PUBLICAR CHAZA
-            </Link>
-            {isLoggedIn ? (
-              <button
-                type="button"
-                className="text-brand-red font-medium text-left px-2 py-1"
-                onClick={() => {
-                  logout()
-                  setOpen(false)
-                }}
-              >
-                Salir ({user?.displayName})
-              </button>
-            ) : (
+            <div className="pt-3 mt-2 border-t border-brand-red/10 flex flex-col gap-2">
               <Link
-                href={siteConfig.urls.login}
-                className="text-brand-red font-medium px-2 py-1"
+                href={siteConfig.urls.publicarChaza}
+                className="font-stencil text-sm bg-brand-red text-white px-5 py-3 rounded-xl text-center
+                           transition-colors hover:bg-brand-red-dark block"
                 onClick={() => setOpen(false)}
               >
-                Entrar
+                PUBLICAR CHAZA
               </Link>
-            )}
+              {isLoggedIn ? (
+                <button
+                  type="button"
+                  className="text-brand-red/60 font-medium text-sm text-left px-3 py-2 rounded-xl hover:bg-brand-red/5"
+                  onClick={() => { logout(); setOpen(false) }}
+                >
+                  Salir ({user?.displayName ?? user?.email?.split("@")[0] ?? "cuenta"})
+                </button>
+              ) : (
+                <Link
+                  href={siteConfig.urls.login}
+                  className="text-brand-red font-semibold px-3 py-2 rounded-xl hover:bg-brand-red/5 transition-colors"
+                  onClick={() => setOpen(false)}
+                >
+                  Entrar
+                </Link>
+              )}
+            </div>
           </div>
         )}
       </nav>

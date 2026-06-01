@@ -16,10 +16,13 @@ export default function PublicarChazaPage() {
       />
       <p className="text-sm text-gray-500 mb-8">
         ¿Primera vez?{" "}
-        <Link href="/registro" className="text-brand-red font-medium hover:underline">
+        <Link href={`/registro?next=${encodeURIComponent("/publicar-chaza")}`} className="text-brand-red font-medium hover:underline">
           Crea una cuenta
         </Link>
-        .
+        {" "}·{" "}
+        <Link href="/explorar" className="text-gray-500 hover:text-brand-red hover:underline">
+          Explorar sin cuenta
+        </Link>
       </p>
       <PublishChazaWizard
         menuVisionEnabled={

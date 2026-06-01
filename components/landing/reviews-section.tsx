@@ -119,7 +119,7 @@ export function ReviewsSection() {
         {/* Header */}
         <div className={`flex flex-col sm:flex-row sm:items-end sm:justify-between gap-8 mb-14 scroll-reveal-up ${isVisible ? "visible" : ""}`}>
           <div>
-            <span className="inline-block bg-brand-red/10 text-brand-red text-xs font-semibold uppercase tracking-widest px-4 py-1.5 rounded-full mb-5">
+            <span className="inline-block bg-brand-red/10 text-brand-red text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-5">
               Comunidad
             </span>
             <h2 className="font-stencil text-5xl sm:text-6xl md:text-7xl text-brand-red leading-none tracking-wide">
@@ -128,71 +128,87 @@ export function ReviewsSection() {
           </div>
 
           <div className="flex flex-col gap-4 sm:items-end">
-            <p className="text-gray-400 text-sm max-w-xs sm:text-right">
+            <p className="text-gray-400 text-sm font-medium max-w-xs sm:text-right">
               Testimonios reales de la comunidad universitaria.
             </p>
-            {/* Nav controls */}
-            <div className="flex items-center gap-3">
-              <button onClick={() => go(Math.max(0, page - 1))} disabled={page === 0 || animating} className="w-10 h-10 rounded-full border-2 border-gray-200 flex items-center justify-center text-gray-400 hover:border-brand-red hover:text-brand-red transition-all hover:scale-105 disabled:opacity-25 disabled:cursor-not-allowed disabled:hover:scale-100" aria-label="Anterior">
+            {/* Fitts: botones de nav más grandes y con área de clic mayor */}
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => go(Math.max(0, page - 1))}
+                disabled={page === 0 || animating}
+                className="w-11 h-11 rounded-xl border-2 border-gray-200 flex items-center justify-center text-gray-400
+                           hover:border-brand-red hover:text-brand-red transition-all hover:-translate-x-0.5
+                           disabled:opacity-20 disabled:cursor-not-allowed disabled:hover:translate-x-0"
+                aria-label="Anterior"
+              >
                 <ChevronLeft className="w-5 h-5" />
               </button>
-              <span className="font-stencil text-sm text-gray-400 min-w-[44px] text-center">{page + 1}/{totalPages}</span>
-              <button onClick={() => go(Math.min(totalPages - 1, page + 1))} disabled={page === totalPages - 1 || animating} className="w-10 h-10 rounded-full border-2 border-gray-200 flex items-center justify-center text-gray-400 hover:border-brand-red hover:text-brand-red transition-all hover:scale-105 disabled:opacity-25 disabled:cursor-not-allowed disabled:hover:scale-100" aria-label="Siguiente">
+              {/* Zeigarnik: muestra el progreso de reseñas */}
+              <span className="font-bold text-sm text-gray-400 min-w-[48px] text-center">
+                {page + 1} / {totalPages}
+              </span>
+              <button
+                onClick={() => go(Math.min(totalPages - 1, page + 1))}
+                disabled={page === totalPages - 1 || animating}
+                className="w-11 h-11 rounded-xl border-2 border-gray-200 flex items-center justify-center text-gray-400
+                           hover:border-brand-red hover:text-brand-red transition-all hover:translate-x-0.5
+                           disabled:opacity-20 disabled:cursor-not-allowed disabled:hover:translate-x-0"
+                aria-label="Siguiente"
+              >
                 <ChevronRight className="w-5 h-5" />
               </button>
             </div>
           </div>
         </div>
 
-        {/* Review cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {/* Review cards — Gestalt similitud: tarjetas con mismo estilo */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
           {visible.map((review, i) => (
             <article
               key={review.id}
-              className={`group relative bg-white rounded-3xl p-7 border border-gray-100 hover:border-brand-red/20 hover:shadow-xl transition-all duration-500 flex flex-col gap-5 scroll-reveal-scale ${isVisible ? "visible" : ""}`}
-              style={{ transitionDelay: `${i * 0.12}s` }}
+              className={`group relative bg-gray-50/70 rounded-3xl p-7 border border-gray-100 hover:border-brand-red/15
+                          hover:bg-white hover:shadow-xl hover:shadow-brand-red/5
+                          transition-all duration-500 flex flex-col gap-5
+                          scroll-reveal-scale ${isVisible ? "visible" : ""}`}
+              style={{ transitionDelay: `${i * 0.1}s` }}
             >
-              {/* Large decorative quote mark */}
-              <span className="font-stencil text-[80px] leading-none text-brand-red/8 absolute top-4 right-6 select-none pointer-events-none" aria-hidden="true">
+              {/* Quote decorativo */}
+              <span className="font-stencil text-[72px] leading-none text-brand-red/7 absolute top-4 right-6 select-none pointer-events-none" aria-hidden="true">
                 &ldquo;
               </span>
 
-              {/* Stars */}
               <StarRow rating={review.rating} />
 
-              {/* Comment */}
-              <p className="text-gray-600 text-base leading-relaxed flex-1">
+              <p className="text-gray-600 text-[15px] leading-relaxed flex-1 font-medium">
                 &ldquo;{review.comment}&rdquo;
               </p>
 
-              {/* Chaza tag */}
-              <span className="inline-block text-xs font-semibold text-brand-red bg-brand-red/8 px-3 py-1.5 rounded-full w-fit group-hover:bg-brand-red group-hover:text-white transition-colors duration-300">
+              <span className="inline-block text-xs font-bold text-brand-red bg-brand-red/8 px-3 py-1.5 rounded-full w-fit group-hover:bg-brand-red group-hover:text-white transition-colors duration-300">
                 {review.chaza}
               </span>
 
-              {/* Author */}
               <div className="flex items-center gap-3 pt-4 border-t border-gray-100">
-                <div className={`w-10 h-10 rounded-full flex items-center justify-center text-white text-sm font-bold flex-shrink-0 ${avatarColor[review.avatar] ?? "bg-gray-400"}`} aria-hidden="true">
+                <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-white text-xs font-bold flex-shrink-0 ${avatarColor[review.avatar] ?? "bg-gray-400"}`} aria-hidden="true">
                   {review.avatar}
                 </div>
                 <div>
-                  <p className="font-semibold text-gray-800 text-sm">{review.author}</p>
-                  <p className="text-gray-400 text-xs">{review.faculty} · {review.date}</p>
+                  <p className="font-bold text-gray-800 text-sm">{review.author}</p>
+                  <p className="text-gray-400 text-xs font-medium">{review.faculty} · {review.date}</p>
                 </div>
               </div>
             </article>
           ))}
         </div>
 
-        {/* Dot pagination */}
+        {/* Dot pagination — Zeigarnik: visualización del progreso */}
         <div className="flex justify-center gap-2 mt-10">
           {Array.from({ length: totalPages }).map((_, i) => (
             <button
               key={i}
               onClick={() => go(i)}
               disabled={animating}
-              className={`h-1.5 rounded-full transition-all duration-500 ${i === page ? "w-8 bg-brand-red" : "w-1.5 bg-gray-200 hover:bg-brand-red/40"}`}
-              aria-label={`Pagina ${i + 1}`}
+              className={`h-2 rounded-full transition-all duration-500 ${i === page ? "w-10 bg-brand-red" : "w-2 bg-gray-200 hover:bg-brand-red/40"}`}
+              aria-label={`Página ${i + 1}`}
             />
           ))}
         </div>

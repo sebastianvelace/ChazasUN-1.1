@@ -9,33 +9,34 @@ const SUBTLE_GRID =
   "repeating-linear-gradient(0deg,transparent,transparent 19px,rgba(255,255,255,1) 19px,rgba(255,255,255,1) 20px),repeating-linear-gradient(90deg,transparent,transparent 19px,rgba(255,255,255,1) 19px,rgba(255,255,255,1) 20px)"
 
 // Bento layout metadata — indexed to match categories array order
+// Explicit 6-col × 4-row placement (24 cells): 3× 2×2 featured + 8× 1×1 + 2× 2×1 wide
 const bentoMeta = [
-  // 0  Cafe y Bebidas — large feature
-  { gridClass: "md:col-span-2 md:row-span-2", nameClass: "text-2xl md:text-4xl", iconClass: "w-10 h-10 md:w-14 md:h-14" },
+  // 0  Cafe y Bebidas
+  { gridClass: "md:col-span-2 md:row-span-2 md:col-start-1 md:row-start-1", nameClass: "text-2xl md:text-4xl", iconClass: "w-10 h-10 md:w-14 md:h-14" },
   // 1  Comida
-  { gridClass: "", nameClass: "text-sm md:text-base", iconClass: "w-6 h-6 md:w-8 md:h-8" },
+  { gridClass: "md:col-span-2 md:row-span-2 md:col-start-3 md:row-start-1", nameClass: "text-2xl md:text-4xl", iconClass: "w-10 h-10 md:w-14 md:h-14" },
   // 2  Servicios
-  { gridClass: "", nameClass: "text-sm md:text-base", iconClass: "w-6 h-6 md:w-8 md:h-8" },
+  { gridClass: "md:col-start-5 md:row-start-1", nameClass: "text-sm md:text-base", iconClass: "w-6 h-6 md:w-8 md:h-8" },
   // 3  Papeleria
-  { gridClass: "", nameClass: "text-sm md:text-base", iconClass: "w-6 h-6 md:w-8 md:h-8" },
+  { gridClass: "md:col-start-6 md:row-start-1", nameClass: "text-sm md:text-base", iconClass: "w-6 h-6 md:w-8 md:h-8" },
   // 4  Libros
-  { gridClass: "", nameClass: "text-sm md:text-base", iconClass: "w-6 h-6 md:w-8 md:h-8" },
-  // 5  Tecnologia — large feature
-  { gridClass: "md:col-span-2 md:row-span-2", nameClass: "text-2xl md:text-4xl", iconClass: "w-10 h-10 md:w-14 md:h-14" },
+  { gridClass: "md:col-start-5 md:row-start-2", nameClass: "text-sm md:text-base", iconClass: "w-6 h-6 md:w-8 md:h-8" },
+  // 5  Tecnologia
+  { gridClass: "md:col-span-2 md:row-span-2 md:col-start-1 md:row-start-3", nameClass: "text-2xl md:text-4xl", iconClass: "w-10 h-10 md:w-14 md:h-14" },
   // 6  Belleza
-  { gridClass: "", nameClass: "text-sm md:text-base", iconClass: "w-6 h-6 md:w-8 md:h-8" },
+  { gridClass: "md:col-start-6 md:row-start-2", nameClass: "text-sm md:text-base", iconClass: "w-6 h-6 md:w-8 md:h-8" },
   // 7  Ropa y Accesorios
-  { gridClass: "", nameClass: "text-sm md:text-base", iconClass: "w-6 h-6 md:w-8 md:h-8" },
-  // 8  Arte y Manualidades — large feature
-  { gridClass: "md:col-span-2 md:row-span-2", nameClass: "text-2xl md:text-4xl", iconClass: "w-10 h-10 md:w-14 md:h-14" },
-  // 9  Deportes — wide
-  { gridClass: "md:col-span-2", nameClass: "text-xl md:text-2xl", iconClass: "w-8 h-8 md:w-10 md:h-10" },
+  { gridClass: "md:col-start-3 md:row-start-3", nameClass: "text-sm md:text-base", iconClass: "w-6 h-6 md:w-8 md:h-8" },
+  // 8  Arte y Manualidades
+  { gridClass: "md:col-start-4 md:row-start-3", nameClass: "text-sm md:text-base", iconClass: "w-6 h-6 md:w-8 md:h-8" },
+  // 9  Deportes
+  { gridClass: "md:col-span-2 md:col-start-5 md:row-start-3", nameClass: "text-xl md:text-2xl", iconClass: "w-8 h-8 md:w-10 md:h-10" },
   // 10 Musica
-  { gridClass: "", nameClass: "text-sm md:text-base", iconClass: "w-6 h-6 md:w-8 md:h-8" },
+  { gridClass: "md:col-start-3 md:row-start-4", nameClass: "text-sm md:text-base", iconClass: "w-6 h-6 md:w-8 md:h-8" },
   // 11 Fotografia
-  { gridClass: "", nameClass: "text-sm md:text-base", iconClass: "w-6 h-6 md:w-8 md:h-8" },
-  // 12 Transporte — wide
-  { gridClass: "md:col-span-2", nameClass: "text-xl md:text-2xl", iconClass: "w-8 h-8 md:w-10 md:h-10" },
+  { gridClass: "md:col-start-4 md:row-start-4", nameClass: "text-sm md:text-base", iconClass: "w-6 h-6 md:w-8 md:h-8" },
+  // 12 Transporte
+  { gridClass: "md:col-span-2 md:col-start-5 md:row-start-4", nameClass: "text-xl md:text-2xl", iconClass: "w-8 h-8 md:w-10 md:h-10" },
 ]
 
 export function CategoriesSection() {
@@ -60,15 +61,14 @@ export function CategoriesSection() {
           </p>
         </div>
 
-        {/* Bento grid
-            Layout (6-col, 4-row desktop):
-            Row 1: [Cafe 2×2][Comida][Servicios][Papeleria][Libros]
-            Row 2: [Cafe 2×2][Tec 2×2          ][Belleza  ][Ropa  ]
-            Row 3: [Arte 2×2][Tec 2×2          ][Deportes 2×1     ]
-            Row 4: [Arte 2×2][Musica][Fotografia][Transporte 2×1   ]
+        {/* Bento grid — 6-col × 4-row (24 cells, no gaps)
+            Row 1: [Cafe 2×2][Comida 2×2][Serv][Papel]
+            Row 2: [Cafe     ][Comida    ][Libr][Bell ]
+            Row 3: [Tec 2×2 ][Ropa][Arte][Deportes 2×1]
+            Row 4: [Tec      ][Mus ][Foto][Transporte 2×1]
         */}
         <div
-          className="grid grid-cols-2 md:grid-cols-6 gap-3 [grid-auto-rows:110px] md:[grid-auto-rows:158px]"
+          className="grid grid-cols-2 md:grid-cols-6 md:grid-rows-4 gap-3 [grid-auto-rows:110px] md:[grid-auto-rows:158px]"
         >
           {categories.map((cat, index) => {
             const meta = bentoMeta[index]
@@ -116,17 +116,21 @@ export function CategoriesSection() {
           })}
         </div>
 
-        {/* CTA row */}
-        <div className={`flex flex-col sm:flex-row items-center justify-between gap-6 mt-10 pt-8 border-t border-white/10 scroll-reveal-up ${isVisible ? "visible" : ""}`}>
-          <p className="text-gray-500 text-sm">
-            ¿No encuentras tu categoría? Publica y sé el primero.
+        {/* CTA row — Gestalt: elemento separado visualmente con borde */}
+        <div className={`flex flex-col sm:flex-row items-center justify-between gap-6 mt-10 pt-8 border-t border-gray-100 scroll-reveal-up ${isVisible ? "visible" : ""}`}>
+          <p className="text-gray-500 text-sm font-medium">
+            ¿Tu chaza no aparece? Publícala gratis y sé el primero.
           </p>
+          {/* Fitts: botón más grande, más fácil de clicar */}
           <Link
             href={siteConfig.urls.publicarChaza}
-            className="inline-flex items-center gap-2 font-stencil text-sm bg-brand-red text-white px-6 py-3 rounded-full hover:bg-brand-red-dark transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-brand-red/30 group shrink-0"
+            className="btn-red-shimmer inline-flex items-center gap-2 font-stencil text-sm bg-brand-red text-white px-7 py-3.5 rounded-xl
+                       hover:bg-brand-red-dark transition-colors duration-300 hover:-translate-y-0.5
+                       hover:shadow-lg hover:shadow-brand-red/25 group shrink-0 active:scale-[0.97]
+                       shadow-md shadow-brand-red/15"
           >
             <span>PUBLICAR MI CHAZA</span>
-            <span className="group-hover:translate-x-1 transition-transform duration-200">→</span>
+            <span className="group-hover:translate-x-1 transition-transform duration-200" aria-hidden="true">→</span>
           </Link>
         </div>
 

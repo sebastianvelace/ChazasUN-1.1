@@ -4,7 +4,7 @@ import { useState } from "react"
 import { toast } from "sonner"
 import { createBrowserSupabaseClient } from "@/lib/supabase/client"
 import { getSupabaseBrowserEnv } from "@/lib/supabase/env"
-import { siteConfig } from "@/config/site"
+import { safeNextPath } from "@/lib/security/safe-redirect"
 
 function GoogleGlyph({ className }: { className?: string }) {
   return (
@@ -31,9 +31,10 @@ function GoogleGlyph({ className }: { className?: string }) {
 
 type Props = {
   label?: string
+  nextPath?: string
 }
 
-export function GoogleOAuthButton({ label = "Continuar con Google" }: Props) {
+export function GoogleOAuthButton({ label = "Continuar con Google", nextPath }: Props) {
   const [loading, setLoading] = useState(false)
   const hasEnv = !!getSupabaseBrowserEnv()
   if (!hasEnv) return null
@@ -42,7 +43,7 @@ export function GoogleOAuthButton({ label = "Continuar con Google" }: Props) {
     setLoading(true)
     try {
       const supabase = createBrowserSupabaseClient()
-      const next = encodeURIComponent(siteConfig.urls.explorar)
+      const next = encodeURIComponent(safeNextPath(nextPath))
       const redirectTo = `${window.location.origin}/auth/callback?next=${next}`
       const { error } = await supabase.auth.signInWithOAuth({
         provider: "google",

@@ -1,20 +1,26 @@
 import type { Metadata } from 'next'
-import { DM_Sans, Barlow_Condensed } from 'next/font/google'
+import { Plus_Jakarta_Sans, Barlow_Condensed, Cormorant_Garamond } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import { Toaster } from 'sonner'
 import { AnalyticsProvider } from '@/components/analytics/analytics-provider'
 import './globals.css'
 
-const dmSans = DM_Sans({ 
+const plusJakartaSans = Plus_Jakarta_Sans({
   subsets: ["latin"],
   variable: '--font-sans',
-  weight: ['400', '500', '600', '700']
+  weight: ['400', '500', '600', '700', '800']
 })
 
-const barlowCondensed = Barlow_Condensed({ 
+const barlowCondensed = Barlow_Condensed({
   weight: ['600', '700', '800'],
   subsets: ["latin"],
   variable: '--font-stencil'
+})
+
+const cormorantGaramond = Cormorant_Garamond({
+  weight: ['300', '400', '600', '700'],
+  subsets: ['latin'],
+  variable: '--font-hero',
 })
 
 export const metadata: Metadata = {
@@ -46,7 +52,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="es" className={`${dmSans.variable} ${barlowCondensed.variable}`}>
+    <html lang="es" className={`${plusJakartaSans.variable} ${barlowCondensed.variable} ${cormorantGaramond.variable}`}>
       <body className="font-sans antialiased bg-white">
         <AnalyticsProvider>{children}</AnalyticsProvider>
         <Toaster richColors position="top-center" />

@@ -47,7 +47,7 @@ export function CampusMap({
   return (
     <div className={cn("flex flex-col lg:flex-row gap-6", className)}>
       <div className="relative flex-1 rounded-3xl border border-gray-100 overflow-hidden bg-gray-50 shadow-lg">
-        <div className="relative w-full aspect-[4/3] sm:aspect-[16/10]">
+        <div className="relative w-full aspect-[3/2] sm:aspect-[16/9] min-h-[360px] sm:min-h-[480px] lg:min-h-[540px]">
           <Image
             src={campusConfig.mapImageUrl}
             alt="Mapa del campus UN Bogota"
@@ -141,7 +141,7 @@ function ChazaMapCard({ chaza, onClose }: { chaza: ChazaCard; onClose: () => voi
       <p className="text-sm text-gray-600 mb-3">{chaza.location}</p>
       <div className="flex items-center gap-1 text-sm text-gray-500 mb-4">
         <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-        {chaza.rating} · {chaza.reviews} resenas
+        {chaza.rating} · {chaza.reviews} reseñas
       </div>
       <div className="flex flex-col gap-2">
         <Link
