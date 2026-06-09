@@ -60,7 +60,7 @@ export const blogPosts: BlogPost[] = [
       "Hoy la tecnologia permite mapear esos puestos y darles visibilidad sin perder el espiritu comunitario. Documentar oferta y precios ayuda a nuevas generaciones.",
       "Conservar la memoria de estas practicas refuerza el valor del trabajo estudiantil y de la economia del campus.",
     ],
-    image: "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=800&h=500&fit=crop&q=80",
+    image: "https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=800&h=500&fit=crop&q=80",
     author: "Ana Martinez",
     date: "5 Mar 2024",
     readTime: "7 min",

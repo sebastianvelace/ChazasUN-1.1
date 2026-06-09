@@ -12,9 +12,11 @@ const enter = (mounted: boolean, delay = "") =>
 export function HeroSection({
   chazasPublished = 50,
   reviewsPublished = 120,
+  featuredImage,
 }: {
   chazasPublished?: number
   reviewsPublished?: number
+  featuredImage?: string
 }) {
   const [mounted, setMounted] = useState(false)
   useEffect(() => { setMounted(true) }, [])
@@ -135,7 +137,12 @@ export function HeroSection({
               <div className="absolute inset-0 rounded-3xl bg-white/20 border border-white/30 shadow-xl translate-x-4 translate-y-3 rotate-3" />
               {/* Front card */}
               <div className="relative w-64 rounded-3xl overflow-hidden shadow-2xl border border-white/20 -rotate-1">
-                <div className="h-48 bg-gradient-to-br from-amber-400 to-orange-500" />
+                {featuredImage ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={featuredImage} alt="" className="h-48 w-full object-cover" />
+                ) : (
+                  <div className="h-48 bg-gradient-to-br from-amber-400 to-orange-500" />
+                )}
                 <div className="bg-white p-4">
                   <span className="text-[10px] font-semibold uppercase tracking-widest text-brand-red bg-brand-red/10 px-2 py-0.5 rounded-full">
                     Comida

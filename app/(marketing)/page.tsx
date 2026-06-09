@@ -20,6 +20,7 @@ export default async function HomePage() {
         <HeroSection
           chazasPublished={stats.chazasPublished}
           reviewsPublished={stats.reviewsPublished}
+          featuredImage={chazas[0]?.image}
         />
         <ChazaSwiper sectionId="explorar" showViewAllLink items={chazas} />
         <CategoriesSection />
