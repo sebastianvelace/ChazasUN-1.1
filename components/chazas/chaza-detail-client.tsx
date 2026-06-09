@@ -2,6 +2,8 @@
 
 import Link from "next/link"
 import { useCallback, useEffect, useMemo, useState } from "react"
+import { formatDistanceToNow } from "date-fns"
+import { es } from "date-fns/locale"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { MapPin, Star, Clock, ArrowLeft, ExternalLink, Flag } from "lucide-react"
@@ -205,10 +207,7 @@ export function ChazaDetailClient({ slug }: { slug: string }) {
             </span>
             {chaza.verifiedAt ? <ChazaVerifiedBadge /> : null}
           </div>
-          <div className="flex flex-wrap items-start justify-between gap-4 mb-4">
-            <h1 className="font-stencil text-4xl text-brand-red">{chaza.name}</h1>
-            <ChazaShareButton slug={slug} chazaName={chaza.name} className="shrink-0" />
-          </div>
+          <h1 className="font-stencil text-4xl text-brand-red mb-4">{chaza.name}</h1>
 
           {useRemote && isLoggedIn && isUuid(chaza.id) && (
             <button
@@ -261,6 +260,9 @@ export function ChazaDetailClient({ slug }: { slug: string }) {
                 {tag}
               </span>
             ))}
+          </div>
+          <div className="mb-8">
+            <ChazaShareButton slug={slug} chazaName={chaza.name} />
           </div>
 
           {(chaza.contactWhatsApp || chaza.contactInstagram) && (
@@ -340,7 +342,9 @@ export function ChazaDetailClient({ slug }: { slug: string }) {
                 </div>
               </div>
               <p className="text-gray-700 text-sm leading-relaxed">{r.body}</p>
-              <p className="text-xs text-gray-400 mt-2">{new Date(r.createdAt).toLocaleString("es-CO")}</p>
+              <p className="text-xs text-gray-400 mt-2" title={new Date(r.createdAt).toLocaleDateString("es-CO")}>
+                {formatDistanceToNow(new Date(r.createdAt), { addSuffix: true, locale: es })}
+              </p>
             </li>
           ))}
         </ul>
@@ -348,12 +352,15 @@ export function ChazaDetailClient({ slug }: { slug: string }) {
         <div className="rounded-2xl border border-gray-200 p-6 bg-white">
           <h3 className="font-semibold text-gray-800 mb-4">Escribir reseña</h3>
           {!isLoggedIn ? (
-            <p className="text-sm text-gray-600 mb-4">
-              <Link href="/login" className="text-brand-red font-medium hover:underline">
-                Inicia sesion
-              </Link>{" "}
-              {useRemote ? "para dejar una reseña." : "(demo) para dejar una reseña."}
-            </p>
+            <div className="flex flex-col items-center gap-3 py-4 text-center">
+              <p className="text-sm text-gray-600">Inicia sesion para compartir tu opinion</p>
+              <Link
+                href={`/login?next=/chazas/${slug}`}
+                className="font-stencil bg-brand-red text-white px-6 py-2.5 rounded-full text-sm hover:bg-brand-red-dark"
+              >
+                INICIAR SESION
+              </Link>
+            </div>
           ) : (
             <form onSubmit={onSubmitReview} className="space-y-4">
               <div>

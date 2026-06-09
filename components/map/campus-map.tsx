@@ -31,6 +31,10 @@ export function CampusMap({
   const { cards } = useChazaCatalog()
   const [selected, setSelected] = useState<ChazaCard | null>(null)
   const { track } = useAnalytics()
+  const [zoom, setZoom] = useState(1)
+  const MIN_ZOOM = 1
+  const MAX_ZOOM = 3
+  const ZOOM_STEP = 0.5
 
   const chazasWithMap = useMemo(() => {
     let withPins = cards.filter((c) => c.mapPosition)
@@ -47,44 +51,80 @@ export function CampusMap({
   return (
     <div className={cn("flex flex-col lg:flex-row gap-6", className)}>
       <div className="relative flex-1 rounded-3xl border border-gray-100 overflow-hidden bg-gray-50 shadow-lg">
-        <div className="relative w-full aspect-[3/2] sm:aspect-[16/9] min-h-[360px] sm:min-h-[480px] lg:min-h-[540px]">
-          <Image
-            src={campusConfig.mapImageUrl}
-            alt="Mapa del campus UN Bogota"
-            fill
-            className="object-contain"
-            priority
-            sizes="(max-width: 1024px) 100vw, 70vw"
-          />
-          {chazasWithMap.map((chaza) => {
-            const pos = chaza.mapPosition!
-            const isActive = selected?.id === chaza.id
-            return (
-              <button
-                key={chaza.id}
-                type="button"
-                className={cn(
-                  "absolute -translate-x-1/2 -translate-y-full z-10 transition-transform hover:scale-110 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-red",
-                  isActive && "scale-125 z-20"
-                )}
-                style={{ left: `${pos.x}%`, top: `${pos.y}%` }}
-                onClick={() => {
-                  setSelected(chaza)
-                  track("map_pin_click", { chazaId: chaza.id })
-                }}
-                aria-label={`Chaza ${chaza.name}`}
-              >
-                <span
+        <div className="relative w-full aspect-[3/2] sm:aspect-[16/9] min-h-[360px] sm:min-h-[480px] lg:min-h-[540px] overflow-hidden">
+          <div
+            style={{
+              transform: `scale(${zoom})`,
+              transformOrigin: "center center",
+              transition: "transform 0.2s ease-out",
+            }}
+            className="absolute inset-0"
+          >
+            <Image
+              src={campusConfig.mapImageUrl}
+              alt="Mapa del campus UN Bogota"
+              fill
+              className="object-contain"
+              priority
+              sizes="(max-width: 1024px) 100vw, 70vw"
+            />
+            {chazasWithMap.map((chaza) => {
+              const pos = chaza.mapPosition!
+              const isActive = selected?.id === chaza.id
+              return (
+                <button
+                  key={chaza.id}
+                  type="button"
                   className={cn(
-                    "flex h-9 w-9 items-center justify-center rounded-full border-2 border-white shadow-lg",
-                    isActive ? "bg-brand-red" : "bg-brand-red/90"
+                    "absolute -translate-x-1/2 -translate-y-full z-10 transition-transform hover:scale-110 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-red",
+                    isActive && "scale-125 z-20"
                   )}
+                  style={{ left: `${pos.x}%`, top: `${pos.y}%` }}
+                  onClick={() => {
+                    setSelected(chaza)
+                    track("map_pin_click", { chazaId: chaza.id })
+                  }}
+                  aria-label={`Chaza ${chaza.name}`}
                 >
-                  <MapPin className="h-5 w-5 text-white" />
-                </span>
-              </button>
-            )
-          })}
+                  <span className="relative flex h-9 w-9 items-center justify-center">
+                    {isActive && (
+                      <span className="absolute inset-0 rounded-full bg-brand-red animate-ping opacity-30" />
+                    )}
+                    <span
+                      className={cn(
+                        "flex h-9 w-9 items-center justify-center rounded-full border-2 border-white shadow-lg",
+                        isActive ? "bg-brand-red" : "bg-brand-red/90"
+                      )}
+                    >
+                      <MapPin className="h-5 w-5 text-white" />
+                    </span>
+                  </span>
+                </button>
+              )
+            })}
+          </div>
+
+          {/* Zoom controls */}
+          <div className="absolute bottom-4 right-4 z-20 flex flex-col gap-2">
+            <button
+              type="button"
+              onClick={() => setZoom((z) => Math.min(z + ZOOM_STEP, MAX_ZOOM))}
+              disabled={zoom >= MAX_ZOOM}
+              className="w-10 h-10 rounded-full bg-white shadow-lg border border-gray-200 flex items-center justify-center text-gray-700 font-bold text-lg hover:bg-gray-50 disabled:opacity-40"
+              aria-label="Acercar"
+            >
+              +
+            </button>
+            <button
+              type="button"
+              onClick={() => setZoom((z) => Math.max(z - ZOOM_STEP, MIN_ZOOM))}
+              disabled={zoom <= MIN_ZOOM}
+              className="w-10 h-10 rounded-full bg-white shadow-lg border border-gray-200 flex items-center justify-center text-gray-700 font-bold text-lg hover:bg-gray-50 disabled:opacity-40"
+              aria-label="Alejar"
+            >
+              −
+            </button>
+          </div>
         </div>
         <p className="text-xs text-gray-400 px-4 py-2 border-t bg-white">
           Plano UN Bogota. Chazas con pin aparecen al publicar o en datos de demo.

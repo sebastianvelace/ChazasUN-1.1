@@ -64,6 +64,22 @@ export default async function BlogPostPage({ params }: PageProps) {
           ))}
         </div>
       </article>
+
+      <div className="mt-16 border-t border-gray-100 pt-10 flex flex-col sm:flex-row items-center justify-between gap-6">
+        <Link
+          href="/blog"
+          className="flex items-center gap-2 text-sm text-gray-500 hover:text-brand-red transition-colors"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          Volver al blog
+        </Link>
+        <Link
+          href="/explorar"
+          className="font-stencil bg-brand-red text-white px-8 py-3 rounded-full text-sm hover:bg-brand-red-dark transition-colors"
+        >
+          EXPLORAR CHAZAS
+        </Link>
+      </div>
     </PageContainer>
   )
 }

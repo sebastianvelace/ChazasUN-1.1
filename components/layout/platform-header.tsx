@@ -16,11 +16,12 @@ export function PlatformHeader() {
   const { user, isLoggedIn, logout } = useSession()
   const scrolled = useScrolled()
 
-  /* Hick's Law: max 3 links primarios. Si está logueado, mis chazas reemplaza blog */
+  /* Hick's Law: max 4 links primarios. Guardadas siempre visible; último slot según sesión */
   const navItems = useMemo(() => {
     const base: { href: string; label: string }[] = [
-      { href: siteConfig.urls.explorar,    label: "Explorar" },
-      { href: siteConfig.urls.mapa,        label: "Mapa"     },
+      { href: siteConfig.urls.explorar,   label: "Explorar"   },
+      { href: siteConfig.urls.mapa,       label: "Mapa"       },
+      { href: siteConfig.urls.guardadas,  label: "Guardadas"  },
     ]
     if (isLoggedIn) {
       base.push({ href: siteConfig.urls.misChazas, label: "Mis chazas" })

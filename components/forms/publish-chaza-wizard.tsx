@@ -214,38 +214,23 @@ export function PublishChazaWizard({ menuVisionEnabled = false }: { menuVisionEn
 
   return (
     <div className="space-y-8">
-      <nav aria-label="Progreso" className="flex flex-wrap gap-2">
-        {STEPS.map((label, i) => (
-          <button
-            key={label}
-            type="button"
-            onClick={async () => {
-              if (i <= step) {
-                setStep(i)
-                return
-              }
-              for (let s = step; s < i; s++) {
-                const ok = await validateStep(s)
-                if (!ok) {
-                  setStep(s)
-                  return
-                }
-              }
-              setStep(i)
-            }}
-            className={cn(
-              "text-xs font-semibold px-3 py-1.5 rounded-full border transition-colors",
-              i === step
-                ? "bg-brand-red text-white border-brand-red"
-                : i < step
-                  ? "border-brand-red/40 text-brand-red"
-                  : "border-gray-200 text-gray-400"
-            )}
-          >
-            {i + 1}. {label}
-          </button>
-        ))}
-      </nav>
+      {/* Step indicator */}
+      <div className="mb-8">
+        <div className="flex items-center justify-between mb-2">
+          <span className="text-xs font-semibold text-gray-400 uppercase tracking-widest">
+            Paso {step + 1} de {STEPS.length}
+          </span>
+          <span className="text-xs font-semibold text-brand-red">
+            {STEPS[step]}
+          </span>
+        </div>
+        <div className="h-1.5 w-full bg-gray-100 rounded-full overflow-hidden">
+          <div
+            className="h-full bg-brand-red rounded-full transition-all duration-500 ease-out"
+            style={{ width: `${((step + 1) / STEPS.length) * 100}%` }}
+          />
+        </div>
+      </div>
 
       {step === 0 && (
         <div className="rounded-2xl border border-gray-100 bg-gray-50 p-6 space-y-4">

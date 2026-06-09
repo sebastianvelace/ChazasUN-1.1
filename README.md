@@ -582,6 +582,7 @@ Pasos detallados (migraciones, variables `NEXT_PUBLIC_*`, **Site URL** y **Redir
 
 | Documento | Contenido |
 |-----------|-----------|
+| [`docs/INFORME_ACADEMICO.md`](docs/INFORME_ACADEMICO.md) | **Informe académico técnico** — 10 secciones (abstract, diseño, pruebas, viabilidad, referencias IEEE) |
 | [`docs/GUIA_COMPLETA.md`](docs/GUIA_COMPLETA.md) | **Guía completa del proyecto** — arquitectura, flujos, seguridad y FAQ para externos |
 | [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) | Carpetas, rutas, flujo de datos |
 | [`docs/CALENDARIO_8_SEMANAS.md`](docs/CALENDARIO_8_SEMANAS.md) | **Calendario 8 semanas** (desarrollo sin IA + marketing semanas 7–8) |

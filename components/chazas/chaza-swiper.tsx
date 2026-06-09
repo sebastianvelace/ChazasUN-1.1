@@ -17,6 +17,7 @@ import {
   toggleSaveInStorage,
 } from "@/lib/storage/favorites"
 import { siteConfig } from "@/config/site"
+import { categories } from "@/config/categories"
 import type { ChazaCard } from "@/types/chaza"
 import { AuthPromptDialog, type AuthPromptReason } from "@/components/auth/auth-prompt-dialog"
 import { ChazaVerifiedBadge } from "@/components/chazas/chaza-verified-badge"
@@ -84,26 +85,34 @@ export function ChazaSwiper({
 
   const [nameQuery, setNameQuery] = useState("")
 
+  // ── TAREA 1: Internal category filter state ──
+  const [activeCategory, setActiveCategory] = useState<string | null>(categoryFilter ?? null)
+
+  // Sync activeCategory when the categoryFilter prop changes
+  useEffect(() => {
+    setActiveCategory(categoryFilter ?? null)
+  }, [categoryFilter])
+
   const source = itemsProp ?? cards
   const filtered = useMemo(() => {
-    let list = !categoryFilter
+    let list = !activeCategory
       ? source
       : source.filter((c) =>
-          (c.categorySlugs ?? inferCategorySlugsFromLabel(c.category)).includes(categoryFilter)
+          (c.categorySlugs ?? inferCategorySlugsFromLabel(c.category)).includes(activeCategory)
         )
     const q = nameQuery.trim().toLowerCase()
     if (q) {
       list = list.filter((c) => c.name.toLowerCase().includes(q))
     }
     return list
-  }, [source, categoryFilter, nameQuery])
+  }, [source, activeCategory, nameQuery])
 
   const featuredVisible = useMemo(() => {
     if (!featuredStrip?.length) return []
     let list = featuredStrip
-    if (categoryFilter) {
+    if (activeCategory) {
       list = list.filter((c) =>
-        (c.categorySlugs ?? inferCategorySlugsFromLabel(c.category)).includes(categoryFilter)
+        (c.categorySlugs ?? inferCategorySlugsFromLabel(c.category)).includes(activeCategory)
       )
     }
     const q = nameQuery.trim().toLowerCase()
@@ -111,13 +120,32 @@ export function ChazaSwiper({
       list = list.filter((c) => c.name.toLowerCase().includes(q))
     }
     return list
-  }, [featuredStrip, categoryFilter, nameQuery])
+  }, [featuredStrip, activeCategory, nameQuery])
 
   const [offset, setOffset] = useState(0)
   const [isDragging, setIsDragging] = useState(false)
   const [exitDirection, setExitDirection] = useState<"left" | "right" | null>(null)
   const [showInfo, setShowInfo] = useState(false)
   const [authPrompt, setAuthPrompt] = useState<AuthPromptReason | null>(null)
+
+  // ── TAREA 3: Onboarding hint ──
+  const [showHint, setShowHint] = useState(false)
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (typeof window !== "undefined" && !localStorage.getItem("chazasun_swiper_onboarded")) {
+        setShowHint(true)
+      }
+    }, 600)
+    return () => clearTimeout(timer)
+  }, [])
+
+  const dismissHint = useCallback(() => {
+    setShowHint(false)
+    if (typeof window !== "undefined") {
+      localStorage.setItem("chazasun_swiper_onboarded", "1")
+    }
+  }, [])
 
   const { track } = useAnalytics()
 
@@ -158,6 +186,8 @@ export function ChazaSwiper({
   const handleAdvance = useCallback(
     (direction: "like" | "pass") => {
       if (!current) return
+      // Dismiss hint on first real swipe
+      dismissHint()
       if (direction === "like") {
         if (!isLoggedIn) {
           requireAuth("like")
@@ -196,7 +226,7 @@ export function ChazaSwiper({
         setExitDirection(null)
       }, 400)
     },
-    [current, deckAdvance, queue, track, requireAuth, isLoggedIn, useRemote, addLike]
+    [current, deckAdvance, queue, track, requireAuth, isLoggedIn, useRemote, addLike, dismissHint]
   )
 
   const handleUndo = useCallback(() => {
@@ -220,6 +250,7 @@ export function ChazaSwiper({
   }, [current, requireAuth, isLoggedIn, toggleSave, useRemote, remoteToggleSave])
 
   const onPointerDown = (e: React.PointerEvent) => {
+    if ((e.target as HTMLElement).closest("button, a")) return
     if (e.pointerType === "mouse" && e.button !== 0) return
     setIsDragging(true)
     startX.current = e.clientX
@@ -246,6 +277,40 @@ export function ChazaSwiper({
   const rotation = offset / 25
   const likeOpacity = Math.min(Math.max(offset / SWIPE_THRESHOLD, 0), 1)
   const skipOpacity = Math.min(Math.max(-offset / SWIPE_THRESHOLD, 0), 1)
+
+  // ── TAREA 1: Category pills component (shared) ──
+  const CategoryPills = (
+    <div className="relative">
+      <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-none">
+        <button
+          type="button"
+          onClick={() => setActiveCategory(null)}
+          className={`shrink-0 px-4 py-1.5 rounded-full text-sm font-medium transition-colors ${
+            activeCategory === null
+              ? "bg-brand-red text-white font-semibold"
+              : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+          }`}
+        >
+          Todas
+        </button>
+        {categories.map((cat) => (
+          <button
+            key={cat.slug}
+            type="button"
+            onClick={() => setActiveCategory(cat.slug === activeCategory ? null : cat.slug)}
+            className={`shrink-0 px-4 py-1.5 rounded-full text-sm font-medium transition-colors ${
+              activeCategory === cat.slug
+                ? "bg-brand-red text-white font-semibold"
+                : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+            }`}
+          >
+            {cat.name}
+          </button>
+        ))}
+      </div>
+      <div className="pointer-events-none absolute right-0 top-0 bottom-2 w-10 bg-gradient-to-l from-white to-transparent" />
+    </div>
+  )
 
   if (filtered.length === 0) {
     return (
@@ -275,6 +340,7 @@ export function ChazaSwiper({
               <h2 className="font-stencil text-4xl text-brand-red mb-3">EXPLORA CHAZAS</h2>
             </div>
           )}
+          <div className="mb-6">{CategoryPills}</div>
           <p className="text-gray-600 text-sm">
             {nameQuery.trim()
               ? "No hay chazas con ese nombre. Prueba otra palabra."
@@ -376,11 +442,6 @@ export function ChazaSwiper({
                 <h2 className="font-stencil text-4xl sm:text-5xl text-brand-red mb-3 tracking-wide">
                   EXPLORA CHAZAS
                 </h2>
-                {categoryFilter && (
-                  <p className="text-brand-red/80 text-xs font-semibold uppercase tracking-wider mb-2">
-                    Filtro activo
-                  </p>
-                )}
                 <p className="text-gray-500 max-w-sm mx-auto text-sm leading-relaxed">
                   Desliza a la derecha si te interesa. Al pasar, la chaza vuelve al final del mazo — como flashcards.
                 </p>
@@ -404,6 +465,11 @@ export function ChazaSwiper({
                 )}
               </div>
             )}
+
+            {/* Mobile-only: category pills (between header and card stack) */}
+            <div className="lg:hidden mb-4">
+              {CategoryPills}
+            </div>
 
             {/* Card stack */}
             <div className="relative w-full max-w-[340px] lg:max-w-none mx-auto h-[520px] lg:h-[620px] select-none mb-8 lg:mb-0">
@@ -443,6 +509,18 @@ export function ChazaSwiper({
                   </div>
                 </div>
 
+                {/* ── TAREA 2: Undo button inside card, top-right, visible only when canUndo ── */}
+                {canUndo && (
+                  <button
+                    type="button"
+                    onClick={(e) => { e.stopPropagation(); handleUndo() }}
+                    className="absolute top-3 right-3 z-30 w-9 h-9 rounded-full bg-white flex items-center justify-center shadow-md text-yellow-500 hover:bg-yellow-50 transition-colors"
+                    aria-label="Deshacer"
+                  >
+                    <RotateCcw className="w-4 h-4" />
+                  </button>
+                )}
+
                 <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-20" style={{ opacity: likeOpacity }} aria-hidden>
                   <div className="border-4 border-green-400 rounded-2xl px-8 py-3 -rotate-[15deg] bg-green-400/20 backdrop-blur-sm shadow-2xl">
                     <span className="text-green-400 font-stencil text-4xl tracking-widest drop-shadow-lg">LIKE</span>
@@ -454,6 +532,32 @@ export function ChazaSwiper({
                     <span className="text-red-400 font-stencil text-4xl tracking-widest drop-shadow-lg">PASS</span>
                   </div>
                 </div>
+
+                {/* ── TAREA 3: Onboarding hint overlay ── */}
+                {showHint && (
+                  <div className="absolute inset-0 z-30 flex flex-col items-center justify-center rounded-3xl bg-black/30 backdrop-blur-[2px] pointer-events-none">
+                    <div className="flex items-center gap-8 mb-4">
+                      <div className="flex flex-col items-center gap-1 animate-pulse">
+                        <span className="text-white text-3xl">←</span>
+                        <span className="text-white font-stencil text-sm tracking-widest">PASS</span>
+                      </div>
+                      <div className="flex flex-col items-center gap-1">
+                        <span className="text-white/70 text-sm font-stencil tracking-wide">desliza</span>
+                      </div>
+                      <div className="flex flex-col items-center gap-1 animate-pulse">
+                        <span className="text-white text-3xl">→</span>
+                        <span className="text-white font-stencil text-sm tracking-widest">LIKE</span>
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={dismissHint}
+                      className="pointer-events-auto mt-2 px-5 py-1.5 bg-white/20 hover:bg-white/30 text-white text-xs font-medium rounded-full border border-white/40 transition-colors backdrop-blur-sm"
+                    >
+                      Entendido
+                    </button>
+                  </div>
+                )}
 
                 <div className="absolute bottom-0 left-0 right-0 p-5 z-10">
                   <Link href={`/chazas/${current.slug}`}>
@@ -492,22 +596,17 @@ export function ChazaSwiper({
             </div>
 
             {/* Mobile-only: buttons + dots + stats */}
+            {/* ── TAREA 2: 3 buttons (Pass · Like · Guardar) on mobile ── */}
             <div className="lg:hidden mt-8">
               <div className="flex items-center justify-center gap-4">
-                <button type="button" onClick={handleUndo} disabled={!canUndo} className="btn-swiper-action w-12 h-12 rounded-full bg-white border-2 border-gray-200 flex items-center justify-center text-yellow-500 shadow-md disabled:opacity-30 disabled:cursor-not-allowed" aria-label="Deshacer">
-                  <RotateCcw className="w-5 h-5" />
-                </button>
                 <button type="button" onClick={() => handleAdvance("pass")} className="btn-swiper-action w-16 h-16 rounded-full bg-white border-2 border-gray-200 flex items-center justify-center shadow-md hover:border-red-300 hover:bg-red-50/80" aria-label="Pasar">
                   <X className="w-8 h-8 text-red-400" />
-                </button>
-                <button type="button" onClick={handleSave} className={`btn-swiper-action w-12 h-12 rounded-full bg-white border-2 flex items-center justify-center shadow-md ${isSaved ? "border-blue-400 bg-blue-50" : "border-gray-200"}`} aria-label="Guardar">
-                  <Bookmark className={`w-5 h-5 ${isSaved ? "text-blue-500 fill-blue-500" : "text-blue-400"}`} />
                 </button>
                 <button type="button" onClick={() => handleAdvance("like")} className="btn-swiper-action w-16 h-16 rounded-full bg-gradient-to-br from-green-400 to-emerald-500 flex items-center justify-center shadow-md" aria-label="Me interesa">
                   <Heart className="w-8 h-8 text-white" />
                 </button>
-                <button type="button" onClick={() => setShowInfo(!showInfo)} className={`btn-swiper-action w-12 h-12 rounded-full bg-white border-2 flex items-center justify-center shadow-md ${showInfo ? "border-purple-400 bg-purple-50" : "border-gray-200"}`} aria-label="Mas informacion">
-                  <Info className={`w-5 h-5 ${showInfo ? "text-purple-500" : "text-purple-400"}`} />
+                <button type="button" onClick={handleSave} className={`btn-swiper-action w-14 h-14 rounded-full bg-white border-2 flex items-center justify-center shadow-md ${isSaved ? "border-blue-400 bg-blue-50" : "border-gray-200"}`} aria-label="Guardar">
+                  <Bookmark className={`w-5 h-5 ${isSaved ? "text-blue-500 fill-blue-500" : "text-blue-400"}`} />
                 </button>
               </div>
               <div className="flex justify-center gap-1.5 mt-6">
@@ -536,11 +635,6 @@ export function ChazaSwiper({
                 <h2 className="font-stencil text-5xl xl:text-6xl text-brand-red mb-4 tracking-wide leading-none">
                   EXPLORA<br />CHAZAS
                 </h2>
-                {categoryFilter && (
-                  <p className="text-brand-red/80 text-xs font-semibold uppercase tracking-wider mb-2">
-                    Filtro activo
-                  </p>
-                )}
                 <p className="text-gray-500 text-sm leading-relaxed mb-5">
                   Desliza a la derecha si te interesa. Al pasar, la chaza vuelve al final del mazo — como flashcards.
                 </p>
@@ -562,6 +656,17 @@ export function ChazaSwiper({
                     />
                   </div>
                 )}
+                {/* Desktop: category pills below search bar */}
+                <div className="mt-5">
+                  {CategoryPills}
+                </div>
+              </div>
+            )}
+
+            {/* If no section header, still render pills on desktop */}
+            {!showSectionHeader && (
+              <div className="mb-6">
+                {CategoryPills}
               </div>
             )}
 
@@ -572,22 +677,16 @@ export function ChazaSwiper({
               ))}
             </div>
 
-            {/* Action buttons — larger on desktop */}
+            {/* ── TAREA 2: 3 action buttons on desktop ── */}
             <div className="flex items-center gap-3 mb-8">
-              <button type="button" onClick={handleUndo} disabled={!canUndo} className="btn-swiper-action w-14 h-14 rounded-full bg-white border-2 border-gray-200 flex items-center justify-center text-yellow-500 shadow-md disabled:opacity-30 disabled:cursor-not-allowed" aria-label="Deshacer">
-                <RotateCcw className="w-6 h-6" />
-              </button>
-              <button type="button" onClick={() => handleAdvance("pass")} className="btn-swiper-action w-20 h-20 rounded-full bg-white border-2 border-gray-200 flex items-center justify-center shadow-md hover:border-red-300 hover:bg-red-50/80" aria-label="Pasar">
+              <button type="button" onClick={() => handleAdvance("pass")} className="btn-swiper-action w-[4.5rem] h-[4.5rem] rounded-full bg-white border-2 border-gray-200 flex items-center justify-center shadow-md hover:border-red-300 hover:bg-red-50/80" aria-label="Pasar">
                 <X className="w-9 h-9 text-red-400" />
+              </button>
+              <button type="button" onClick={() => handleAdvance("like")} className="btn-swiper-action w-[4.5rem] h-[4.5rem] rounded-full bg-gradient-to-br from-green-400 to-emerald-500 flex items-center justify-center shadow-md" aria-label="Me interesa">
+                <Heart className="w-9 h-9 text-white" />
               </button>
               <button type="button" onClick={handleSave} className={`btn-swiper-action w-14 h-14 rounded-full bg-white border-2 flex items-center justify-center shadow-md ${isSaved ? "border-blue-400 bg-blue-50" : "border-gray-200"}`} aria-label="Guardar">
                 <Bookmark className={`w-6 h-6 ${isSaved ? "text-blue-500 fill-blue-500" : "text-blue-400"}`} />
-              </button>
-              <button type="button" onClick={() => handleAdvance("like")} className="btn-swiper-action w-20 h-20 rounded-full bg-gradient-to-br from-green-400 to-emerald-500 flex items-center justify-center shadow-md" aria-label="Me interesa">
-                <Heart className="w-9 h-9 text-white" />
-              </button>
-              <button type="button" onClick={() => setShowInfo(!showInfo)} className={`btn-swiper-action w-14 h-14 rounded-full bg-white border-2 flex items-center justify-center shadow-md ${showInfo ? "border-purple-400 bg-purple-50" : "border-gray-200"}`} aria-label="Mas informacion">
-                <Info className={`w-6 h-6 ${showInfo ? "text-purple-500" : "text-purple-400"}`} />
               </button>
             </div>
 
@@ -611,6 +710,7 @@ export function ChazaSwiper({
         open={authPrompt !== null}
         onOpenChange={(open) => !open && setAuthPrompt(null)}
         reason={authPrompt ?? "like"}
+        nextPath={siteConfig.urls.explorar}
       />
     </section>
   )

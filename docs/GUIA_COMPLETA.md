@@ -710,7 +710,6 @@ Deploy: [`VERCEL_DEPLOY.md`](VERCEL_DEPLOY.md)
 ### Pendiente
 
 - Deploy Vercel + smoke test producción
-- Integración Jetson Orin Nano (análisis emocional reseñas — plan académico)
 - Campo: registrar 30–50 chazas reales en campus
 
 Detalle: [`BUILD_PLAN.md`](BUILD_PLAN.md) · [`INFORME_PROYECTO_CLASE.md`](INFORME_PROYECTO_CLASE.md)
@@ -850,13 +849,10 @@ Panel admin → botón VERIFICAR → `verified_at = now()`.
 
 ---
 
-### Sobre el futuro (Jetson / IA edge)
+### Sobre moderación de contenido
 
-**¿Planean IA local?**  
-Sí, como extensión académica: NVIDIA Jetson Orin Nano para análisis de sentimiento/emoción en reseñas, sin enviar texto a nube externa.
-
-**¿Está implementado ya?**  
-No. Documentado en [`INFORME_PROYECTO_CLASE.md`](INFORME_PROYECTO_CLASE.md).
+**¿Cómo se moderan las reseñas?**  
+Con filtro de profanidad en servidor (`lib/security/profanity.ts`) y herramientas exclusivas de administrador (cola de reportes, verificación de chazas). No se usa hardware edge ni análisis de sentimiento local.
 
 ---
 

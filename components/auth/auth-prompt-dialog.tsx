@@ -34,10 +34,13 @@ interface AuthPromptDialogProps {
   open: boolean
   onOpenChange: (open: boolean) => void
   reason: AuthPromptReason
+  /** Path to redirect to after auth. Defaults to siteConfig.urls.explorar. */
+  nextPath?: string
 }
 
-export function AuthPromptDialog({ open, onOpenChange, reason }: AuthPromptDialogProps) {
+export function AuthPromptDialog({ open, onOpenChange, reason, nextPath }: AuthPromptDialogProps) {
   const { title, description } = copy[reason]
+  const resolvedNext = encodeURIComponent(nextPath ?? siteConfig.urls.explorar)
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -54,13 +57,22 @@ export function AuthPromptDialog({ open, onOpenChange, reason }: AuthPromptDialo
           >
             Seguir explorando
           </button>
-          <Link
-            href={siteConfig.urls.registro}
-            className="w-full sm:w-auto font-stencil text-center bg-brand-red text-white px-6 py-2.5 rounded-full hover:bg-brand-red-dark transition-colors"
-            onClick={() => onOpenChange(false)}
-          >
-            CREAR CUENTA
-          </Link>
+          <div className="flex flex-col items-center gap-1.5 w-full sm:w-auto">
+            <Link
+              href={`${siteConfig.urls.registro}?next=${resolvedNext}`}
+              className="w-full sm:w-auto font-stencil text-center bg-brand-red text-white px-6 py-2.5 rounded-full hover:bg-brand-red-dark transition-colors"
+              onClick={() => onOpenChange(false)}
+            >
+              CREAR CUENTA
+            </Link>
+            <Link
+              href={`/login?next=${resolvedNext}`}
+              className="text-xs text-gray-400 hover:text-gray-600 transition-colors"
+              onClick={() => onOpenChange(false)}
+            >
+              ¿Ya tienes cuenta? Entra
+            </Link>
+          </div>
         </DialogFooter>
       </DialogContent>
     </Dialog>
