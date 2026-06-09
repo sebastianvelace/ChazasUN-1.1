@@ -98,17 +98,19 @@ export function HeroSection({
             </Link>
           </div>
 
-          {/* Zeigarnik progress */}
-          <div className={`mb-8 w-full max-w-md mx-auto ${enter(mounted, "motion-delay-4")}`}>
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-white/50 text-xs font-medium flex items-center gap-1.5">
-                <TrendingUp className="w-3.5 h-3.5" />
-                Campus siendo explorado
-              </span>
-              <span className="text-white/70 text-xs font-bold">{exploredPercent}%</span>
+          {/* Zeigarnik progress — solo si hay datos */}
+          {exploredPercent > 0 && (
+            <div className={`mb-8 w-full max-w-md mx-auto ${enter(mounted, "motion-delay-4")}`}>
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-white/50 text-xs font-medium flex items-center gap-1.5">
+                  <TrendingUp className="w-3.5 h-3.5" />
+                  Campus siendo explorado
+                </span>
+                <span className="text-white/70 text-xs font-bold">{exploredPercent}%</span>
+              </div>
+              <div className="zeigarnik-bar" style={{ "--progress-width": `${exploredPercent}%` } as React.CSSProperties} />
             </div>
-            <div className="zeigarnik-bar" style={{ "--progress-width": `${exploredPercent}%` } as React.CSSProperties} />
-          </div>
+          )}
 
           {/* Stats — centered */}
           <div className={`flex flex-wrap items-center justify-center gap-8 border-t border-white/10 pt-7 w-full max-w-lg mx-auto ${enter(mounted, "motion-delay-4")}`}>
