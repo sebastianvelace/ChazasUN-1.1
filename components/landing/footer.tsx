@@ -1,16 +1,65 @@
 "use client"
 
+import { useRef } from "react"
+import type React from "react"
 import Link from "next/link"
 import { SquiggleIcon } from "./squiggle-icon"
 import { useScrollReveal } from "@/hooks/use-scroll-reveal"
 import { siteConfig } from "@/config/site"
+import { useGSAP } from "@gsap/react"
+import { gsap } from "@/lib/gsap"
+import { ScrollTrigger } from "gsap/ScrollTrigger"
+
+gsap.registerPlugin(ScrollTrigger)
 
 export function Footer() {
-  const { ref: footerRef, isVisible } = useScrollReveal<HTMLElement>({ threshold: 0.15 })
+  const { ref: scrollRevealRef, isVisible } = useScrollReveal<HTMLElement>({ threshold: 0.15 })
+  const footerRef = useRef<HTMLElement>(null)
+
+  const setFooterRefs = (el: HTMLElement | null) => {
+    footerRef.current = el
+    if (typeof scrollRevealRef === "function") {
+      scrollRevealRef(el)
+    } else if (scrollRevealRef) {
+      (scrollRevealRef as React.MutableRefObject<HTMLElement | null>).current = el
+    }
+  }
+
+  useGSAP(() => {
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    if (reduced) return
+
+    // Entrada del footer
+    gsap.from(".footer-content", {
+      opacity: 0,
+      y: 32,
+      duration: 0.7,
+      ease: "power2.out",
+      scrollTrigger: {
+        trigger: footerRef.current,
+        start: "top 90%",
+        once: true,
+      },
+    })
+
+    // Blobs flotantes (reemplaza animate-float CSS)
+    const blobs = footerRef.current?.querySelectorAll(".footer-blob")
+    blobs?.forEach((blob, i) => {
+      gsap.to(blob, {
+        y: i % 2 === 0 ? -18 : 14,
+        x: i % 2 === 0 ? 8 : -6,
+        duration: 5 + i * 1.5,
+        yoyo: true,
+        repeat: -1,
+        ease: "sine.inOut",
+        delay: i * 0.8,
+      })
+    })
+  }, { scope: footerRef })
 
   return (
     <footer
-      ref={footerRef}
+      ref={setFooterRefs}
       id="contacto"
       className="bg-brand-red w-full overflow-hidden"
     >
@@ -25,11 +74,11 @@ export function Footer() {
 
         {/* Main footer */}
         <div className="pt-16 pb-12 relative">
-          <div className="absolute top-10 left-0 w-40 h-40 bg-white/4 rounded-full blur-3xl animate-float" aria-hidden="true" />
-          <div className="absolute bottom-0 right-0 w-48 h-48 bg-white/4 rounded-full blur-3xl animate-float" style={{ animationDelay: "1.5s" }} aria-hidden="true" />
+          <div className="footer-blob absolute top-10 left-0 w-40 h-40 bg-white/4 rounded-full blur-3xl" aria-hidden="true" />
+          <div className="footer-blob absolute bottom-0 right-0 w-48 h-48 bg-white/4 rounded-full blur-3xl" aria-hidden="true" />
 
           {/* Layout Gestalt: agrupado en 2 columnas en desktop */}
-          <div className="relative grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+          <div className="footer-content relative grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
 
             {/* Izquierda: Marca */}
             <div className={`scroll-reveal-up ${isVisible ? "visible" : ""}`}>

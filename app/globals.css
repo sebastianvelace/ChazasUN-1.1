@@ -91,7 +91,6 @@
 @theme inline {
   --font-sans: var(--font-sans), 'Plus Jakarta Sans', system-ui, sans-serif;
   --font-stencil: var(--font-stencil), 'Barlow Condensed', Impact, sans-serif;
-  --font-hero: var(--font-hero), 'Cormorant Garamond', Georgia, serif;
   --font-mono: 'Geist Mono', 'Geist Mono Fallback';
   
   /* Brand color classes */
@@ -155,12 +154,6 @@
   font-family: var(--font-stencil), 'Barlow Condensed', Impact, sans-serif;
   letter-spacing: 0.04em;
   font-weight: 800;
-}
-
-/* Hero headline — Playfair Display via next/font */
-.font-hero {
-  font-family: var(--font-hero), 'Cormorant Garamond', Georgia, serif;
-  font-feature-settings: 'liga' 1, 'kern' 1;
 }
 
 /* ========== ANIMATIONS ========== */

@@ -1,22 +1,77 @@
 "use client"
 
+import { useRef } from "react"
 import Link from "next/link"
-import { useScrollReveal } from "@/hooks/use-scroll-reveal"
+import { useGSAP } from "@gsap/react"
+import { gsap } from "@/lib/gsap"
+import { ScrollTrigger } from "gsap/ScrollTrigger"
 import { User, ArrowRight, Clock } from "lucide-react"
 import { blogPosts } from "@/lib/constants/blog-posts"
 
+gsap.registerPlugin(ScrollTrigger)
+
 export function BlogSection() {
-  const { ref, isVisible } = useScrollReveal<HTMLElement>({ threshold: 0.1 })
+  const containerRef = useRef<HTMLElement>(null)
+
+  useGSAP(() => {
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    if (reduced) return
+
+    // Header section
+    gsap.from(".blog-header", {
+      opacity: 0,
+      y: 20,
+      duration: 0.6,
+      ease: "power2.out",
+      scrollTrigger: {
+        trigger: ".blog-header",
+        start: "top 85%",
+        once: true,
+      },
+    })
+
+    // Batch para las tarjetas del blog
+    ScrollTrigger.batch(".blog-card", {
+      onEnter: (elements) => {
+        gsap.fromTo(
+          elements,
+          { opacity: 0, y: 32 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.55,
+            stagger: 0.08,
+            ease: "power2.out",
+          }
+        )
+      },
+      once: true,
+      start: "top 88%",
+    })
+
+    // Newsletter CTA
+    gsap.from(".blog-newsletter", {
+      opacity: 0,
+      scale: 0.98,
+      duration: 0.6,
+      ease: "power2.out",
+      scrollTrigger: {
+        trigger: ".blog-newsletter",
+        start: "top 88%",
+        once: true,
+      },
+    })
+  }, { scope: containerRef })
 
   return (
-    <section 
-      ref={ref}
-      id="blog" 
+    <section
+      ref={containerRef}
+      id="blog"
       className="py-20 px-4 bg-white"
     >
       <div className="mx-auto max-w-6xl">
         {/* Header */}
-        <div className={`flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6 mb-14 scroll-reveal-up ${isVisible ? "visible" : ""}`}>
+        <div className="blog-header flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6 mb-14">
           <div>
             <span className="inline-block bg-brand-red/10 text-brand-red text-xs font-semibold uppercase tracking-widest px-4 py-1.5 rounded-full mb-4">
               Blog
@@ -39,12 +94,11 @@ export function BlogSection() {
 
         {/* Blog grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {blogPosts.map((post, index) => (
+          {blogPosts.map((post) => (
             <Link
               key={post.id}
               href={`/blog/${post.slug}`}
-              className={`group block bg-white rounded-2xl border border-gray-100 overflow-hidden hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 scroll-reveal-up focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-red focus-visible:ring-offset-2 ${isVisible ? "visible" : ""}`}
-              style={{ transitionDelay: `${index * 100}ms` }}
+              className="blog-card group block bg-white rounded-2xl border border-gray-100 overflow-hidden hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-red focus-visible:ring-offset-2"
             >
               <article className="h-full flex flex-col">
               {/* Image */}
@@ -55,7 +109,7 @@ export function BlogSection() {
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                
+
                 {/* Category badge */}
                 <span className="absolute top-4 left-4 bg-white/90 text-brand-red text-xs font-semibold px-3 py-1 rounded-full shadow-sm">
                   {post.category}
@@ -99,7 +153,7 @@ export function BlogSection() {
         </div>
 
         {/* Newsletter CTA */}
-        <div className={`mt-16 bg-gradient-to-br from-brand-red to-brand-red-dark rounded-3xl p-8 sm:p-12 text-center scroll-reveal-scale stagger-4 ${isVisible ? "visible" : ""}`}>
+        <div className="blog-newsletter mt-16 bg-gradient-to-br from-brand-red to-brand-red-dark rounded-3xl p-8 sm:p-12 text-center">
           <h3 className="font-stencil text-2xl sm:text-3xl text-white mb-3 tracking-wide">
             MANTENTE INFORMADO
           </h3>

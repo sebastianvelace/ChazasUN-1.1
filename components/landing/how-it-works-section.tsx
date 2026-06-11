@@ -1,8 +1,12 @@
 "use client"
 
+import { useRef } from "react"
 import Link from "next/link"
-import { useScrollReveal } from "@/hooks/use-scroll-reveal"
+import { useGSAP } from "@gsap/react"
+import { gsap, ScrollTrigger } from "@/lib/gsap"
 import { siteConfig } from "@/config/site"
+
+gsap.registerPlugin(ScrollTrigger)
 
 const steps = [
   {
@@ -52,7 +56,53 @@ const steps = [
 ]
 
 export function HowItWorksSection() {
-  const { ref: sectionRef, isVisible } = useScrollReveal<HTMLElement>({ threshold: 0.1 })
+  const sectionRef = useRef<HTMLElement>(null)
+
+  useGSAP(() => {
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    if (reduced) return
+
+    // Header
+    gsap.from(".hiw-header", {
+      opacity: 0,
+      y: 24,
+      duration: 0.6,
+      ease: "power3.out",
+      scrollTrigger: {
+        trigger: ".hiw-header",
+        start: "top 85%",
+        once: true,
+      },
+    })
+
+    // Connector line animates drawing left→right
+    gsap.from("#connector-line", {
+      scaleX: 0,
+      transformOrigin: "left center",
+      duration: 1.2,
+      ease: "power2.inOut",
+      scrollTrigger: {
+        trigger: "#connector-line",
+        start: "top 85%",
+        once: true,
+      },
+    })
+
+    // Steps con stagger
+    gsap.from(".hiw-step", {
+      opacity: 0,
+      y: 32,
+      scale: 0.97,
+      duration: 0.6,
+      stagger: 0.18,
+      ease: "power3.out",
+      scrollTrigger: {
+        trigger: ".hiw-step",
+        start: "top 80%",
+        once: true,
+      },
+    })
+  }, { scope: sectionRef })
 
   return (
     <section
@@ -76,7 +126,7 @@ export function HowItWorksSection() {
       <div className="relative z-10 mx-auto max-w-6xl">
 
         {/* Header */}
-        <div className={`text-center mb-14 sm:mb-18 scroll-reveal-up ${isVisible ? "visible" : ""}`}>
+        <div className="hiw-header text-center mb-14 sm:mb-18">
           <span className="inline-flex items-center gap-2 glass text-white text-xs font-semibold uppercase tracking-widest px-4 py-2 rounded-full mb-6">
             Simple y directo
           </span>
@@ -98,8 +148,8 @@ export function HowItWorksSection() {
             aria-hidden="true"
           >
             <div
-              className={`h-full bg-gradient-to-r from-white/20 via-white/40 to-white/20 transition-all duration-1000 ${isVisible ? "opacity-100 scale-x-100" : "opacity-0 scale-x-0"}`}
-              style={{ transformOrigin: "left", transitionDelay: "0.6s" }}
+              id="connector-line"
+              className="h-full bg-gradient-to-r from-white/20 via-white/40 to-white/20"
             />
           </div>
 
@@ -107,8 +157,7 @@ export function HowItWorksSection() {
             {steps.map((step, i) => (
               <div
                 key={step.number}
-                className={`group relative scroll-reveal-up ${isVisible ? "visible" : ""}`}
-                style={{ transitionDelay: `${0.15 + i * 0.15}s` }}
+                className="hiw-step group relative"
               >
                 {/* Card glassmorfismo — Jakob's Law: tarjeta reconocible */}
                 <div className="glass rounded-3xl p-8 sm:p-10 h-full hover:bg-white/20 transition-all duration-500 border-white/15 group-hover:border-white/30 group-hover:-translate-y-1 group-hover:shadow-2xl group-hover:shadow-black/20">
@@ -155,7 +204,7 @@ export function HowItWorksSection() {
         </div>
 
         {/* Zeigarnik footer: progreso de la acción */}
-        <div className={`mt-12 text-center scroll-reveal-up ${isVisible ? "visible" : ""}`} style={{ transitionDelay: "0.6s" }}>
+        <div className="mt-12 text-center">
           <p className="text-white/35 text-xs font-semibold uppercase tracking-widest">
             ¿Tienes una chaza? Publícala en menos de 3 minutos →
           </p>

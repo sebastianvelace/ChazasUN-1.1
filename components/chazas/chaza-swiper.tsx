@@ -280,35 +280,32 @@ export function ChazaSwiper({
 
   // ── TAREA 1: Category pills component (shared) ──
   const CategoryPills = (
-    <div className="relative">
-      <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-none">
+    <div className="flex flex-wrap gap-2 justify-center lg:justify-start">
+      <button
+        type="button"
+        onClick={() => setActiveCategory(null)}
+        className={`px-3 sm:px-4 py-1.5 rounded-full text-xs sm:text-sm font-medium transition-colors ${
+          activeCategory === null
+            ? "bg-brand-red text-white font-semibold"
+            : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+        }`}
+      >
+        Todas
+      </button>
+      {categories.map((cat) => (
         <button
+          key={cat.slug}
           type="button"
-          onClick={() => setActiveCategory(null)}
-          className={`shrink-0 px-4 py-1.5 rounded-full text-sm font-medium transition-colors ${
-            activeCategory === null
+          onClick={() => setActiveCategory(cat.slug === activeCategory ? null : cat.slug)}
+          className={`px-3 sm:px-4 py-1.5 rounded-full text-xs sm:text-sm font-medium transition-colors ${
+            activeCategory === cat.slug
               ? "bg-brand-red text-white font-semibold"
               : "bg-gray-100 text-gray-600 hover:bg-gray-200"
           }`}
         >
-          Todas
+          {cat.name}
         </button>
-        {categories.map((cat) => (
-          <button
-            key={cat.slug}
-            type="button"
-            onClick={() => setActiveCategory(cat.slug === activeCategory ? null : cat.slug)}
-            className={`shrink-0 px-4 py-1.5 rounded-full text-sm font-medium transition-colors ${
-              activeCategory === cat.slug
-                ? "bg-brand-red text-white font-semibold"
-                : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-            }`}
-          >
-            {cat.name}
-          </button>
-        ))}
-      </div>
-      <div className="pointer-events-none absolute right-0 top-0 bottom-2 w-10 bg-gradient-to-l from-white to-transparent" />
+      ))}
     </div>
   )
 

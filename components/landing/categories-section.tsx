@@ -1,9 +1,14 @@
 "use client"
 
+import { useRef } from "react"
 import Link from "next/link"
-import { useScrollReveal } from "@/hooks/use-scroll-reveal"
+import { useGSAP } from "@gsap/react"
+import { gsap } from "@/lib/gsap"
+import { ScrollTrigger } from "gsap/ScrollTrigger"
 import { categories } from "@/config/categories"
 import { siteConfig } from "@/config/site"
+
+gsap.registerPlugin(ScrollTrigger)
 
 const SUBTLE_GRID =
   "repeating-linear-gradient(0deg,transparent,transparent 19px,rgba(255,255,255,1) 19px,rgba(255,255,255,1) 20px),repeating-linear-gradient(90deg,transparent,transparent 19px,rgba(255,255,255,1) 19px,rgba(255,255,255,1) 20px)"
@@ -40,14 +45,52 @@ const bentoMeta = [
 ]
 
 export function CategoriesSection() {
-  const { ref, isVisible } = useScrollReveal<HTMLElement>({ threshold: 0.08 })
+  const containerRef = useRef<HTMLElement>(null)
+
+  useGSAP(() => {
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    if (reduced) return
+
+    // Header section
+    gsap.from(".categories-header", {
+      opacity: 0,
+      y: 20,
+      duration: 0.6,
+      ease: "power2.out",
+      scrollTrigger: {
+        trigger: ".categories-header",
+        start: "top 85%",
+        once: true,
+      },
+    })
+
+    // Batch para el grid de categorías
+    ScrollTrigger.batch(".category-item", {
+      onEnter: (elements) => {
+        gsap.fromTo(
+          elements,
+          { opacity: 0, y: 24, scale: 0.97 },
+          {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            duration: 0.5,
+            stagger: 0.06,
+            ease: "power2.out",
+          }
+        )
+      },
+      once: true,
+      start: "top 90%",
+    })
+  }, { scope: containerRef })
 
   return (
-    <section ref={ref} id="categorias" className="py-20 sm:py-28 px-4 bg-white overflow-hidden">
+    <section ref={containerRef} id="categorias" className="py-20 sm:py-28 px-4 bg-white overflow-hidden">
       <div className="mx-auto max-w-6xl">
 
         {/* Header */}
-        <div className={`flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6 mb-12 scroll-reveal-up ${isVisible ? "visible" : ""}`}>
+        <div className="categories-header flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6 mb-12">
           <div>
             <span className="inline-block bg-brand-red/10 text-brand-red text-xs font-semibold uppercase tracking-widest px-4 py-1.5 rounded-full mb-5">
               Explora por categoría
@@ -77,8 +120,7 @@ export function CategoriesSection() {
               <Link
                 key={cat.id}
                 href={`${siteConfig.urls.explorar}?categoria=${cat.slug}`}
-                className={`group relative ${cat.colorClass} rounded-2xl overflow-hidden block transition-all duration-300 hover:scale-[1.025] hover:brightness-110 hover:shadow-2xl hover:shadow-black/50 ${meta.gridClass} scroll-reveal-scale ${isVisible ? "visible" : ""}`}
-                style={{ transitionDelay: `${index * 35}ms` }}
+                className={`category-item group relative ${cat.colorClass} rounded-2xl overflow-hidden block transition-all duration-300 hover:scale-[1.025] hover:brightness-110 hover:shadow-2xl hover:shadow-black/50 ${meta.gridClass}`}
               >
                 {/* Subtle crosshatch texture */}
                 <div
@@ -117,7 +159,7 @@ export function CategoriesSection() {
         </div>
 
         {/* CTA row — Gestalt: elemento separado visualmente con borde */}
-        <div className={`flex flex-col sm:flex-row items-center justify-between gap-6 mt-10 pt-8 border-t border-gray-100 scroll-reveal-up ${isVisible ? "visible" : ""}`}>
+        <div className="categories-header flex flex-col sm:flex-row items-center justify-between gap-6 mt-10 pt-8 border-t border-gray-100">
           <p className="text-gray-500 text-sm font-medium">
             ¿Tu chaza no aparece? Publícala gratis y sé el primero.
           </p>

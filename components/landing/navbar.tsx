@@ -7,6 +7,7 @@ import { Menu, X } from "lucide-react"
 import { siteConfig } from "@/config/site"
 import { useScrolled } from "@/hooks/use-scrolled"
 import { cn } from "@/lib/utils"
+import { useMagnetic } from "@/hooks/use-magnetic"
 
 /* Hick's Law: solo 3 enlaces visibles + 1 CTA. Menos opciones = decisión más rápida */
 const navLinks = [
@@ -18,6 +19,7 @@ const navLinks = [
 export function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const scrolled = useScrolled()
+  const magneticCTA = useMagnetic({ strength: 0.35 })
 
   return (
     <header
@@ -54,15 +56,17 @@ export function Navbar() {
             ))}
 
             {/* Fitts: CTA más grande y llamativo */}
-            <Link
-              href={siteConfig.urls.publicarChaza}
-              className="btn-red-shimmer font-stencil text-sm bg-brand-red text-white px-6 py-2.5 rounded-xl
-                         hover:bg-brand-red-dark transition-colors duration-300 active:scale-[0.97]
-                         shadow-md shadow-brand-red/20 hover:shadow-lg hover:shadow-brand-red/30
-                         hover:-translate-y-0.5"
-            >
-              PUBLICAR CHAZA
-            </Link>
+            <span ref={magneticCTA} style={{ display: 'inline-block' }}>
+              <Link
+                href={siteConfig.urls.publicarChaza}
+                className="btn-red-shimmer font-stencil text-sm bg-brand-red text-white px-6 py-2.5 rounded-xl
+                           hover:bg-brand-red-dark transition-colors duration-300 active:scale-[0.97]
+                           shadow-md shadow-brand-red/20 hover:shadow-lg hover:shadow-brand-red/30
+                           hover:-translate-y-0.5"
+              >
+                PUBLICAR CHAZA
+              </Link>
+            </span>
           </div>
 
           {/* Fitts: botón hamburguesa más grande en mobile */}

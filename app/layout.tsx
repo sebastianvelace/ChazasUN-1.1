@@ -1,8 +1,9 @@
 import type { Metadata } from 'next'
-import { Plus_Jakarta_Sans, Barlow_Condensed, Cormorant_Garamond } from 'next/font/google'
+import { Plus_Jakarta_Sans, Barlow_Condensed } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import { Toaster } from 'sonner'
 import { AnalyticsProvider } from '@/components/analytics/analytics-provider'
+import '@/lib/gsap'
 import './globals.css'
 
 const plusJakartaSans = Plus_Jakarta_Sans({
@@ -15,12 +16,6 @@ const barlowCondensed = Barlow_Condensed({
   weight: ['600', '700', '800'],
   subsets: ["latin"],
   variable: '--font-stencil'
-})
-
-const cormorantGaramond = Cormorant_Garamond({
-  weight: ['300', '400', '600', '700'],
-  subsets: ['latin'],
-  variable: '--font-hero',
 })
 
 export const metadata: Metadata = {
@@ -52,7 +47,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="es" className={`${plusJakartaSans.variable} ${barlowCondensed.variable} ${cormorantGaramond.variable}`}>
+    <html lang="es" className={`${plusJakartaSans.variable} ${barlowCondensed.variable}`}>
       <body className="font-sans antialiased bg-white">
         <AnalyticsProvider>{children}</AnalyticsProvider>
         <Toaster richColors position="top-center" />

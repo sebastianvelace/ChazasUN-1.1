@@ -1,8 +1,14 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useRef } from "react"
+import type React from "react"
 import { Star, ChevronLeft, ChevronRight } from "lucide-react"
 import { useScrollReveal } from "@/hooks/use-scroll-reveal"
+import { useGSAP } from "@gsap/react"
+import { gsap } from "@/lib/gsap"
+import { ScrollTrigger } from "gsap/ScrollTrigger"
+
+gsap.registerPlugin(ScrollTrigger)
 
 interface Review {
   id: number
@@ -103,7 +109,64 @@ export function ReviewsSection() {
   const perPage = 3
   const totalPages = Math.ceil(reviews.length / perPage)
   const visible = reviews.slice(page * perPage, page * perPage + perPage)
-  const { ref, isVisible } = useScrollReveal<HTMLElement>({ threshold: 0.1 })
+  const { ref: scrollRevealRef, isVisible } = useScrollReveal<HTMLElement>({ threshold: 0.1 })
+  const sectionRef = useRef<HTMLElement>(null)
+
+  const setSectionRefs = (el: HTMLElement | null) => {
+    sectionRef.current = el
+    if (typeof scrollRevealRef === "function") {
+      scrollRevealRef(el)
+    } else if (scrollRevealRef) {
+      (scrollRevealRef as React.MutableRefObject<HTMLElement | null>).current = el
+    }
+  }
+
+  useGSAP(() => {
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    if (reduced) return
+
+    // Header
+    gsap.from(".reviews-header", {
+      opacity: 0,
+      y: 24,
+      duration: 0.6,
+      ease: "power3.out",
+      scrollTrigger: {
+        trigger: ".reviews-header",
+        start: "top 85%",
+        once: true,
+      },
+    })
+
+    // Review cards con stagger
+    gsap.from(".review-card", {
+      opacity: 0,
+      y: 32,
+      scale: 0.97,
+      duration: 0.55,
+      stagger: 0.1,
+      ease: "power2.out",
+      scrollTrigger: {
+        trigger: sectionRef.current,
+        start: "top 75%",
+        once: true,
+      },
+    })
+
+    // Pagination dots
+    gsap.from(".review-dots", {
+      opacity: 0,
+      y: 12,
+      duration: 0.4,
+      delay: 0.4,
+      ease: "power2.out",
+      scrollTrigger: {
+        trigger: ".review-dots",
+        start: "top 90%",
+        once: true,
+      },
+    })
+  }, { scope: sectionRef })
 
   const go = (next: number) => {
     if (animating) return
@@ -113,11 +176,11 @@ export function ReviewsSection() {
   }
 
   return (
-    <section ref={ref} id="comentarios" className="py-20 sm:py-28 px-4 bg-white overflow-hidden">
+    <section ref={setSectionRefs} id="comentarios" className="py-20 sm:py-28 px-4 bg-white overflow-hidden">
       <div className="mx-auto max-w-6xl">
 
         {/* Header */}
-        <div className={`flex flex-col sm:flex-row sm:items-end sm:justify-between gap-8 mb-14 scroll-reveal-up ${isVisible ? "visible" : ""}`}>
+        <div className={`reviews-header flex flex-col sm:flex-row sm:items-end sm:justify-between gap-8 mb-14 scroll-reveal-up ${isVisible ? "visible" : ""}`}>
           <div>
             <span className="inline-block bg-brand-red/10 text-brand-red text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-5">
               Comunidad
@@ -166,7 +229,7 @@ export function ReviewsSection() {
           {visible.map((review, i) => (
             <article
               key={review.id}
-              className={`group relative bg-gray-50/70 rounded-3xl p-7 border border-gray-100 hover:border-brand-red/15
+              className={`review-card group relative bg-gray-50/70 rounded-3xl p-7 border border-gray-100 hover:border-brand-red/15
                           hover:bg-white hover:shadow-xl hover:shadow-brand-red/5
                           transition-all duration-500 flex flex-col gap-5
                           scroll-reveal-scale ${isVisible ? "visible" : ""}`}
@@ -201,7 +264,7 @@ export function ReviewsSection() {
         </div>
 
         {/* Dot pagination — Zeigarnik: visualización del progreso */}
-        <div className="flex justify-center gap-2 mt-10">
+        <div className="review-dots flex justify-center gap-2 mt-10">
           {Array.from({ length: totalPages }).map((_, i) => (
             <button
               key={i}
