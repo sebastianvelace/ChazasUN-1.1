@@ -7,8 +7,7 @@ import { useGSAP } from "@gsap/react"
 import gsap from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 
-// Register plugins once at module level (safe in Next.js client components)
-gsap.registerPlugin(ScrollTrigger)
+gsap.registerPlugin(useGSAP, ScrollTrigger)
 
 export function HeroSection({
   chazasPublished = 50,
@@ -21,17 +20,6 @@ export function HeroSection({
 }) {
   const containerRef = useRef<HTMLElement>(null)
 
-  // Element refs for targeted animation
-  const blob1Ref = useRef<HTMLDivElement>(null)
-  const blob2Ref = useRef<HTMLDivElement>(null)
-  const blob3Ref = useRef<HTMLDivElement>(null)
-  const headlineRef = useRef<HTMLHeadingElement>(null)
-  const descRef = useRef<HTMLParagraphElement>(null)
-  const ctaRef = useRef<HTMLDivElement>(null)
-  const progressRef = useRef<HTMLDivElement>(null)
-  const statsRef = useRef<HTMLDivElement>(null)
-  const cardRef = useRef<HTMLDivElement>(null)
-
   const stats = [
     { value: String(chazasPublished), label: "Chazas activas" },
     ...(reviewsPublished > 0 ? [{ value: String(reviewsPublished), label: "Reseñas" }] : []),
@@ -42,152 +30,48 @@ export function HeroSection({
     ? Math.min(Math.round((reviewsPublished / (chazasPublished * 3)) * 100), 72)
     : 0
 
-  useGSAP(
-    () => {
-      // Respect prefers-reduced-motion
-      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return
+  // A) Entrance timeline
+  useGSAP(() => {
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    if (reduced) return
 
-      // ── A) Entrance timeline ──────────────────────────────────────────────
-      const tl = gsap.timeline({ defaults: { ease: "power3.out" } })
+    const tl = gsap.timeline({ defaults: { ease: "power3.out" } })
 
-      // 1. Headline
-      tl.from(headlineRef.current, {
-        opacity: 0,
-        y: 24,
-        duration: 0.6,
-      })
+    tl.from(".hero-badge", { opacity: 0, y: -12, duration: 0.4 })
+      .from(".hero-title", { opacity: 0, y: 28, duration: 0.6 }, "-=0.2")
+      .from(".hero-subtitle", { opacity: 0, y: 16, duration: 0.5 }, "-=0.3")
+      .from(".hero-cta", { opacity: 0, y: 12, scale: 0.96, duration: 0.4, stagger: 0.1 }, "-=0.3")
+      .from(".hero-card", { opacity: 0, x: 40, rotateY: -8, duration: 0.8, ease: "back.out(1.2)" }, "-=0.4")
+      .from(".hero-stats", { opacity: 0, y: 8, duration: 0.4, stagger: 0.08 }, "-=0.3")
+  }, { scope: containerRef })
 
-      // 2. Subtitle/description
-      tl.from(
-        descRef.current,
-        {
-          opacity: 0,
-          y: 16,
-          duration: 0.5,
-        },
-        "-=0.35"
-      )
+  // B) Blob floating animations (replaces animate-float CSS)
+  useGSAP(() => {
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    if (reduced) return
 
-      // 3. CTA buttons (stagger)
-      if (ctaRef.current) {
-        tl.from(
-          ctaRef.current.querySelectorAll("a"),
-          {
-            opacity: 0,
-            y: 12,
-            scale: 0.96,
-            duration: 0.4,
-            stagger: 0.1,
-          },
-          "-=0.25"
-        )
-      }
+    gsap.to(".hero-blob-1", { y: -22, duration: 6.5, yoyo: true, repeat: -1, ease: "sine.inOut" })
+    gsap.to(".hero-blob-2", { y: 18, x: -10, duration: 8, yoyo: true, repeat: -1, ease: "sine.inOut", delay: 1.2 })
+    gsap.to(".hero-blob-3", { y: -14, x: 8, duration: 7, yoyo: true, repeat: -1, ease: "sine.inOut", delay: 2.5 })
+  }, { scope: containerRef })
 
-      // 4. Progress bar (conditional)
-      if (progressRef.current) {
-        tl.from(
-          progressRef.current,
-          {
-            opacity: 0,
-            y: 8,
-            duration: 0.35,
-          },
-          "-=0.2"
-        )
-      }
+  // C) Parallax on scroll
+  useGSAP(() => {
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    if (reduced) return
 
-      // 5. Stats
-      if (statsRef.current) {
-        tl.from(
-          statsRef.current.querySelectorAll("[data-stat]"),
-          {
-            opacity: 0,
-            y: 8,
-            duration: 0.35,
-            stagger: 0.08,
-          },
-          "-=0.2"
-        )
-      }
-
-      // 6. Decorative card (right column)
-      if (cardRef.current) {
-        tl.from(
-          cardRef.current,
-          {
-            opacity: 0,
-            x: 40,
-            rotateY: -8,
-            duration: 0.8,
-            ease: "back.out(1.2)",
-          },
-          "-=0.7"
-        )
-      }
-
-      // ── B) Blob floating animations ───────────────────────────────────────
-      gsap.to(blob1Ref.current, {
-        y: -20,
-        duration: 6,
-        yoyo: true,
-        repeat: -1,
-        ease: "sine.inOut",
-      })
-
-      gsap.to(blob2Ref.current, {
-        y: 15,
-        duration: 8,
-        yoyo: true,
-        repeat: -1,
-        ease: "sine.inOut",
-        delay: 1.5,
-      })
-
-      gsap.to(blob3Ref.current, {
-        y: -12,
-        duration: 7,
-        yoyo: true,
-        repeat: -1,
-        ease: "sine.inOut",
-        delay: 0.8,
-      })
-
-      // ── C) Parallax on scroll ─────────────────────────────────────────────
-      const scrollBase = {
-        trigger: containerRef.current,
-        start: "top top",
-        end: "bottom top",
-        scrub: 1,
-      }
-
-      gsap.to(blob1Ref.current, {
-        y: -60,
-        ease: "none",
-        scrollTrigger: scrollBase,
-      })
-
-      gsap.to(blob2Ref.current, {
-        y: -48,
-        ease: "none",
-        scrollTrigger: scrollBase,
-      })
-
-      gsap.to(blob3Ref.current, {
-        y: -36,
-        ease: "none",
-        scrollTrigger: scrollBase,
-      })
-
-      if (cardRef.current) {
-        gsap.to(cardRef.current, {
-          y: 20,
-          ease: "none",
-          scrollTrigger: scrollBase,
-        })
-      }
-    },
-    { scope: containerRef }
-  )
+    ScrollTrigger.create({
+      trigger: containerRef.current,
+      start: "top top",
+      end: "bottom top",
+      scrub: 1,
+      onUpdate: (self) => {
+        gsap.set(".hero-blob-1", { y: -22 + self.progress * -50 })
+        gsap.set(".hero-blob-2", { y: 18 + self.progress * 30 })
+        gsap.set(".hero-card", { y: self.progress * -20 })
+      },
+    })
+  }, { scope: containerRef })
 
   return (
     <section id="inicio" ref={containerRef} className="relative bg-brand-red overflow-hidden">
@@ -202,20 +86,19 @@ export function HeroSection({
       />
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_40%,rgba(255,255,255,0.08)_0%,transparent_70%)]" aria-hidden="true" />
 
-      {/* Blobs — float + parallax driven by GSAP (no animate-float CSS) */}
-      <div ref={blob1Ref} className="absolute top-20 left-1/4 w-48 h-48 bg-white/5 rounded-full blur-3xl" aria-hidden="true" />
-      <div ref={blob2Ref} className="absolute bottom-32 right-1/4 w-64 h-64 bg-white/5 rounded-full blur-3xl" aria-hidden="true" />
-      <div ref={blob3Ref} className="absolute top-1/2 left-10 w-32 h-32 bg-white/[0.03] rounded-full blur-2xl" aria-hidden="true" />
+      {/* Blobs — float + parallax driven by GSAP */}
+      <div className="hero-blob-1 absolute top-20 left-1/4 w-48 h-48 bg-white/5 rounded-full blur-3xl" aria-hidden="true" />
+      <div className="hero-blob-2 absolute bottom-32 right-1/4 w-64 h-64 bg-white/5 rounded-full blur-3xl" aria-hidden="true" />
+      <div className="hero-blob-3 absolute top-1/2 left-10 w-32 h-32 bg-white/[0.03] rounded-full blur-2xl" aria-hidden="true" />
 
       <div className="relative mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 pt-16 pb-0">
         <div className="flex flex-col lg:flex-row lg:items-center lg:gap-16">
-          {/* Left column: all existing content, left-aligned on desktop */}
+          {/* Left column */}
           <div className="flex flex-col items-center text-center lg:items-start lg:text-left lg:flex-1">
 
-            {/* Headline — Barlow Condensed stencil brand */}
+            {/* Headline */}
             <h1
-              ref={headlineRef}
-              className="font-stencil mb-7 leading-none tracking-wide"
+              className="hero-title font-stencil mb-7 leading-none tracking-wide"
               aria-label="CHAZAS UN"
             >
               <span className="block text-5xl sm:text-6xl lg:text-7xl text-white">
@@ -226,17 +109,17 @@ export function HeroSection({
               </span>
             </h1>
 
-            <p ref={descRef} className="text-white/80 text-xl leading-relaxed mb-9 max-w-[480px] font-sans font-medium mx-auto">
+            <p className="hero-subtitle text-white/80 text-xl leading-relaxed mb-9 max-w-[480px] font-sans font-medium mx-auto">
               El marketplace de los estudiantes de la{" "}
               <strong className="text-white font-bold">Universidad Nacional</strong>.
               Comida, servicios, libros y más.
             </p>
 
             {/* CTAs */}
-            <div ref={ctaRef} className="flex flex-col sm:flex-row gap-3 mb-10 justify-center">
+            <div className="flex flex-col sm:flex-row gap-3 mb-10 justify-center">
               <Link
                 href="/explorar"
-                className="btn-white-shimmer font-stencil text-lg bg-white text-brand-red px-10 py-4 rounded-2xl
+                className="hero-cta btn-white-shimmer font-stencil text-lg bg-white text-brand-red px-10 py-4 rounded-2xl
                            hover:bg-gray-50 transition-colors duration-300
                            shadow-xl shadow-black/10 hover:shadow-2xl hover:shadow-black/15
                            text-center tracking-wide active:scale-[0.97]
@@ -246,7 +129,7 @@ export function HeroSection({
               </Link>
               <Link
                 href="/publicar-chaza"
-                className="glass-btn font-stencil text-lg text-white px-10 py-4 rounded-2xl
+                className="hero-cta glass-btn font-stencil text-lg text-white px-10 py-4 rounded-2xl
                            text-center tracking-wide active:scale-[0.97]
                            min-h-[56px] flex items-center justify-center hover-lift"
               >
@@ -256,7 +139,7 @@ export function HeroSection({
 
             {/* Zeigarnik progress — solo si hay datos */}
             {exploredPercent > 0 && (
-              <div ref={progressRef} className="mb-8 w-full max-w-md mx-auto">
+              <div className="hero-badge mb-8 w-full max-w-md mx-auto">
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-white/50 text-xs font-medium flex items-center gap-1.5">
                     <TrendingUp className="w-3.5 h-3.5" />
@@ -268,13 +151,12 @@ export function HeroSection({
               </div>
             )}
 
-            {/* Stats — centered */}
-            <div ref={statsRef} className="flex flex-wrap items-center justify-center gap-8 border-t border-white/10 pt-7 w-full max-w-lg mx-auto">
+            {/* Stats */}
+            <div className="flex flex-wrap items-center justify-center gap-8 border-t border-white/10 pt-7 w-full max-w-lg mx-auto">
               {stats.map((s, i) => (
                 <div
                   key={s.label}
-                  data-stat
-                  className={`${i < stats.length - 1 ? "sm:pr-8 sm:border-r sm:border-white/10" : ""} hover-scale`}
+                  className={`hero-stats ${i < stats.length - 1 ? "sm:pr-8 sm:border-r sm:border-white/10" : ""} hover-scale`}
                 >
                   <p className="font-stencil text-2xl sm:text-3xl text-white">{s.value}</p>
                   <p className="text-white/40 text-[11px] mt-0.5 uppercase tracking-wider font-medium">{s.label}</p>
@@ -286,7 +168,7 @@ export function HeroSection({
 
           {/* Right column: decorative card mockup — desktop only */}
           <div className="hidden lg:flex lg:w-80 lg:shrink-0 items-center justify-center">
-            <div ref={cardRef} className="relative select-none" aria-hidden="true">
+            <div className="hero-card relative select-none" aria-hidden="true">
               {/* Back card — peeking behind */}
               <div className="absolute inset-0 rounded-3xl bg-white/20 border border-white/30 shadow-xl translate-x-4 translate-y-3 rotate-3" />
               {/* Front card */}
@@ -323,7 +205,7 @@ export function HeroSection({
         </div>
       </div>
 
-      {/* Wave separator — block SVG + overlap avoids subpixel red seam */}
+      {/* Wave separator */}
       <div className="relative h-16 bg-brand-red leading-none -mb-px">
         <svg
           viewBox="0 0 1440 65"

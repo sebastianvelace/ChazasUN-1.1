@@ -1,6 +1,10 @@
-"use client"
+'use client'
 
-import { useEffect, useRef, useState, useCallback } from "react"
+import { useEffect, useRef, useState, useCallback } from 'react'
+import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+
+gsap.registerPlugin(ScrollTrigger)
 
 interface UseScrollRevealOptions {
   threshold?: number
@@ -11,7 +15,7 @@ interface UseScrollRevealOptions {
 export function useScrollReveal<T extends HTMLElement = HTMLDivElement>(
   options: UseScrollRevealOptions = {}
 ) {
-  const { threshold = 0.1, rootMargin = "0px 0px -50px 0px", triggerOnce = true } = options
+  const { triggerOnce = true } = options
   const ref = useRef<T>(null)
   const [isVisible, setIsVisible] = useState(false)
 
@@ -19,87 +23,97 @@ export function useScrollReveal<T extends HTMLElement = HTMLDivElement>(
     const element = ref.current
     if (!element) return
 
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true)
-          if (triggerOnce) {
-            observer.unobserve(element)
-          }
-        } else if (!triggerOnce) {
-          setIsVisible(false)
-        }
-      },
-      { threshold, rootMargin }
-    )
-
-    observer.observe(element)
-
-    // Si la seccion ya esta en pantalla al montar, revelar de inmediato.
+    // Si ya está en pantalla al montar, revelar de inmediato
     const rect = element.getBoundingClientRect()
     const viewportHeight = window.innerHeight || document.documentElement.clientHeight
     if (rect.top < viewportHeight && rect.bottom > 0) {
       setIsVisible(true)
+      return
     }
 
-    return () => {
-      observer.unobserve(element)
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    if (reduced) {
+      setIsVisible(true)
+      return
     }
-  }, [threshold, rootMargin, triggerOnce])
+
+    const trigger = ScrollTrigger.create({
+      trigger: element,
+      start: 'top 88%',
+      onEnter: () => setIsVisible(true),
+      onLeaveBack: triggerOnce ? undefined : () => setIsVisible(false),
+      once: triggerOnce,
+    })
+
+    return () => trigger.kill()
+  }, [triggerOnce])
 
   return { ref, isVisible }
 }
 
-// Hook for multiple elements with stagger
 export function useScrollRevealMultiple(count: number, options: UseScrollRevealOptions = {}) {
+  const { triggerOnce = true } = options
   const [visibleItems, setVisibleItems] = useState<boolean[]>(Array(count).fill(false))
   const refs = useRef<(HTMLElement | null)[]>([])
 
-  const setRef = useCallback((index: number) => (el: HTMLElement | null) => {
-    refs.current[index] = el
-  }, [])
+  const setRef = useCallback(
+    (index: number) => (el: HTMLElement | null) => {
+      refs.current[index] = el
+    },
+    []
+  )
 
   useEffect(() => {
-    const { threshold = 0.1, rootMargin = "0px 0px -50px 0px", triggerOnce = true } = options
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    if (reduced) {
+      setVisibleItems(Array(count).fill(true))
+      return
+    }
 
-    const observers: IntersectionObserver[] = []
+    const triggers: ReturnType<typeof ScrollTrigger.create>[] = []
 
     refs.current.forEach((element, index) => {
       if (!element) return
 
-      const observer = new IntersectionObserver(
-        ([entry]) => {
-          if (entry.isIntersecting) {
-            setVisibleItems((prev) => {
-              const next = [...prev]
-              next[index] = true
-              return next
-            })
-            if (triggerOnce) {
-              observer.unobserve(element)
-            }
-          } else if (!triggerOnce) {
-            setVisibleItems((prev) => {
-              const next = [...prev]
-              next[index] = false
-              return next
-            })
-          }
-        },
-        { threshold, rootMargin }
-      )
+      // Si ya está visible al montar
+      const rect = element.getBoundingClientRect()
+      const vh = window.innerHeight || document.documentElement.clientHeight
+      if (rect.top < vh && rect.bottom > 0) {
+        setVisibleItems((prev) => {
+          const next = [...prev]
+          next[index] = true
+          return next
+        })
+        return
+      }
 
-      observer.observe(element)
-      observers.push(observer)
+      const trigger = ScrollTrigger.create({
+        trigger: element,
+        start: 'top 88%',
+        onEnter: () => {
+          setVisibleItems((prev) => {
+            const next = [...prev]
+            next[index] = true
+            return next
+          })
+        },
+        onLeaveBack: triggerOnce
+          ? undefined
+          : () => {
+              setVisibleItems((prev) => {
+                const next = [...prev]
+                next[index] = false
+                return next
+              })
+            },
+        once: triggerOnce,
+      })
+
+      triggers.push(trigger)
     })
 
-    return () => {
-      observers.forEach((observer, index) => {
-        const element = refs.current[index]
-        if (element) observer.unobserve(element)
-      })
-    }
-  }, [count, options])
+    return () => triggers.forEach((t) => t.kill())
+  }, [count, triggerOnce])
 
   return { setRef, visibleItems }
 }

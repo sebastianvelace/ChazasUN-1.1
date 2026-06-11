@@ -18,11 +18,7 @@ export function Footer() {
 
   const setFooterRefs = (el: HTMLElement | null) => {
     footerRef.current = el
-    if (typeof scrollRevealRef === "function") {
-      scrollRevealRef(el)
-    } else if (scrollRevealRef) {
-      (scrollRevealRef as React.MutableRefObject<HTMLElement | null>).current = el
-    }
+    ;(scrollRevealRef as React.MutableRefObject<HTMLElement | null>).current = el
   }
 
   useGSAP(() => {

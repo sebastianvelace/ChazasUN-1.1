@@ -114,11 +114,7 @@ export function ReviewsSection() {
 
   const setSectionRefs = (el: HTMLElement | null) => {
     sectionRef.current = el
-    if (typeof scrollRevealRef === "function") {
-      scrollRevealRef(el)
-    } else if (scrollRevealRef) {
-      (scrollRevealRef as React.MutableRefObject<HTMLElement | null>).current = el
-    }
+    ;(scrollRevealRef as React.MutableRefObject<HTMLElement | null>).current = el
   }
 
   useGSAP(() => {

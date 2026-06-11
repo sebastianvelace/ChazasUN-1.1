@@ -97,7 +97,7 @@ export function HowItWorksSection() {
       stagger: 0.18,
       ease: "power3.out",
       scrollTrigger: {
-        trigger: ".hiw-step",
+        trigger: ".hiw-steps-container",
         start: "top 80%",
         once: true,
       },
@@ -153,7 +153,7 @@ export function HowItWorksSection() {
             />
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="hiw-steps-container grid grid-cols-1 md:grid-cols-3 gap-4">
             {steps.map((step, i) => (
               <div
                 key={step.number}
