@@ -1,0 +1,214 @@
+/* ========== HOVER MICRO-INTERACTIONS ========== */
+
+.hover-lift {
+  transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.35s ease;
+}
+.hover-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 18px 40px -14px rgba(0, 0, 0, 0.18);
+}
+
+.hover-scale {
+  transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.hover-scale:hover {
+  transform: scale(1.03);
+}
+
+.hover-glow {
+  transition: box-shadow 0.3s ease;
+}
+.hover-glow:hover {
+  box-shadow: 0 0 30px rgba(163, 30, 30, 0.3);
+}
+
+/* ========== BUTTONS ========== */
+
+.btn-primary {
+  @apply relative overflow-hidden transition-all duration-300;
+}
+.btn-primary:hover {
+  @apply scale-105 shadow-xl;
+}
+.btn-primary:active {
+  @apply scale-95;
+  animation: button-pop 0.3s ease;
+}
+
+.btn-secondary {
+  @apply relative overflow-hidden transition-all duration-300;
+}
+.btn-secondary:hover {
+  @apply scale-105;
+}
+.btn-secondary:active {
+  @apply scale-95;
+}
+
+.btn-outline {
+  @apply relative overflow-hidden border-2 transition-all duration-300;
+}
+.btn-outline:hover {
+  @apply scale-105 shadow-lg;
+}
+.btn-outline:active {
+  @apply scale-95;
+}
+
+.btn-ripple {
+  @apply relative overflow-hidden;
+}
+.btn-ripple::after {
+  content: '';
+  @apply absolute inset-0 pointer-events-none;
+  background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%);
+  transform: scale(0);
+  opacity: 0;
+}
+.btn-ripple:active::after {
+  animation: ripple 0.6s ease-out;
+}
+
+/* ========== SHIMMER BUTTONS ========== */
+
+.btn-red-shimmer {
+  position: relative;
+  overflow: hidden;
+  border-radius: 9999px;
+}
+.btn-red-shimmer::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 15%,
+    rgba(255, 255, 255, 0.18) 50%,
+    transparent 85%
+  );
+  transform: translateX(-120%);
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+  z-index: 0;
+}
+.btn-red-shimmer:hover::before {
+  transform: translateX(120%);
+}
+.btn-red-shimmer > * {
+  position: relative;
+  z-index: 1;
+}
+
+.btn-white-shimmer {
+  position: relative;
+  overflow: hidden;
+  border-radius: 9999px;
+}
+.btn-white-shimmer::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 15%,
+    rgba(163, 30, 30, 0.07) 50%,
+    transparent 85%
+  );
+  transform: translateX(-120%);
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+  z-index: 0;
+}
+.btn-white-shimmer:hover::before {
+  transform: translateX(120%);
+}
+.btn-white-shimmer > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* ========== CARDS ========== */
+
+.card-hover {
+  @apply transition-all duration-500;
+}
+.card-hover:hover {
+  @apply -translate-y-2 shadow-2xl;
+}
+.card-hover:hover img {
+  @apply scale-110;
+}
+
+/* ========== LINK UNDERLINE ========== */
+
+.link-underline {
+  position: relative;
+}
+.link-underline::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0%;
+  height: 2px;
+  background-color: var(--brand-red);
+  border-radius: 9999px;
+  transition: width 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.link-underline:hover::after {
+  width: 100%;
+}
+
+/* ========== ICON & MAGNETIC ========== */
+
+.icon-bounce:hover {
+  animation: float 0.5s ease-in-out;
+}
+
+.btn-magnetic {
+  @apply transition-transform duration-200;
+}
+
+/* ========== TEXT GRADIENT ========== */
+
+.text-gradient-animate {
+  background: linear-gradient(90deg, var(--brand-red), var(--brand-red-dark), var(--brand-red));
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradient-shift 3s ease infinite;
+}
+
+/* ========== CTA CLASSES ========== */
+
+.cta-primary {
+  @apply font-stencil text-lg bg-white text-brand-red px-10 py-4 rounded-2xl
+         hover:bg-gray-50 transition-all duration-300 shadow-xl shadow-black/10
+         text-center tracking-wide active:scale-[0.97]
+         hover:shadow-2xl hover:shadow-black/15 hover:-translate-y-0.5;
+  min-height: 56px;
+  min-width: 180px;
+}
+
+.cta-secondary-glass {
+  @apply font-stencil text-lg text-white px-10 py-4 rounded-2xl
+         text-center tracking-wide active:scale-[0.97];
+  min-height: 56px;
+  min-width: 180px;
+}
+
+/* ========== SWIPER ACTION BUTTONS ========== */
+
+.btn-swiper-action {
+  transition: transform var(--motion-duration-fast, 200ms) var(--motion-ease, cubic-bezier(0.22, 1, 0.36, 1)),
+              border-color var(--motion-duration-fast, 200ms) ease,
+              background-color var(--motion-duration-fast, 200ms) ease,
+              box-shadow var(--motion-duration-fast, 200ms) ease;
+}
+.btn-swiper-action:hover:not(:disabled) {
+  box-shadow: 0 8px 20px -8px rgba(0, 0, 0, 0.12);
+}
+.btn-swiper-action:active:not(:disabled) {
+  transform: scale(0.97);
+}

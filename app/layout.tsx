@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { Plus_Jakarta_Sans, Barlow_Condensed } from 'next/font/google'
+import { Plus_Jakarta_Sans, Barlow_Condensed, DM_Sans } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import { Toaster } from 'sonner'
 import { AnalyticsProvider } from '@/components/analytics/analytics-provider'
@@ -16,6 +16,12 @@ const barlowCondensed = Barlow_Condensed({
   weight: ['600', '700', '800'],
   subsets: ["latin"],
   variable: '--font-stencil'
+})
+
+const dmSans = DM_Sans({
+  subsets: ['latin'],
+  variable: '--font-display',
+  weight: ['400', '500', '600', '700', '800']
 })
 
 export const metadata: Metadata = {
@@ -47,8 +53,8 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="es" className={`${plusJakartaSans.variable} ${barlowCondensed.variable}`}>
-      <body className="font-sans antialiased bg-white">
+    <html lang="es" className={`${plusJakartaSans.variable} ${barlowCondensed.variable} ${dmSans.variable}`}>
+      <body className={`${plusJakartaSans.variable} ${barlowCondensed.variable} ${dmSans.variable} font-sans antialiased bg-background`}>
         <AnalyticsProvider>{children}</AnalyticsProvider>
         <Toaster richColors position="top-center" />
         {process.env.NODE_ENV === 'production' && <Analytics />}

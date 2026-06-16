@@ -1,12 +1,8 @@
 "use client"
 
-import { useRef } from "react"
 import Link from "next/link"
-import { useGSAP } from "@gsap/react"
-import { gsap, ScrollTrigger } from "@/lib/gsap"
+import { useGSAPSafe } from "@/hooks/use-gsap-reduced"
 import { siteConfig } from "@/config/site"
-
-gsap.registerPlugin(ScrollTrigger)
 
 const steps = [
   {
@@ -56,26 +52,20 @@ const steps = [
 ]
 
 export function HowItWorksSection() {
-  const sectionRef = useRef<HTMLElement>(null)
+  const sectionRef = useGSAPSafe(({ isReduced, gsap, ScrollTrigger }) => {
+    if (isReduced) return
 
-  useGSAP(() => {
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches
-    if (reduced) return
-
-    // Header
     gsap.from(".hiw-header", {
-      opacity: 0,
-      y: 24,
+      y: 28,
       duration: 0.6,
       ease: "power3.out",
       scrollTrigger: {
         trigger: ".hiw-header",
-        start: "top 85%",
+        start: "top bottom",
         once: true,
       },
     })
 
-    // Connector line animates drawing left→right
     gsap.from("#connector-line", {
       scaleX: 0,
       transformOrigin: "left center",
@@ -83,116 +73,91 @@ export function HowItWorksSection() {
       ease: "power2.inOut",
       scrollTrigger: {
         trigger: "#connector-line",
-        start: "top 85%",
+        start: "top bottom",
         once: true,
       },
     })
 
-    // Steps con stagger
     gsap.from(".hiw-step", {
-      opacity: 0,
-      y: 32,
+      y: 36,
       scale: 0.97,
       duration: 0.6,
       stagger: 0.18,
       ease: "power3.out",
       scrollTrigger: {
         trigger: ".hiw-steps-container",
-        start: "top 80%",
+        start: "top bottom",
         once: true,
       },
     })
-  }, { scope: sectionRef })
+  })
 
   return (
     <section
       ref={sectionRef}
       id="como-funciona"
-      className="relative py-20 sm:py-28 px-4 bg-brand-red overflow-hidden"
+      className="relative py-16 sm:py-24 px-4 bg-muted border-t border-border overflow-hidden"
     >
-      {/* Textura grid */}
-      <div
-        className="absolute inset-0 opacity-[0.06]"
-        style={{
-          backgroundImage:
-            "repeating-linear-gradient(0deg,transparent,transparent 39px,rgba(255,255,255,0.6) 39px,rgba(255,255,255,0.6) 40px),repeating-linear-gradient(90deg,transparent,transparent 39px,rgba(255,255,255,0.6) 39px,rgba(255,255,255,0.6) 40px)",
-        }}
-        aria-hidden="true"
-      />
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_50%_at_70%_30%,rgba(255,255,255,0.05)_0%,transparent_70%)]" aria-hidden="true" />
-      <div className="absolute top-16 right-16 w-56 h-56 bg-white/5 rounded-full blur-3xl animate-float" aria-hidden="true" />
-      <div className="absolute bottom-16 left-12 w-72 h-72 bg-white/5 rounded-full blur-3xl animate-float" style={{ animationDelay: "2s" }} aria-hidden="true" />
-
       <div className="relative z-10 mx-auto max-w-6xl">
 
         {/* Header */}
-        <div className="hiw-header text-center mb-14 sm:mb-18">
-          <span className="inline-flex items-center gap-2 glass text-white text-xs font-semibold uppercase tracking-widest px-4 py-2 rounded-full mb-6">
-            Simple y directo
-          </span>
-          <h2 className="font-stencil text-5xl sm:text-6xl md:text-7xl text-white leading-none mb-4">
-            COMO FUNCIONA
+        <div className="hiw-header text-center mb-16">
+          <div className="inline-flex items-center gap-3 mb-6">
+            <div className="h-px w-8 bg-brand-red" />
+            <span className="text-xs font-semibold uppercase tracking-[0.2em] text-brand-red">Simple y directo</span>
+            <div className="h-px w-8 bg-brand-red" />
+          </div>
+          <h2 className="font-display font-black text-foreground leading-none tracking-tight" style={{ fontSize: 'clamp(2.5rem, 6vw, 4.5rem)' }}>
+            CÓMO FUNCIONA
           </h2>
-          {/* Zeigarnik: subtítulo que implica tarea incompleta */}
-          <p className="text-white/55 text-base sm:text-lg max-w-sm mx-auto font-medium">
-            3 pasos · menos de 2 minutos · gratis
+          <p className="mt-4 text-muted-foreground text-lg max-w-lg mx-auto">
+            Tres pasos para conectar con tu comunidad universitaria.
           </p>
         </div>
 
-        {/* Steps — Gestalt: continuidad con conectores */}
         <div className="relative">
-
-          {/* Conector horizontal (desktop) — Gestalt ley de continuidad */}
           <div
             className="hidden md:block absolute top-[52px] left-[calc(16.66%+32px)] right-[calc(16.66%+32px)] h-px"
             aria-hidden="true"
           >
-            <div
-              id="connector-line"
-              className="h-full bg-gradient-to-r from-white/20 via-white/40 to-white/20"
-            />
+            <div id="connector-line" className="h-full bg-border" />
           </div>
 
           <div className="hiw-steps-container grid grid-cols-1 md:grid-cols-3 gap-4">
             {steps.map((step, i) => (
               <div
                 key={step.number}
-                className="hiw-step group relative"
+                className="hiw-step group relative overflow-hidden rounded-2xl border border-border bg-background p-8 shadow-sm hover:shadow-md hover:border-gray-200 transition-all"
               >
-                {/* Card glassmorfismo — Jakob's Law: tarjeta reconocible */}
-                <div className="glass rounded-3xl p-8 sm:p-10 h-full hover:bg-white/20 transition-all duration-500 border-white/15 group-hover:border-white/30 group-hover:-translate-y-1 group-hover:shadow-2xl group-hover:shadow-black/20">
-
-                  {/* Número del paso — Zeigarnik: secuencia visible */}
-                  <div className="flex items-center gap-3 mb-6">
-                    <div className="w-9 h-9 rounded-xl bg-white/20 flex items-center justify-center group-hover:bg-white/30 transition-colors">
-                      <span className="font-stencil text-sm text-white/80">{step.number}</span>
+                <div className="h-full flex flex-col">
+                  <div className="mb-6 flex items-center gap-4">
+                    <span className="font-display font-black text-[7rem] leading-none text-muted/30 select-none absolute -top-4 -left-2 transition-colors group-hover:text-brand-red/10">
+                      {step.number}
+                    </span>
+                    <div className="relative z-10 w-10 h-10 rounded-full border-2 border-brand-red flex items-center justify-center text-brand-red font-bold font-display">
+                      {step.number}
                     </div>
-                    {/* Conector hacia siguiente paso en mobile */}
                     {i < steps.length - 1 && (
-                      <div className="md:hidden flex-1 h-px bg-gradient-to-r from-white/25 to-transparent" aria-hidden="true" />
+                      <div className="md:hidden flex-1 h-px bg-gradient-to-r from-border to-transparent" aria-hidden="true" />
                     )}
                   </div>
 
-                  {/* Icono */}
-                  <div className="text-white/55 group-hover:text-white/90 transition-colors duration-300 mb-6">
+                  <div className="text-muted-foreground group-hover:text-brand-red transition-colors duration-300 mb-6">
                     {step.icon}
                   </div>
 
-                  {/* Título */}
-                  <h3 className="font-stencil text-2xl sm:text-3xl text-white mb-3 tracking-wide">
+                  <h3 className="font-display font-bold text-foreground text-xl mb-3">
                     {step.title}
                   </h3>
 
-                  {/* Descripción — Plus Jakarta Sans */}
-                  <p className="text-white/55 text-sm sm:text-base leading-relaxed group-hover:text-white/75 transition-colors duration-300 font-medium">
+                  <p className="text-muted-foreground text-sm leading-relaxed flex-1">
                     {step.description}
                   </p>
 
-                  {/* CTA en último paso — Zeigarnik + Fitts */}
                   {step.cta && (
                     <Link
                       href={step.cta.href}
-                      className="inline-flex items-center gap-1.5 mt-6 text-sm font-bold text-white/80 hover:text-white transition-colors group/link"
+                      className="inline-flex items-center gap-1.5 mt-6 text-sm font-bold text-brand-red hover:text-brand-red-dark transition-colors"
                     >
                       <span>{step.cta.label}</span>
                     </Link>
@@ -203,9 +168,8 @@ export function HowItWorksSection() {
           </div>
         </div>
 
-        {/* Zeigarnik footer: progreso de la acción */}
         <div className="mt-12 text-center">
-          <p className="text-white/35 text-xs font-semibold uppercase tracking-widest">
+          <p className="text-muted-foreground text-xs font-semibold uppercase tracking-widest">
             ¿Tienes una chaza? Publícala en menos de 3 minutos →
           </p>
         </div>

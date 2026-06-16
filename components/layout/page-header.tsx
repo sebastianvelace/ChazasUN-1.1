@@ -23,7 +23,7 @@ export function PageHeader({ eyebrow, title, description }: PageHeaderProps) {
         </span>
       )}
       <h1 className="font-stencil text-4xl sm:text-5xl text-brand-red tracking-wide mb-3">{title}</h1>
-      {description && <p className="text-gray-500 max-w-2xl leading-relaxed">{description}</p>}
+      {description && <p className="text-muted-foreground max-w-2xl leading-relaxed">{description}</p>}
     </header>
   )
 }

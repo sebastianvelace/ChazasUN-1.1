@@ -24,8 +24,10 @@ export function Navbar() {
   return (
     <header
       className={cn(
-        "sticky top-0 z-50 transition-all duration-300",
-        scrolled ? "glass-nav" : "bg-white/95 backdrop-blur-sm shadow-sm border-b border-brand-red/5"
+        "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
+        scrolled
+          ? "bg-background/95 backdrop-blur-md shadow-sm border-b border-border"
+          : "bg-transparent"
       )}
     >
       <nav className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -38,7 +40,7 @@ export function Navbar() {
               height={18}
               className="text-brand-red transition-transform duration-300 group-hover:scale-110"
             />
-            <span className="font-stencil text-xl sm:text-2xl text-brand-red tracking-wider">
+            <span className="font-display font-black text-base tracking-[0.06em] text-foreground">
               CHAZAS UN
             </span>
           </Link>
@@ -49,30 +51,25 @@ export function Navbar() {
               <Link
                 key={link.href}
                 href={link.href}
-                className="text-sm font-semibold text-brand-red/80 hover:text-brand-red transition-colors duration-200 link-underline"
+                className="text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground transition hover:text-foreground"
               >
                 {link.label}
               </Link>
             ))}
 
-            {/* Fitts: CTA más grande y llamativo */}
             <span ref={magneticCTA} style={{ display: 'inline-block' }}>
               <Link
                 href={siteConfig.urls.publicarChaza}
-                className="btn-red-shimmer font-stencil text-sm bg-brand-red text-white px-6 py-2.5 rounded-xl
-                           hover:bg-brand-red-dark transition-colors duration-300 active:scale-[0.97]
-                           shadow-md shadow-brand-red/20 hover:shadow-lg hover:shadow-brand-red/30
-                           hover:-translate-y-0.5"
+                className="rounded-full bg-brand-red px-5 py-2 text-xs font-semibold uppercase tracking-[0.12em] text-primary-foreground transition hover:bg-foreground active:scale-95"
               >
                 PUBLICAR CHAZA
               </Link>
             </span>
           </div>
 
-          {/* Fitts: botón hamburguesa más grande en mobile */}
           <button
             type="button"
-            className="md:hidden p-3 -mr-1 text-brand-red transition-opacity hover:opacity-70 rounded-xl hover:bg-brand-red/5"
+            className="md:hidden p-3 -mr-1 text-foreground transition-opacity hover:opacity-70 rounded-xl hover:bg-muted"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-label={mobileMenuOpen ? "Cerrar menu" : "Abrir menu"}
             aria-expanded={mobileMenuOpen}
@@ -81,24 +78,22 @@ export function Navbar() {
           </button>
         </div>
 
-        {/* Mobile menu — Gestalt proximidad: items agrupados */}
         {mobileMenuOpen && (
-          <div className="md:hidden py-5 border-t border-brand-red/10 flex flex-col gap-1 animate-menu-in">
+          <div className="md:hidden py-5 border-t border-border flex flex-col gap-1 animate-menu-in">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className="text-brand-red font-semibold px-3 py-3 rounded-xl hover:bg-brand-red/5 transition-colors"
+                className="text-sm font-medium text-muted-foreground px-3 py-3 rounded-xl hover:text-brand-red hover:bg-muted transition-colors"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 {link.label}
               </Link>
             ))}
-            <div className="pt-3 mt-2 border-t border-brand-red/10">
+            <div className="pt-3 mt-2 border-t border-border">
               <Link
                 href={siteConfig.urls.publicarChaza}
-                className="font-stencil text-sm bg-brand-red text-white px-5 py-3 rounded-xl text-center
-                           transition-colors hover:bg-brand-red-dark block"
+                className="rounded-full bg-brand-red px-5 py-3 text-sm font-semibold uppercase tracking-wider text-primary-foreground transition hover:bg-brand-red-dark text-center block"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 PUBLICAR CHAZA

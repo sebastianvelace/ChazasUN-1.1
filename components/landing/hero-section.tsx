@@ -1,13 +1,8 @@
 "use client"
 
-import { useRef } from "react"
 import Link from "next/link"
 import { TrendingUp } from "lucide-react"
-import { useGSAP } from "@gsap/react"
-import gsap from "gsap"
-import { ScrollTrigger } from "gsap/ScrollTrigger"
-
-gsap.registerPlugin(useGSAP, ScrollTrigger)
+import { useGSAPSafe } from "@/hooks/use-gsap-reduced"
 
 export function HeroSection({
   chazasPublished = 50,
@@ -18,22 +13,8 @@ export function HeroSection({
   reviewsPublished?: number
   featuredImage?: string
 }) {
-  const containerRef = useRef<HTMLElement>(null)
-
-  const stats = [
-    { value: String(chazasPublished), label: "Chazas activas" },
-    ...(reviewsPublished > 0 ? [{ value: String(reviewsPublished), label: "Reseñas" }] : []),
-    { value: "4.8★", label: "Calidad promedio" },
-  ]
-
-  const exploredPercent = chazasPublished > 0
-    ? Math.min(Math.round((reviewsPublished / (chazasPublished * 3)) * 100), 72)
-    : 0
-
-  // A) Entrance timeline
-  useGSAP(() => {
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches
-    if (reduced) return
+  const containerRef = useGSAPSafe(({ isReduced, gsap, ScrollTrigger }) => {
+    if (isReduced) return
 
     const tl = gsap.timeline({ defaults: { ease: "power3.out" } })
 
@@ -43,22 +24,6 @@ export function HeroSection({
       .from(".hero-cta", { opacity: 0, y: 12, scale: 0.96, duration: 0.4, stagger: 0.1 }, "-=0.3")
       .from(".hero-card", { opacity: 0, x: 40, rotateY: -8, duration: 0.8, ease: "back.out(1.2)" }, "-=0.4")
       .from(".hero-stats", { opacity: 0, y: 8, duration: 0.4, stagger: 0.08 }, "-=0.3")
-  }, { scope: containerRef })
-
-  // B) Blob floating animations (replaces animate-float CSS)
-  useGSAP(() => {
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches
-    if (reduced) return
-
-    gsap.to(".hero-blob-1", { y: -22, duration: 6.5, yoyo: true, repeat: -1, ease: "sine.inOut" })
-    gsap.to(".hero-blob-2", { y: 18, x: -10, duration: 8, yoyo: true, repeat: -1, ease: "sine.inOut", delay: 1.2 })
-    gsap.to(".hero-blob-3", { y: -14, x: 8, duration: 7, yoyo: true, repeat: -1, ease: "sine.inOut", delay: 2.5 })
-  }, { scope: containerRef })
-
-  // C) Parallax on scroll
-  useGSAP(() => {
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches
-    if (reduced) return
 
     ScrollTrigger.create({
       trigger: containerRef.current,
@@ -66,157 +31,147 @@ export function HeroSection({
       end: "bottom top",
       scrub: 1,
       onUpdate: (self) => {
-        gsap.set(".hero-blob-1", { y: -22 + self.progress * -50 })
-        gsap.set(".hero-blob-2", { y: 18 + self.progress * 30 })
         gsap.set(".hero-card", { y: self.progress * -20 })
       },
     })
-  }, { scope: containerRef })
+  })
+
+  const stats = {
+    chazasPublished: String(chazasPublished),
+    averageRating: "4.8",
+  }
+
+  const exploredPercent = chazasPublished > 0
+    ? Math.min(Math.round((reviewsPublished / (chazasPublished * 3)) * 100), 72)
+    : 0
 
   return (
-    <section id="inicio" ref={containerRef} className="relative bg-brand-red overflow-hidden">
-      {/* Grid pattern */}
-      <div
-        className="absolute inset-0 opacity-[0.07]"
-        style={{
-          backgroundImage:
-            "repeating-linear-gradient(0deg,transparent,transparent 39px,rgba(255,255,255,0.6) 39px,rgba(255,255,255,0.6) 40px),repeating-linear-gradient(90deg,transparent,transparent 39px,rgba(255,255,255,0.6) 39px,rgba(255,255,255,0.6) 40px)",
-        }}
-        aria-hidden="true"
-      />
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_40%,rgba(255,255,255,0.08)_0%,transparent_70%)]" aria-hidden="true" />
+    <section
+      id="inicio"
+      ref={containerRef}
+      className="relative min-h-[92vh] flex flex-col items-center justify-center overflow-hidden px-6 pb-16"
+      style={{
+        background: 'var(--background)',
+        backgroundImage: 'radial-gradient(circle, var(--border-color) 1px, transparent 1px)',
+        backgroundSize: '28px 28px',
+      }}
+    >
+      {/* Overlay para suavizar el grid en los bordes */}
+      <div className="absolute inset-0 bg-gradient-to-b from-background via-transparent to-background pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-r from-background via-transparent to-background pointer-events-none" />
 
-      {/* Blobs — float + parallax driven by GSAP */}
-      <div className="hero-blob-1 absolute top-20 left-1/4 w-48 h-48 bg-white/5 rounded-full blur-3xl" aria-hidden="true" />
-      <div className="hero-blob-2 absolute bottom-32 right-1/4 w-64 h-64 bg-white/5 rounded-full blur-3xl" aria-hidden="true" />
-      <div className="hero-blob-3 absolute top-1/2 left-10 w-32 h-32 bg-white/[0.03] rounded-full blur-2xl" aria-hidden="true" />
+      {/* Línea decorativa eyebrow */}
+      <div className="hero-badge relative z-10 flex items-center gap-4 mb-8">
+        <div className="h-px w-12 bg-gray-300" />
+        <span className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+          Marketplace Universitario · Bogotá
+        </span>
+        <div className="h-px w-12 bg-border" />
+      </div>
 
-      <div className="relative mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 pt-16 pb-0">
-        <div className="flex flex-col lg:flex-row lg:items-center lg:gap-16">
-          {/* Left column */}
-          <div className="flex flex-col items-center text-center lg:items-start lg:text-left lg:flex-1">
+      {/* Título principal */}
+      <h1
+        className="hero-title relative z-10 font-display font-black text-center leading-[0.9] tracking-tight text-foreground"
+        style={{ fontSize: 'clamp(5rem, 14vw, 11rem)' }}
+        aria-label="CHAZAS UN"
+      >
+        CHAZAS<br />
+        <span className="text-brand-red">UN</span>
+      </h1>
 
-            {/* Headline */}
-            <h1
-              className="hero-title font-stencil mb-7 leading-none tracking-wide"
-              aria-label="CHAZAS UN"
-            >
-              <span className="block text-5xl sm:text-6xl lg:text-7xl text-white">
-                CHAZAS
-              </span>
-              <span className="block text-xl sm:text-2xl lg:text-3xl text-white/70 tracking-[0.25em] mt-1">
-                UN
-              </span>
-            </h1>
+      {/* Línea horizontal bajo el título */}
+      <div className="relative z-10 mt-6 mb-8 flex items-center gap-4 w-full max-w-xs">
+        <div className="h-px flex-1 bg-border" />
+        <div className="h-1.5 w-1.5 rounded-full bg-brand-red" />
+        <div className="h-px flex-1 bg-border" />
+      </div>
 
-            <p className="hero-subtitle text-white/80 text-xl leading-relaxed mb-9 max-w-[480px] font-sans font-medium mx-auto">
-              El marketplace de los estudiantes de la{" "}
-              <strong className="text-white font-bold">Universidad Nacional</strong>.
-              Comida, servicios, libros y más.
-            </p>
+      {/* Subtítulo */}
+      <p className="hero-subtitle relative z-10 text-muted-foreground text-base max-w-sm text-center leading-relaxed">
+        Comida, servicios, libros y más —{" "}
+        <strong className="text-foreground">directo de otros universitarios.</strong>
+      </p>
 
-            {/* CTAs */}
-            <div className="flex flex-col sm:flex-row gap-3 mb-10 justify-center">
-              <Link
-                href="/explorar"
-                className="hero-cta btn-white-shimmer font-stencil text-lg bg-white text-brand-red px-10 py-4 rounded-2xl
-                           hover:bg-gray-50 transition-colors duration-300
-                           shadow-xl shadow-black/10 hover:shadow-2xl hover:shadow-black/15
-                           text-center tracking-wide active:scale-[0.97]
-                           min-h-[56px] flex items-center justify-center hover-lift"
-              >
-                EXPLORAR CHAZAS
-              </Link>
-              <Link
-                href="/publicar-chaza"
-                className="hero-cta glass-btn font-stencil text-lg text-white px-10 py-4 rounded-2xl
-                           text-center tracking-wide active:scale-[0.97]
-                           min-h-[56px] flex items-center justify-center hover-lift"
-              >
-                PUBLICAR MI CHAZA
-              </Link>
-            </div>
+      {/* CTAs */}
+      <div className="hero-cta relative z-10 flex flex-wrap items-center justify-center gap-3 mt-8">
+        <Link
+          href="/explorar"
+          className="inline-flex items-center gap-2 rounded-full bg-foreground px-8 py-3.5 text-sm font-semibold uppercase tracking-widest text-primary-foreground shadow-lg transition hover:bg-brand-red hover:shadow-xl active:scale-95"
+        >
+          Explorar chazas
+        </Link>
+        <Link
+          href="/publicar-chaza"
+          className="inline-flex items-center gap-2 rounded-full border border-border bg-background px-8 py-3.5 text-sm font-semibold uppercase tracking-widest text-muted-foreground shadow-sm transition hover:border-gray-400 hover:shadow-md active:scale-95"
+        >
+          Publicar mi chaza
+        </Link>
+      </div>
 
-            {/* Zeigarnik progress — solo si hay datos */}
-            {exploredPercent > 0 && (
-              <div className="hero-badge mb-8 w-full max-w-md mx-auto">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-white/50 text-xs font-medium flex items-center gap-1.5">
-                    <TrendingUp className="w-3.5 h-3.5" />
-                    Campus siendo explorado
-                  </span>
-                  <span className="text-white/70 text-xs font-bold">{exploredPercent}%</span>
-                </div>
-                <div className="zeigarnik-bar" style={{ "--progress-width": `${exploredPercent}%` } as React.CSSProperties} />
-              </div>
-            )}
-
-            {/* Stats */}
-            <div className="flex flex-wrap items-center justify-center gap-8 border-t border-white/10 pt-7 w-full max-w-lg mx-auto">
-              {stats.map((s, i) => (
-                <div
-                  key={s.label}
-                  className={`hero-stats ${i < stats.length - 1 ? "sm:pr-8 sm:border-r sm:border-white/10" : ""} hover-scale`}
-                >
-                  <p className="font-stencil text-2xl sm:text-3xl text-white">{s.value}</p>
-                  <p className="text-white/40 text-[11px] mt-0.5 uppercase tracking-wider font-medium">{s.label}</p>
-                </div>
-              ))}
-            </div>
-
+      {/* Zeigarnik progress — solo si hay datos */}
+      {exploredPercent > 0 && (
+        <div className="hero-badge relative z-10 mt-8 w-full max-w-md mx-auto">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-muted-foreground text-xs font-medium flex items-center gap-1.5">
+              <TrendingUp className="w-3.5 h-3.5" />
+              Campus siendo explorado
+            </span>
+            <span className="text-foreground text-xs font-bold">{exploredPercent}%</span>
           </div>
+          <div className="zeigarnik-bar" style={{ "--progress-width": `${exploredPercent}%` } as React.CSSProperties} />
+        </div>
+      )}
 
-          {/* Right column: decorative card mockup — desktop only */}
-          <div className="hidden lg:flex lg:w-80 lg:shrink-0 items-center justify-center">
-            <div className="hero-card relative select-none" aria-hidden="true">
-              {/* Back card — peeking behind */}
-              <div className="absolute inset-0 rounded-3xl bg-white/20 border border-white/30 shadow-xl translate-x-4 translate-y-3 rotate-3" />
-              {/* Front card */}
-              <div className="relative w-64 rounded-3xl overflow-hidden shadow-2xl border border-white/20 -rotate-1">
-                {featuredImage ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img src={featuredImage} alt="" className="h-48 w-full object-cover" />
-                ) : (
-                  <div className="h-48 bg-gradient-to-br from-amber-400 to-orange-500" />
-                )}
-                <div className="bg-white p-4">
-                  <span className="text-[10px] font-semibold uppercase tracking-widest text-brand-red bg-brand-red/10 px-2 py-0.5 rounded-full">
-                    Comida
-                  </span>
-                  <p className="font-stencil text-lg text-gray-900 mt-1 leading-tight">El Rincón del Tinto</p>
-                  <p className="text-xs text-gray-500 mt-0.5">Edificio Posgrados · Desde $2.000</p>
-                  <div className="flex items-center gap-1 mt-2">
-                    {[1,2,3,4,5].map(s => (
-                      <svg key={s} className="w-3 h-3 fill-yellow-400 text-yellow-400" viewBox="0 0 20 20">
-                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                      </svg>
-                    ))}
-                    <span className="text-xs text-gray-500 ml-1">4.8</span>
-                  </div>
-                </div>
-              </div>
-              {/* Swipe hint badge */}
-              <div className="absolute -bottom-3 -right-3 bg-white rounded-full shadow-lg px-3 py-1.5 flex items-center gap-1.5 text-xs font-semibold text-gray-700">
-                <span>👆</span> Desliza
-              </div>
-            </div>
-          </div>
-
+      {/* Stats */}
+      <div className="hero-stats relative z-10 mt-12 flex items-center justify-center gap-8 text-center">
+        <div>
+          <div className="text-3xl font-black font-display text-foreground leading-none">{stats.chazasPublished}</div>
+          <div className="mt-1 text-xs uppercase tracking-widest text-muted-foreground">Chazas activas</div>
+        </div>
+        <div className="h-8 w-px bg-border" />
+        <div>
+          <div className="text-3xl font-black font-display text-foreground leading-none">{stats.averageRating}★</div>
+          <div className="mt-1 text-xs uppercase tracking-widest text-muted-foreground">Calidad promedio</div>
+        </div>
+        <div className="h-8 w-px bg-border" />
+        <div>
+          <div className="text-3xl font-black font-display text-foreground leading-none">∞</div>
+          <div className="mt-1 text-xs uppercase tracking-widest text-muted-foreground">Estudiantes</div>
         </div>
       </div>
 
-      {/* Wave separator */}
-      <div className="relative h-16 bg-brand-red leading-none -mb-px">
-        <svg
-          viewBox="0 0 1440 65"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-          className="block w-full h-full"
-          preserveAspectRatio="none"
-          aria-hidden="true"
-        >
-          <path d="M0 64 L0 32 Q360 0 720 32 Q1080 64 1440 32 L1440 64 L1440 65 L0 65 Z" fill="white" />
-        </svg>
+      {/* Tarjeta decorativa flotante */}
+      <div className="hero-card hidden lg:block absolute right-8 top-1/2 -translate-y-1/2 select-none" aria-hidden="true">
+        {/* Back card — peeking behind */}
+        <div className="absolute inset-0 rounded-3xl bg-muted/60 border border-border shadow-md translate-x-4 translate-y-3 rotate-3" />
+        {/* Front card */}
+        <div className="relative w-72 rounded-3xl overflow-hidden shadow-xl border border-border -rotate-1 bg-background">
+          {featuredImage ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={featuredImage} alt="" className="h-40 w-full object-cover" />
+          ) : (
+            <div className="h-40 bg-gradient-to-br from-amber-400 to-orange-500" />
+          )}
+          <div className="p-4">
+            <span className="text-[10px] font-semibold uppercase tracking-widest text-brand-red bg-brand-red/10 px-2 py-0.5 rounded-full">
+              Comida
+            </span>
+            <p className="font-display text-base text-foreground mt-1 leading-tight font-bold">El Rincón del Tinto</p>
+            <p className="text-xs text-muted-foreground mt-0.5">Edificio Posgrados · Desde $2.000</p>
+            <div className="flex items-center gap-1 mt-2">
+              {[1, 2, 3, 4, 5].map((s) => (
+                <svg key={s} className="w-3 h-3 fill-yellow-400 text-yellow-400" viewBox="0 0 20 20">
+                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                </svg>
+              ))}
+              <span className="text-xs text-muted-foreground ml-1">4.8</span>
+            </div>
+          </div>
+        </div>
+        {/* Swipe hint badge */}
+        <div className="absolute -bottom-3 -right-3 bg-background rounded-full shadow-lg px-3 py-1.5 flex items-center gap-1.5 text-xs font-semibold text-foreground border border-border">
+          <span>👆</span> Desliza
+        </div>
       </div>
     </section>
   )

@@ -35,7 +35,7 @@ export function PlatformHeader() {
     <header
       className={cn(
         "sticky top-0 z-50 transition-all duration-300",
-        scrolled ? "glass-nav" : "bg-white/95 backdrop-blur-sm border-b border-brand-red/5"
+        scrolled ? "glass-nav" : "bg-background/95 backdrop-blur-sm border-b border-brand-red/5"
       )}
     >
       <nav className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">

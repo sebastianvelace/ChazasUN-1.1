@@ -1,44 +1,25 @@
 "use client"
 
-import { useRef } from "react"
-import type React from "react"
 import Link from "next/link"
 import { SquiggleIcon } from "./squiggle-icon"
-import { useScrollReveal } from "@/hooks/use-scroll-reveal"
 import { siteConfig } from "@/config/site"
-import { useGSAP } from "@gsap/react"
-import { gsap } from "@/lib/gsap"
-import { ScrollTrigger } from "gsap/ScrollTrigger"
-
-gsap.registerPlugin(ScrollTrigger)
+import { useGSAPSafe } from "@/hooks/use-gsap-reduced"
 
 export function Footer() {
-  const { ref: scrollRevealRef, isVisible } = useScrollReveal<HTMLElement>({ threshold: 0.15 })
-  const footerRef = useRef<HTMLElement>(null)
+  const footerRef = useGSAPSafe(({ isReduced, gsap }) => {
+    if (isReduced) return
 
-  const setFooterRefs = (el: HTMLElement | null) => {
-    footerRef.current = el
-    ;(scrollRevealRef as React.MutableRefObject<HTMLElement | null>).current = el
-  }
-
-  useGSAP(() => {
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches
-    if (reduced) return
-
-    // Entrada del footer
     gsap.from(".footer-content", {
-      opacity: 0,
       y: 32,
       duration: 0.7,
       ease: "power2.out",
       scrollTrigger: {
         trigger: footerRef.current,
-        start: "top 90%",
+        start: "top bottom",
         once: true,
       },
     })
 
-    // Blobs flotantes (reemplaza animate-float CSS)
     const blobs = footerRef.current?.querySelectorAll(".footer-blob")
     blobs?.forEach((blob, i) => {
       gsap.to(blob, {
@@ -51,79 +32,63 @@ export function Footer() {
         delay: i * 0.8,
       })
     })
-  }, { scope: footerRef })
+  })
 
   return (
-    <footer
-      ref={setFooterRefs}
-      id="contacto"
-      className="bg-brand-red w-full overflow-hidden"
-    >
-      {/* Wave entrada */}
-      <div className="relative h-12 bg-white">
+    <footer ref={footerRef} id="contacto" className="relative bg-foreground text-primary-foreground w-full overflow-hidden">
+      <div className="relative h-12 bg-background">
         <svg viewBox="0 0 1440 48" fill="none" xmlns="http://www.w3.org/2000/svg" className="absolute bottom-0 w-full" preserveAspectRatio="none" aria-hidden="true">
-          <path d="M0 0 Q360 48 720 24 Q1080 0 1440 48 L1440 48 L0 48 Z" fill="#A31E1E" />
+          <path d="M0 0 Q360 48 720 24 Q1080 0 1440 48 L1440 48 L0 48 Z" fill="var(--foreground)" />
         </svg>
       </div>
 
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-
-        {/* Main footer */}
         <div className="pt-16 pb-12 relative">
-          <div className="footer-blob absolute top-10 left-0 w-40 h-40 bg-white/4 rounded-full blur-3xl" aria-hidden="true" />
-          <div className="footer-blob absolute bottom-0 right-0 w-48 h-48 bg-white/4 rounded-full blur-3xl" aria-hidden="true" />
+          <div className="footer-blob absolute top-[-60px] right-[-80px] w-[300px] h-[300px] rounded-full bg-brand-red/20 blur-3xl pointer-events-none" aria-hidden="true" />
+          <div className="footer-blob absolute bottom-[-40px] left-[-60px] w-[250px] h-[250px] rounded-full bg-muted-foreground/20 blur-3xl pointer-events-none" aria-hidden="true" />
 
-          {/* Layout Gestalt: agrupado en 2 columnas en desktop */}
           <div className="footer-content relative grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
-
-            {/* Izquierda: Marca */}
-            <div className={`scroll-reveal-up ${isVisible ? "visible" : ""}`}>
+            <div>
               <div className="flex items-center gap-3 mb-5">
-                <SquiggleIcon width={48} height={24} className="text-white/50 animate-wave" />
-                <span className="font-stencil text-3xl text-white tracking-wider">CHAZAS UN</span>
+                <SquiggleIcon width={48} height={24} className="text-brand-red" />
+                <span className="font-display font-extrabold text-2xl text-white tracking-tight">CHAZAS UN</span>
               </div>
-              <p className="text-white/65 text-base leading-relaxed max-w-xs font-medium mb-8">
+              <p className="text-muted-foreground text-base leading-relaxed max-w-xs font-medium mb-8">
                 El marketplace de los estudiantes de la Universidad Nacional de Colombia.
                 Gratuito para todos.
               </p>
-
-              {/* CTA footer — Fitts: botón grande, glassmorfismo */}
               <Link
                 href={siteConfig.urls.explorar}
-                className="inline-flex items-center gap-2 font-stencil text-base bg-white text-brand-red px-8 py-3.5 rounded-2xl
-                           hover:bg-gray-50 transition-all duration-300 hover:shadow-xl hover:shadow-black/15
-                           hover:-translate-y-0.5 active:scale-[0.97] shadow-lg shadow-black/10"
+                className="inline-flex items-center gap-2 rounded-full bg-brand-red px-6 py-2.5 text-sm font-semibold text-white hover:bg-brand-red-dark transition"
               >
                 EXPLORAR CHAZAS
                 <span aria-hidden="true">→</span>
               </Link>
             </div>
 
-            {/* Derecha: Links — Hick's Law: 3 grupos máximo */}
-            <div className={`scroll-reveal-up stagger-2 ${isVisible ? "visible" : ""} grid grid-cols-2 gap-8`}>
+            <div className="grid grid-cols-2 gap-8">
               <div>
-                <p className="text-white/30 text-xs font-bold uppercase tracking-[0.15em] mb-4">Plataforma</p>
+                <p className="text-white font-semibold text-sm uppercase tracking-widest mb-4">Plataforma</p>
                 <nav className="flex flex-col gap-3">
-                  <Link href={siteConfig.urls.explorar} className="text-white/65 hover:text-white text-sm font-semibold transition-colors">Explorar chazas</Link>
-                  <Link href={siteConfig.urls.mapa} className="text-white/65 hover:text-white text-sm font-semibold transition-colors">Mapa del campus</Link>
-                  <Link href={siteConfig.urls.publicarChaza} className="text-white/65 hover:text-white text-sm font-semibold transition-colors">Publicar mi chaza</Link>
+                  <Link href={siteConfig.urls.explorar} className="text-muted-foreground hover:text-white text-sm font-semibold transition-colors">Explorar chazas</Link>
+                  <Link href={siteConfig.urls.mapa} className="text-muted-foreground hover:text-white text-sm font-semibold transition-colors">Mapa del campus</Link>
+                  <Link href={siteConfig.urls.publicarChaza} className="text-muted-foreground hover:text-white text-sm font-semibold transition-colors">Publicar mi chaza</Link>
                 </nav>
               </div>
               <div>
-                <p className="text-white/30 text-xs font-bold uppercase tracking-[0.15em] mb-4">Legal</p>
+                <p className="text-white font-semibold text-sm uppercase tracking-widest mb-4">Legal</p>
                 <nav className="flex flex-col gap-3">
-                  <Link href="/terminos" className="text-white/65 hover:text-white text-sm font-semibold transition-colors">Términos de uso</Link>
-                  <Link href="/privacidad" className="text-white/65 hover:text-white text-sm font-semibold transition-colors">Privacidad</Link>
-                  <Link href={siteConfig.urls.blog} className="text-white/65 hover:text-white text-sm font-semibold transition-colors">Blog</Link>
+                  <Link href="/terminos" className="text-muted-foreground hover:text-white text-sm font-semibold transition-colors">Términos de uso</Link>
+                  <Link href="/privacidad" className="text-muted-foreground hover:text-white text-sm font-semibold transition-colors">Privacidad</Link>
+                  <Link href={siteConfig.urls.blog} className="text-muted-foreground hover:text-white text-sm font-semibold transition-colors">Blog</Link>
                 </nav>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Bottom bar */}
-        <div className="border-t border-white/15 py-6">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-3 text-white/40 text-xs font-medium">
+        <div className="border-t border-white/10 py-6">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-3 text-muted-foreground text-xs">
             <p>© 2026 ChazasUN — Proyecto estudiantil independiente · UN Bogotá</p>
           </div>
         </div>
