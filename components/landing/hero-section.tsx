@@ -19,21 +19,36 @@ export function HeroSection({
     const tl = gsap.timeline({ defaults: { ease: "power3.out" } })
 
     tl.from(".hero-badge", { opacity: 0, y: -12, duration: 0.4 })
-      .from(".hero-title", { opacity: 0, y: 28, duration: 0.6 }, "-=0.2")
+      .from(".hero-letter", { opacity: 0, y: "110%", duration: 0.7, stagger: 0.04 }, "-=0.2")
+      .from(".hero-letter-red", { opacity: 0, y: "110%", duration: 0.6, stagger: 0.05 }, "-=0.4")
       .from(".hero-subtitle", { opacity: 0, y: 16, duration: 0.5 }, "-=0.3")
       .from(".hero-cta", { opacity: 0, y: 12, scale: 0.96, duration: 0.4, stagger: 0.1 }, "-=0.3")
-      .from(".hero-card", { opacity: 0, x: 40, rotateY: -8, duration: 0.8, ease: "back.out(1.2)" }, "-=0.4")
       .from(".hero-stats", { opacity: 0, y: 8, duration: 0.4, stagger: 0.08 }, "-=0.3")
 
-    ScrollTrigger.create({
-      trigger: containerRef.current,
-      start: "top top",
-      end: "bottom top",
-      scrub: 1,
-      onUpdate: (self) => {
-        gsap.set(".hero-card", { y: self.progress * -20 })
-      },
-    })
+    // CountUp: starts right as the stats fade in
+    const chazasEl = gsap.utils.toArray<HTMLElement>(".stat-chazas-num")[0]
+    const ratingEl = gsap.utils.toArray<HTMLElement>(".stat-rating-num")[0]
+    if (chazasEl && ratingEl) {
+      const c1 = { v: 0 }
+      const c2 = { v: 0 }
+      tl.call(() => {
+        chazasEl.textContent = "0"
+        ratingEl.textContent = "0.0★"
+      }, undefined, "<")
+        .to(c1, {
+          v: chazasPublished,
+          duration: 1.5,
+          ease: "power2.out",
+          onUpdate() { chazasEl.textContent = Math.round(c1.v).toString() },
+        }, "<")
+        .to(c2, {
+          v: 4.8,
+          duration: 1.5,
+          ease: "power2.out",
+          onUpdate() { ratingEl.textContent = c2.v.toFixed(1) + "★" },
+        }, "<")
+    }
+
   })
 
   const stats = {
@@ -71,12 +86,20 @@ export function HeroSection({
 
       {/* Título principal */}
       <h1
-        className="hero-title relative z-10 font-display font-black text-center leading-[0.9] tracking-tight text-foreground"
+        className="hero-title relative z-10 font-display font-black text-center tracking-tight text-foreground"
         style={{ fontSize: 'clamp(5rem, 14vw, 11rem)' }}
         aria-label="CHAZAS UN"
       >
-        CHAZAS<br />
-        <span className="text-brand-red">UN</span>
+        <span className="block overflow-hidden leading-[0.9]">
+          {"CHAZAS".split("").map((l, i) => (
+            <span key={i} className="hero-letter inline-block">{l}</span>
+          ))}
+        </span>
+        <span className="block overflow-hidden leading-[0.9]">
+          {"UN".split("").map((l, i) => (
+            <span key={i} className="hero-letter-red inline-block text-brand-red">{l}</span>
+          ))}
+        </span>
       </h1>
 
       {/* Línea horizontal bajo el título */}
@@ -125,12 +148,12 @@ export function HeroSection({
       {/* Stats */}
       <div className="hero-stats relative z-10 mt-12 flex items-center justify-center gap-8 text-center">
         <div>
-          <div className="text-3xl font-black font-display text-foreground leading-none">{stats.chazasPublished}</div>
+          <div className="stat-chazas-num text-3xl font-black font-display text-foreground leading-none">{stats.chazasPublished}</div>
           <div className="mt-1 text-xs uppercase tracking-widest text-muted-foreground">Chazas activas</div>
         </div>
         <div className="h-8 w-px bg-border" />
         <div>
-          <div className="text-3xl font-black font-display text-foreground leading-none">{stats.averageRating}★</div>
+          <div className="stat-rating-num text-3xl font-black font-display text-foreground leading-none">{stats.averageRating}★</div>
           <div className="mt-1 text-xs uppercase tracking-widest text-muted-foreground">Calidad promedio</div>
         </div>
         <div className="h-8 w-px bg-border" />
@@ -140,39 +163,6 @@ export function HeroSection({
         </div>
       </div>
 
-      {/* Tarjeta decorativa flotante */}
-      <div className="hero-card hidden lg:block absolute right-8 top-1/2 -translate-y-1/2 select-none" aria-hidden="true">
-        {/* Back card — peeking behind */}
-        <div className="absolute inset-0 rounded-3xl bg-muted/60 border border-border shadow-md translate-x-4 translate-y-3 rotate-3" />
-        {/* Front card */}
-        <div className="relative w-72 rounded-3xl overflow-hidden shadow-xl border border-border -rotate-1 bg-background">
-          {featuredImage ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={featuredImage} alt="" className="h-40 w-full object-cover" />
-          ) : (
-            <div className="h-40 bg-gradient-to-br from-amber-400 to-orange-500" />
-          )}
-          <div className="p-4">
-            <span className="text-[10px] font-semibold uppercase tracking-widest text-brand-red bg-brand-red/10 px-2 py-0.5 rounded-full">
-              Comida
-            </span>
-            <p className="font-display text-base text-foreground mt-1 leading-tight font-bold">El Rincón del Tinto</p>
-            <p className="text-xs text-muted-foreground mt-0.5">Edificio Posgrados · Desde $2.000</p>
-            <div className="flex items-center gap-1 mt-2">
-              {[1, 2, 3, 4, 5].map((s) => (
-                <svg key={s} className="w-3 h-3 fill-yellow-400 text-yellow-400" viewBox="0 0 20 20">
-                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                </svg>
-              ))}
-              <span className="text-xs text-muted-foreground ml-1">4.8</span>
-            </div>
-          </div>
-        </div>
-        {/* Swipe hint badge */}
-        <div className="absolute -bottom-3 -right-3 bg-background rounded-full shadow-lg px-3 py-1.5 flex items-center gap-1.5 text-xs font-semibold text-foreground border border-border">
-          <span>👆</span> Desliza
-        </div>
-      </div>
     </section>
   )
 }

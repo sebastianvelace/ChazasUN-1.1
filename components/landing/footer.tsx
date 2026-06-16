@@ -6,18 +6,16 @@ import { siteConfig } from "@/config/site"
 import { useGSAPSafe } from "@/hooks/use-gsap-reduced"
 
 export function Footer() {
-  const footerRef = useGSAPSafe(({ isReduced, gsap }) => {
+  const footerRef = useGSAPSafe(({ isReduced, gsap, ScrollTrigger }) => {
     if (isReduced) return
 
-    gsap.from(".footer-content", {
-      y: 32,
-      duration: 0.7,
-      ease: "power2.out",
-      scrollTrigger: {
-        trigger: footerRef.current,
-        start: "top bottom",
-        once: true,
-      },
+    ScrollTrigger.batch(".footer-content", {
+      onEnter: (els) => gsap.fromTo(els,
+        { opacity: 0, y: 32 },
+        { opacity: 1, y: 0, duration: 0.7, ease: "power2.out" }
+      ),
+      once: true,
+      start: "top bottom",
     })
 
     const blobs = footerRef.current?.querySelectorAll(".footer-blob")

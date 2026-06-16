@@ -107,40 +107,32 @@ export function ReviewsSection() {
   const sectionRef = useGSAPSafe(({ isReduced, gsap, ScrollTrigger }) => {
     if (isReduced) return
 
-    gsap.from(".reviews-header", {
-      y: 28,
-      duration: 0.6,
-      ease: "power3.out",
-      scrollTrigger: {
-        trigger: ".reviews-header",
-        start: "top bottom",
-        once: true,
-      },
+    ScrollTrigger.batch(".reviews-header", {
+      onEnter: (els) => gsap.fromTo(els,
+        { opacity: 0, y: 28 },
+        { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" }
+      ),
+      once: true,
+      start: "top bottom",
     })
 
-    gsap.from(".review-card", {
-      y: 36,
-      scale: 0.97,
-      duration: 0.55,
-      stagger: 0.1,
-      ease: "power2.out",
-      scrollTrigger: {
-        trigger: sectionRef.current,
-        start: "top bottom",
-        once: true,
-      },
+    ScrollTrigger.batch(".review-card", {
+      onEnter: (elements) => gsap.fromTo(
+        elements,
+        { opacity: 0, y: 36, scale: 0.96 },
+        { opacity: 1, y: 0, scale: 1, duration: 0.55, stagger: 0.1, ease: "power2.out" }
+      ),
+      once: true,
+      start: "top bottom",
     })
 
-    gsap.from(".review-dots", {
-      y: 14,
-      duration: 0.4,
-      delay: 0.4,
-      ease: "power2.out",
-      scrollTrigger: {
-        trigger: ".review-dots",
-        start: "top bottom",
-        once: true,
-      },
+    ScrollTrigger.batch(".review-dots", {
+      onEnter: (els) => gsap.fromTo(els,
+        { opacity: 0, y: 14 },
+        { opacity: 1, y: 0, duration: 0.4, ease: "power2.out" }
+      ),
+      once: true,
+      start: "top bottom",
     })
   })
 

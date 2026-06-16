@@ -9,44 +9,32 @@ export function BlogSection() {
   const containerRef = useGSAPSafe(({ isReduced, gsap, ScrollTrigger }) => {
     if (isReduced) return
 
-    gsap.from(".blog-header", {
-      y: 24,
-      duration: 0.6,
-      ease: "power2.out",
-      scrollTrigger: {
-        trigger: ".blog-header",
-        start: "top bottom",
-        once: true,
-      },
-    })
-
-    ScrollTrigger.batch(".blog-card", {
-      onEnter: (elements) => {
-        gsap.fromTo(
-          elements,
-          { y: 36 },
-          {
-            y: 0,
-            duration: 0.55,
-            stagger: 0.08,
-            ease: "power2.out",
-          }
-        )
-      },
+    ScrollTrigger.batch(".blog-header", {
+      onEnter: (els) => gsap.fromTo(els,
+        { opacity: 0, y: 24 },
+        { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" }
+      ),
       once: true,
       start: "top bottom",
     })
 
-    gsap.from(".blog-newsletter", {
-      y: 20,
-      scale: 0.98,
-      duration: 0.6,
-      ease: "power2.out",
-      scrollTrigger: {
-        trigger: ".blog-newsletter",
-        start: "top bottom",
-        once: true,
-      },
+    ScrollTrigger.batch(".blog-card", {
+      onEnter: (elements) => gsap.fromTo(
+        elements,
+        { opacity: 0, y: 36 },
+        { opacity: 1, y: 0, duration: 0.55, stagger: 0.08, ease: "power2.out" }
+      ),
+      once: true,
+      start: "top bottom",
+    })
+
+    ScrollTrigger.batch(".blog-newsletter", {
+      onEnter: (els) => gsap.fromTo(els,
+        { opacity: 0, y: 20, scale: 0.98 },
+        { opacity: 1, y: 0, scale: 1, duration: 0.6, ease: "power2.out" }
+      ),
+      once: true,
+      start: "top bottom",
     })
   })
 

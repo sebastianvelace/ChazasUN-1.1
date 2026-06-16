@@ -26,31 +26,45 @@ export function CategoriesSection() {
   const containerRef = useGSAPSafe(({ isReduced, gsap, ScrollTrigger }) => {
     if (isReduced) return
 
-    gsap.from(".categories-header", {
-      y: 24,
-      duration: 0.6,
-      ease: "power2.out",
-      scrollTrigger: {
-        trigger: ".categories-header",
-        start: "top bottom",
-        once: true,
-      },
+    // Header eyebrow + label fade-in
+    ScrollTrigger.batch(".categories-eyebrow", {
+      onEnter: (els) => gsap.fromTo(els,
+        { opacity: 0, y: 20 },
+        { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }
+      ),
+      once: true,
+      start: "top bottom",
     })
 
+    // Clip-path reveal for the main title
+    ScrollTrigger.batch(".categories-title", {
+      onEnter: (els) => gsap.fromTo(els,
+        { clipPath: "inset(0 100% 0 0)" },
+        { clipPath: "inset(0 0% 0 0)", duration: 0.85, ease: "power2.inOut" }
+      ),
+      once: true,
+      start: "top bottom",
+    })
+
+    // Category grid items with opacity + y + scale
     ScrollTrigger.batch(".category-item", {
       onEnter: (elements) => {
         gsap.fromTo(
           elements,
-          { y: 28, scale: 0.97 },
-          {
-            y: 0,
-            scale: 1,
-            duration: 0.5,
-            stagger: 0.06,
-            ease: "power2.out",
-          }
+          { opacity: 0, y: 28, scale: 0.97 },
+          { opacity: 1, y: 0, scale: 1, duration: 0.5, stagger: 0.06, ease: "power2.out" }
         )
       },
+      once: true,
+      start: "top bottom",
+    })
+
+    // Bottom CTA row
+    ScrollTrigger.batch(".categories-cta", {
+      onEnter: (els) => gsap.fromTo(els,
+        { opacity: 0, y: 16 },
+        { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }
+      ),
       once: true,
       start: "top bottom",
     })
@@ -61,12 +75,12 @@ export function CategoriesSection() {
       <div className="mx-auto max-w-6xl">
 
         {/* Header */}
-        <div className="categories-header mb-16">
-          <div className="flex items-center gap-3 mb-4">
+        <div className="mb-16">
+          <div className="categories-eyebrow flex items-center gap-3 mb-4">
             <div className="h-px w-8 bg-brand-red" />
             <span className="text-xs font-semibold uppercase tracking-[0.2em] text-brand-red">Explora por categoría</span>
           </div>
-          <h2 className="font-display font-black text-foreground leading-none tracking-tight" style={{ fontSize: 'clamp(2.5rem, 6vw, 4.5rem)' }}>
+          <h2 className="categories-title font-display font-black text-foreground leading-none tracking-tight" style={{ fontSize: 'clamp(2.5rem, 6vw, 4.5rem)' }}>
             TODO LO QUE<br />NECESITAS
           </h2>
         </div>
@@ -108,7 +122,7 @@ export function CategoriesSection() {
         </div>
 
         {/* CTA row */}
-        <div className="categories-header flex flex-col sm:flex-row items-center justify-between gap-6 mt-10 pt-8 border-t border-border">
+        <div className="categories-cta flex flex-col sm:flex-row items-center justify-between gap-6 mt-10 pt-8 border-t border-border">
           <p className="text-muted-foreground text-sm font-medium">
             ¿Tu chaza no aparece? Publícala gratis y sé el primero.
           </p>

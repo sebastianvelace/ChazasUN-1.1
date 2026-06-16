@@ -55,40 +55,67 @@ export function HowItWorksSection() {
   const sectionRef = useGSAPSafe(({ isReduced, gsap, ScrollTrigger }) => {
     if (isReduced) return
 
-    gsap.from(".hiw-header", {
-      y: 28,
-      duration: 0.6,
-      ease: "power3.out",
-      scrollTrigger: {
-        trigger: ".hiw-header",
-        start: "top bottom",
-        once: true,
-      },
+    // Header fade + clip-path reveal for the title
+    ScrollTrigger.batch(".hiw-header", {
+      onEnter: (els) => gsap.fromTo(els,
+        { opacity: 0, y: 28 },
+        { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" }
+      ),
+      once: true,
+      start: "top bottom",
     })
 
+    ScrollTrigger.batch(".hiw-title", {
+      onEnter: (els) => gsap.fromTo(els,
+        { clipPath: "inset(0 100% 0 0)" },
+        { clipPath: "inset(0 0% 0 0)", duration: 0.85, ease: "power2.inOut", delay: 0.1 }
+      ),
+      once: true,
+      start: "top bottom",
+    })
+
+    // Connector line draws progressively as user scrolls
     gsap.from("#connector-line", {
       scaleX: 0,
       transformOrigin: "left center",
-      duration: 1.2,
-      ease: "power2.inOut",
+      ease: "none",
       scrollTrigger: {
-        trigger: "#connector-line",
-        start: "top bottom",
-        once: true,
+        trigger: ".hiw-steps-container",
+        start: "top 75%",
+        end: "center center",
+        scrub: 1,
       },
     })
 
-    gsap.from(".hiw-step", {
-      y: 36,
-      scale: 0.97,
-      duration: 0.6,
-      stagger: 0.18,
-      ease: "power3.out",
-      scrollTrigger: {
-        trigger: ".hiw-steps-container",
+    // Ghost numbers parallax — each moves at a different rate
+    gsap.utils.toArray<HTMLElement>(".hiw-ghost-number").forEach((el) => {
+      gsap.to(el, {
+        y: -50,
+        ease: "none",
+        scrollTrigger: {
+          trigger: el,
+          start: "top bottom",
+          end: "bottom top",
+          scrub: 2,
+        },
+      })
+    })
+
+    // Step cards slide in from sides with opacity
+    const stepEls = gsap.utils.toArray<HTMLElement>(".hiw-step")
+    stepEls.forEach((el, i) => {
+      const xFrom = i === 0 ? -36 : i === 2 ? 36 : 0
+      ScrollTrigger.create({
+        trigger: el,
         start: "top bottom",
         once: true,
-      },
+        onEnter() {
+          gsap.fromTo(el,
+            { opacity: 0, y: 36, x: xFrom, scale: 0.97 },
+            { opacity: 1, y: 0, x: 0, scale: 1, duration: 0.65, ease: "power3.out" }
+          )
+        },
+      })
     })
   })
 
@@ -107,7 +134,7 @@ export function HowItWorksSection() {
             <span className="text-xs font-semibold uppercase tracking-[0.2em] text-brand-red">Simple y directo</span>
             <div className="h-px w-8 bg-brand-red" />
           </div>
-          <h2 className="font-display font-black text-foreground leading-none tracking-tight" style={{ fontSize: 'clamp(2.5rem, 6vw, 4.5rem)' }}>
+          <h2 className="hiw-title font-display font-black text-foreground leading-none tracking-tight" style={{ fontSize: 'clamp(2.5rem, 6vw, 4.5rem)' }}>
             CÓMO FUNCIONA
           </h2>
           <p className="mt-4 text-muted-foreground text-lg max-w-lg mx-auto">
@@ -131,7 +158,7 @@ export function HowItWorksSection() {
               >
                 <div className="h-full flex flex-col">
                   <div className="mb-6 flex items-center gap-4">
-                    <span className="font-display font-black text-[7rem] leading-none text-muted/30 select-none absolute -top-4 -left-2 transition-colors group-hover:text-brand-red/10">
+                    <span className="hiw-ghost-number font-display font-black text-[7rem] leading-none text-muted/30 select-none absolute -top-4 -left-2 transition-colors group-hover:text-brand-red/10">
                       {step.number}
                     </span>
                     <div className="relative z-10 w-10 h-10 rounded-full border-2 border-brand-red flex items-center justify-center text-brand-red font-bold font-display">
