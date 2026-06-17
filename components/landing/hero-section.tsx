@@ -49,6 +49,31 @@ export function HeroSection({
         }, "<")
     }
 
+    // Scroll-exit: parallax lento del título — se queda visible más tiempo
+    gsap.to(".hero-title", {
+      y: -60,
+      ease: "none",
+      scrollTrigger: {
+        trigger: containerRef.current,
+        start: "top top",
+        end: "bottom top",
+        scrub: 1.5,
+      },
+    })
+
+    // Scroll-exit: badge, subtítulo, CTAs y stats se van rápido con opacity
+    gsap.to([".hero-badge", ".hero-subtitle", ".hero-cta", ".hero-stats"], {
+      opacity: 0,
+      y: -30,
+      ease: "none",
+      scrollTrigger: {
+        trigger: containerRef.current,
+        start: "top top",
+        end: "35% top",
+        scrub: 1,
+      },
+    })
+
   })
 
   const stats = {

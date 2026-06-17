@@ -12,7 +12,16 @@ export function BlogSection() {
     ScrollTrigger.batch(".blog-header", {
       onEnter: (els) => gsap.fromTo(els,
         { opacity: 0, y: 24 },
-        { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" }
+        { opacity: 1, y: 0, duration: 0.6, ease: "expo.out" }
+      ),
+      once: true,
+      start: "top bottom",
+    })
+
+    ScrollTrigger.batch(".blog-title", {
+      onEnter: (els) => gsap.fromTo(els,
+        { clipPath: "inset(0 100% 0 0)" },
+        { clipPath: "inset(0 0% 0 0)", duration: 0.85, ease: "power2.inOut" }
       ),
       once: true,
       start: "top bottom",
@@ -46,7 +55,7 @@ export function BlogSection() {
             <span className="inline-block bg-brand-red/10 text-brand-red text-xs font-semibold uppercase tracking-widest px-4 py-1.5 rounded-full mb-4">
               Blog
             </span>
-            <h2 className="font-display font-extrabold text-5xl md:text-6xl text-foreground tracking-tight">
+            <h2 className="blog-title font-display font-extrabold text-5xl md:text-6xl text-foreground tracking-tight">
               BLOG
             </h2>
             <p className="text-muted-foreground mt-3 max-w-md">

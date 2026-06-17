@@ -12,7 +12,7 @@ export function Footer() {
     ScrollTrigger.batch(".footer-content", {
       onEnter: (els) => gsap.fromTo(els,
         { opacity: 0, y: 32 },
-        { opacity: 1, y: 0, duration: 0.7, ease: "power2.out" }
+        { opacity: 1, y: 0, duration: 0.7, ease: "expo.out" }
       ),
       once: true,
       start: "top bottom",

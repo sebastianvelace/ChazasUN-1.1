@@ -3,6 +3,7 @@ import { Plus_Jakarta_Sans, Barlow_Condensed, DM_Sans } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import { Toaster } from 'sonner'
 import { AnalyticsProvider } from '@/components/analytics/analytics-provider'
+import { LenisProvider } from '@/components/providers/lenis-provider'
 import '@/lib/gsap'
 import './globals.css'
 
@@ -55,7 +56,9 @@ export default function RootLayout({
   return (
     <html lang="es" className={`${plusJakartaSans.variable} ${barlowCondensed.variable} ${dmSans.variable}`}>
       <body className={`${plusJakartaSans.variable} ${barlowCondensed.variable} ${dmSans.variable} font-sans antialiased bg-background`}>
-        <AnalyticsProvider>{children}</AnalyticsProvider>
+        <LenisProvider>
+          <AnalyticsProvider>{children}</AnalyticsProvider>
+        </LenisProvider>
         <Toaster richColors position="top-center" />
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>

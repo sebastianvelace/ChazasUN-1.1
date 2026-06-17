@@ -59,7 +59,7 @@ export function HowItWorksSection() {
     ScrollTrigger.batch(".hiw-header", {
       onEnter: (els) => gsap.fromTo(els,
         { opacity: 0, y: 28 },
-        { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" }
+        { opacity: 1, y: 0, duration: 0.6, ease: "expo.out" }
       ),
       once: true,
       start: "top bottom",
@@ -112,7 +112,7 @@ export function HowItWorksSection() {
         onEnter() {
           gsap.fromTo(el,
             { opacity: 0, y: 36, x: xFrom, scale: 0.97 },
-            { opacity: 1, y: 0, x: 0, scale: 1, duration: 0.65, ease: "power3.out" }
+            { opacity: 1, y: 0, x: 0, scale: 1, duration: 0.65, ease: "expo.out" }
           )
         },
       })

@@ -110,7 +110,16 @@ export function ReviewsSection() {
     ScrollTrigger.batch(".reviews-header", {
       onEnter: (els) => gsap.fromTo(els,
         { opacity: 0, y: 28 },
-        { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" }
+        { opacity: 1, y: 0, duration: 0.6, ease: "expo.out" }
+      ),
+      once: true,
+      start: "top bottom",
+    })
+
+    ScrollTrigger.batch(".reviews-title", {
+      onEnter: (els) => gsap.fromTo(els,
+        { clipPath: "inset(0 100% 0 0)" },
+        { clipPath: "inset(0 0% 0 0)", duration: 0.85, ease: "power2.inOut" }
       ),
       once: true,
       start: "top bottom",
@@ -152,7 +161,7 @@ export function ReviewsSection() {
             <span className="inline-block bg-brand-red/10 text-brand-red text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-5">
               Comunidad
             </span>
-            <h2 className="font-display font-extrabold text-5xl md:text-6xl text-foreground tracking-tight">
+            <h2 className="reviews-title font-display font-extrabold text-5xl md:text-6xl text-foreground tracking-tight">
               LO QUE<br className="hidden sm:block" /> DICEN
             </h2>
           </div>
