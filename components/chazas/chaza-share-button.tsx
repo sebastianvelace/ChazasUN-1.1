@@ -19,7 +19,7 @@ type Props = {
   chazaName: string
   className?: string
   /** En listados: solo icono y texto corto */
-  variant?: "default" | "compact"
+  variant?: "default" | "compact" | "icon"
 }
 
 async function copyText(text: string, okMessage: string) {
@@ -72,14 +72,17 @@ export function ChazaShareButton({ slug, chazaName, className, variant = "defaul
         type="button"
         onClick={() => setOpen(true)}
         className={cn(
-          variant === "compact"
-            ? "text-sm font-semibold text-gray-600 hover:text-brand-red inline-flex items-center gap-1"
-            : "inline-flex items-center justify-center gap-2 rounded-full border-2 border-brand-red/30 text-brand-red font-stencil text-sm px-5 py-2.5 hover:bg-brand-red/5 transition-colors",
+          variant === "icon"
+            ? "inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-gray-200 bg-white text-brand-red shadow-sm transition hover:border-brand-red/30 hover:bg-brand-red/5"
+            : variant === "compact"
+              ? "text-sm font-semibold text-gray-600 hover:text-brand-red inline-flex items-center gap-1"
+              : "inline-flex items-center justify-center gap-2 rounded-full border-2 border-brand-red/30 text-brand-red font-stencil text-sm px-5 py-2.5 hover:bg-brand-red/5 transition-colors",
           className
         )}
+        aria-label="Compartir chaza"
       >
         <Share2 className={variant === "compact" ? "w-3.5 h-3.5" : "w-4 h-4"} />
-        {variant === "compact" ? "Compartir / QR" : "COMPARTIR"}
+        {variant === "icon" ? null : variant === "compact" ? "Compartir / QR" : "COMPARTIR"}
       </button>
 
       <Dialog open={open} onOpenChange={setOpen}>

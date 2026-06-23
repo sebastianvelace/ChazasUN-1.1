@@ -22,7 +22,18 @@ import { MenuVisionPicker } from "@/components/forms/menu-vision-picker"
 import { CoverUploadField } from "@/components/forms/cover-upload-field"
 import { Checkbox } from "@/components/ui/checkbox"
 import { CHAZA_COVER_PLACEHOLDER, hasChazaCover } from "@/lib/constants/chaza-images"
-import { ImageIcon } from "lucide-react"
+import {
+  ArrowLeft,
+  ArrowRight,
+  CheckCircle2,
+  Eye,
+  ImageIcon,
+  MapPin,
+  PackageOpen,
+  ShieldCheck,
+  Sparkles,
+  Store,
+} from "lucide-react"
 import type { ChazaCard } from "@/types/chaza"
 
 const publishAuthNext = encodeURIComponent(siteConfig.urls.publicarChaza)
@@ -47,6 +58,15 @@ const STEPS = [
   "Ubicacion",
   "Contacto",
   "Vista previa",
+] as const
+
+const STEP_HELP = [
+  "Verifica tu identidad para proteger la comunidad.",
+  "Cuenta que vendes y por que deberian elegirte.",
+  "Convierte tu carta en una experiencia facil de escanear.",
+  "Marca el punto mas claro para encontrarte en el campus.",
+  "Publica solo canales que puedas atender rapido.",
+  "Revisa como te vera alguien antes de guardar.",
 ] as const
 
 export function PublishChazaWizard({ menuVisionEnabled = false }: { menuVisionEnabled?: boolean }) {
@@ -211,23 +231,73 @@ export function PublishChazaWizard({ menuVisionEnabled = false }: { menuVisionEn
     }
   }, [watched])
 
+  const progress = Math.round(((step + 1) / STEPS.length) * 100)
+  const selectedCategoryNames = categorySlugs
+    .map((slug) => categories.find((category) => category.slug === slug)?.name)
+    .filter(Boolean) as string[]
+  const coverReady = hasChazaCover(watched.coverImageUrl)
+  const productsCount = watched.products.length
+  const contactChannels = [watched.whatsapp, watched.instagram].filter((value) => value?.trim()).length
+
   return (
-    <div className="space-y-8">
+    <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_340px]">
+      <section className="space-y-7 rounded-[2rem] border border-gray-100 bg-white p-4 shadow-sm sm:p-6 lg:p-8">
       {/* Step indicator */}
-      <div className="mb-8">
-        <div className="flex items-center justify-between mb-2">
-          <span className="text-xs font-semibold text-gray-400 uppercase tracking-widest">
-            Paso {step + 1} de {STEPS.length}
-          </span>
-          <span className="text-xs font-semibold text-brand-red">
-            {STEPS[step]}
+      <div className="space-y-4">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <span className="text-xs font-semibold text-gray-400 uppercase tracking-widest">
+              Paso {step + 1} de {STEPS.length}
+            </span>
+            <h2 className="mt-1 font-stencil text-3xl text-gray-950 sm:text-4xl">{STEPS[step]}</h2>
+            <p className="mt-1 text-sm text-gray-500">{STEP_HELP[step]}</p>
+          </div>
+          <span className="inline-flex w-fit items-center gap-2 rounded-full border border-brand-red/15 bg-brand-red/5 px-3 py-1.5 text-xs font-semibold text-brand-red">
+            <Sparkles className="h-3.5 w-3.5" aria-hidden />
+            {progress}% listo
           </span>
         </div>
-        <div className="h-1.5 w-full bg-gray-100 rounded-full overflow-hidden">
+        <div className="h-2 w-full overflow-hidden rounded-full bg-gray-100">
           <div
-            className="h-full bg-brand-red rounded-full transition-all duration-500 ease-out"
-            style={{ width: `${((step + 1) / STEPS.length) * 100}%` }}
+            className="h-full rounded-full bg-brand-red transition-all duration-500 ease-out"
+            style={{ width: `${progress}%` }}
           />
+        </div>
+        <div className="grid grid-cols-3 gap-2 sm:grid-cols-6">
+          {STEPS.map((label, index) => {
+            const done = index < step
+            const current = index === step
+            return (
+              <button
+                key={label}
+                type="button"
+                onClick={async () => {
+                  if (index <= step) {
+                    setStep(index)
+                    return
+                  }
+                  if (index === step + 1) {
+                    const ok = await validateStep(step)
+                    if (ok) setStep(index)
+                    return
+                  }
+                  toast.message("Avanza paso a paso para no dejar datos importantes por fuera.")
+                }}
+                className={`rounded-2xl border px-2.5 py-2 text-left text-xs font-semibold transition-colors ${
+                  current
+                    ? "border-brand-red bg-brand-red text-white"
+                    : done
+                      ? "border-emerald-200 bg-emerald-50 text-emerald-700"
+                      : "border-gray-100 bg-gray-50 text-gray-400"
+                }`}
+              >
+                <span className="mb-1 flex h-5 w-5 items-center justify-center rounded-full bg-white/80 text-[10px] text-gray-700">
+                  {done ? <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600" aria-hidden /> : index + 1}
+                </span>
+                <span className="block truncate">{label}</span>
+              </button>
+            )
+          })}
         </div>
       </div>
 
@@ -444,25 +514,127 @@ export function PublishChazaWizard({ menuVisionEnabled = false }: { menuVisionEn
       )}
 
       {step > 0 && (
-        <div className="flex justify-between pt-4 border-t border-gray-100">
+        <div className="flex items-center justify-between gap-3 border-t border-gray-100 pt-4">
           <button
             type="button"
             onClick={prevStep}
-            className="text-sm font-semibold text-gray-600 hover:text-brand-red"
+            className="inline-flex items-center gap-2 rounded-full border border-gray-200 px-4 py-2 text-sm font-semibold text-gray-600 hover:border-brand-red/30 hover:text-brand-red"
           >
+            <ArrowLeft className="h-4 w-4" aria-hidden />
             Atras
           </button>
           {step < STEPS.length - 1 && (
             <button
               type="button"
               onClick={() => void nextStep()}
-              className="font-stencil bg-brand-red text-white px-6 py-2.5 rounded-full text-sm hover:bg-brand-red-dark"
+              className="inline-flex items-center gap-2 rounded-full bg-brand-red px-5 py-2.5 font-stencil text-sm text-white hover:bg-brand-red-dark"
             >
               SIGUIENTE
+              <ArrowRight className="h-4 w-4" aria-hidden />
             </button>
           )}
         </div>
       )}
+      </section>
+
+      <aside className="space-y-4 lg:sticky lg:top-24 lg:self-start">
+        <div className="rounded-[1.75rem] border border-gray-100 bg-gray-950 p-5 text-white shadow-sm">
+          <div className="mb-4 flex items-center justify-between">
+            <span className="text-xs font-semibold uppercase tracking-widest text-white/50">Vista viva</span>
+            <Eye className="h-4 w-4 text-white/50" aria-hidden />
+          </div>
+          <div className="relative overflow-hidden rounded-3xl border border-white/10 aspect-[4/5] bg-white/5">
+            {coverReady ? (
+              <img src={watched.coverImageUrl} alt="" className="absolute inset-0 h-full w-full object-cover" />
+            ) : (
+              <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-gradient-to-br from-white/10 to-white/0 text-white/40">
+                <ImageIcon className="h-9 w-9" aria-hidden />
+                <span className="text-xs font-semibold">Sin portada</span>
+              </div>
+            )}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
+            <div className="absolute left-4 top-4">
+              <span className="rounded-full bg-brand-red px-3 py-1.5 text-xs font-semibold">
+                {selectedCategoryNames[0] ?? "Categoria"}
+              </span>
+            </div>
+            <div className="absolute inset-x-0 bottom-0 p-4">
+              <h3 className="font-stencil text-2xl leading-none">{watched.name || "Nombre de tu chaza"}</h3>
+              <p className="mt-2 line-clamp-2 text-xs text-white/70">
+                {watched.description || "Una descripcion corta hace que alguien decida mas rapido."}
+              </p>
+              <div className="mt-3 flex items-center justify-between text-xs text-white/75">
+                <span>{watched.locationText || "Punto del campus"}</span>
+                <span>{productsCount ? `${productsCount} productos` : "Carta pendiente"}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="rounded-[1.75rem] border border-gray-100 bg-white p-5 shadow-sm">
+          <h3 className="font-stencil text-2xl text-gray-950">Checklist</h3>
+          <div className="mt-4 space-y-3">
+            <PublishSignal
+              icon={<Store className="h-4 w-4" aria-hidden />}
+              active={Boolean(watched.name.trim() && selectedCategoryNames.length)}
+              label="Identidad clara"
+              detail={selectedCategoryNames.join(", ") || "Elige al menos una categoria"}
+            />
+            <PublishSignal
+              icon={<ImageIcon className="h-4 w-4" aria-hidden />}
+              active={coverReady}
+              label="Portada memorable"
+              detail={coverReady ? "Lista para el explorador" : "Una foto real sube la confianza"}
+            />
+            <PublishSignal
+              icon={<PackageOpen className="h-4 w-4" aria-hidden />}
+              active={productsCount > 0}
+              label="Carta escaneable"
+              detail={productsCount ? `${productsCount} productos cargados` : "Agrega tus mas vendidos"}
+            />
+            <PublishSignal
+              icon={<MapPin className="h-4 w-4" aria-hidden />}
+              active={Boolean(watched.locationText.trim())}
+              label="Ubicacion entendible"
+              detail={watched.locationText || "Describe el punto de referencia"}
+            />
+            <PublishSignal
+              icon={<ShieldCheck className="h-4 w-4" aria-hidden />}
+              active={contactChannels > 0}
+              label="Contacto accionable"
+              detail={contactChannels ? `${contactChannels} canal(es) visible(s)` : "WhatsApp o Instagram ayudan a convertir"}
+            />
+          </div>
+        </div>
+      </aside>
+    </div>
+  )
+}
+
+function PublishSignal({
+  icon,
+  active,
+  label,
+  detail,
+}: {
+  icon: React.ReactNode
+  active: boolean
+  label: string
+  detail: string
+}) {
+  return (
+    <div className="flex gap-3">
+      <span
+        className={`mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full ${
+          active ? "bg-emerald-50 text-emerald-600" : "bg-gray-100 text-gray-400"
+        }`}
+      >
+        {active ? <CheckCircle2 className="h-4 w-4" aria-hidden /> : icon}
+      </span>
+      <div className="min-w-0">
+        <p className="text-sm font-semibold text-gray-900">{label}</p>
+        <p className="truncate text-xs text-gray-500">{detail}</p>
+      </div>
     </div>
   )
 }
