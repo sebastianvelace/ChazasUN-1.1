@@ -18,7 +18,7 @@ gsap.registerPlugin(ScrollTrigger)
  *   })
  */
 export function useGSAPSafe(
-  callback: (ctx: { isReduced: boolean; gsap: typeof gsap; ScrollTrigger: typeof ScrollTrigger }) => void | gsap.core.Timeline,
+  callback: (ctx: { isReduced: boolean; gsap: typeof gsap; ScrollTrigger: typeof ScrollTrigger }) => void | gsap.core.Timeline | (() => void),
   options?: { scope?: React.RefObject<HTMLElement | null>; dependencies?: unknown[] }
 ) {
   const internalRef = useRef<HTMLElement>(null)

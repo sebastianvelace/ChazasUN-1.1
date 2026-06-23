@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { TrendingUp } from "lucide-react"
+import { ArrowRight, MapPin, MousePointer2, Sparkles, Store, Utensils } from "lucide-react"
 import { useGSAPSafe } from "@/hooks/use-gsap-reduced"
 
 export function HeroSection({
@@ -13,181 +13,153 @@ export function HeroSection({
   reviewsPublished?: number
   featuredImage?: string
 }) {
-  const containerRef = useGSAPSafe(({ isReduced, gsap, ScrollTrigger }) => {
+  const containerRef = useGSAPSafe(({ isReduced, gsap }) => {
     if (isReduced) return
 
-    const tl = gsap.timeline({ defaults: { ease: "power3.out" } })
+    const ctx = gsap.context(() => {
+      const tl = gsap.timeline({ defaults: { ease: "expo.out" } })
+      tl.from(".hero-copy > *", { opacity: 0, y: 28, duration: 0.75, stagger: 0.08 })
+        .from(".hero-card", { opacity: 0, y: 42, rotate: -4, scale: 0.92, duration: 0.9 }, "-=0.48")
+        .from(".hero-orbit", { opacity: 0, scale: 0.75, duration: 0.55, stagger: 0.08 }, "-=0.42")
+        .from(".hero-dock", { opacity: 0, y: 18, duration: 0.55 }, "-=0.35")
 
-    tl.from(".hero-badge", { opacity: 0, y: -12, duration: 0.4 })
-      .from(".hero-letter", { opacity: 0, y: "110%", duration: 0.7, stagger: 0.04 }, "-=0.2")
-      .from(".hero-letter-red", { opacity: 0, y: "110%", duration: 0.6, stagger: 0.05 }, "-=0.4")
-      .from(".hero-subtitle", { opacity: 0, y: 16, duration: 0.5 }, "-=0.3")
-      .from(".hero-cta", { opacity: 0, y: 12, scale: 0.96, duration: 0.4, stagger: 0.1 }, "-=0.3")
-      .from(".hero-stats", { opacity: 0, y: 8, duration: 0.4, stagger: 0.08 }, "-=0.3")
+      gsap.to(".hero-card", {
+        y: -46,
+        rotate: 2.5,
+        ease: "none",
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: "top top",
+          end: "bottom top",
+          scrub: 1.2,
+        },
+      })
 
-    // CountUp: starts right as the stats fade in
-    const chazasEl = gsap.utils.toArray<HTMLElement>(".stat-chazas-num")[0]
-    const ratingEl = gsap.utils.toArray<HTMLElement>(".stat-rating-num")[0]
-    if (chazasEl && ratingEl) {
-      const c1 = { v: 0 }
-      const c2 = { v: 0 }
-      tl.call(() => {
-        chazasEl.textContent = "0"
-        ratingEl.textContent = "0.0★"
-      }, undefined, "<")
-        .to(c1, {
-          v: chazasPublished,
-          duration: 1.5,
-          ease: "power2.out",
-          onUpdate() { chazasEl.textContent = Math.round(c1.v).toString() },
-        }, "<")
-        .to(c2, {
-          v: 4.8,
-          duration: 1.5,
-          ease: "power2.out",
-          onUpdate() { ratingEl.textContent = c2.v.toFixed(1) + "★" },
-        }, "<")
-    }
+      gsap.to(".hero-orbit", {
+        yPercent: (i) => (i % 2 === 0 ? -34 : 28),
+        xPercent: (i) => (i % 2 === 0 ? 18 : -14),
+        ease: "none",
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: "top top",
+          end: "bottom top",
+          scrub: 1.6,
+        },
+      })
+    }, containerRef)
 
-    // Scroll-exit: parallax lento del título — se queda visible más tiempo
-    gsap.to(".hero-title", {
-      y: -60,
-      ease: "none",
-      scrollTrigger: {
-        trigger: containerRef.current,
-        start: "top top",
-        end: "bottom top",
-        scrub: 1.5,
-      },
-    })
-
-    // Scroll-exit: badge, subtítulo, CTAs y stats se van rápido con opacity
-    gsap.to([".hero-badge", ".hero-subtitle", ".hero-cta", ".hero-stats"], {
-      opacity: 0,
-      y: -30,
-      ease: "none",
-      scrollTrigger: {
-        trigger: containerRef.current,
-        start: "top top",
-        end: "35% top",
-        scrub: 1,
-      },
-    })
-
+    return () => ctx.revert()
   })
 
-  const stats = {
-    chazasPublished: String(chazasPublished),
-    averageRating: "4.8",
-  }
-
-  const exploredPercent = chazasPublished > 0
-    ? Math.min(Math.round((reviewsPublished / (chazasPublished * 3)) * 100), 72)
-    : 0
+  const exploredPercent =
+    chazasPublished > 0 ? Math.min(Math.round((reviewsPublished / (chazasPublished * 3)) * 100), 72) : 0
+  const image = featuredImage || "/placeholder.svg"
 
   return (
     <section
       id="inicio"
       ref={containerRef}
-      className="relative min-h-[92vh] flex flex-col items-center justify-center overflow-hidden px-6 pb-16"
-      style={{
-        background: 'var(--background)',
-        backgroundImage: 'radial-gradient(circle, var(--border-color) 1px, transparent 1px)',
-        backgroundSize: '28px 28px',
-      }}
+      className="relative min-h-[100dvh] overflow-hidden bg-[#fbfbf9] px-4 pt-24 pb-10 sm:px-6 lg:px-8"
     >
-      {/* Overlay para suavizar el grid en los bordes */}
-      <div className="absolute inset-0 bg-gradient-to-b from-background via-transparent to-background pointer-events-none" />
-      <div className="absolute inset-0 bg-gradient-to-r from-background via-transparent to-background pointer-events-none" />
+      <div
+        className="absolute inset-0 opacity-[0.45]"
+        style={{
+          backgroundImage:
+            "linear-gradient(#d8d8d3 1px, transparent 1px), linear-gradient(90deg, #d8d8d3 1px, transparent 1px)",
+          backgroundSize: "44px 44px",
+        }}
+        aria-hidden="true"
+      />
+      <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-white to-transparent" aria-hidden="true" />
 
-      {/* Línea decorativa eyebrow */}
-      <div className="hero-badge relative z-10 flex items-center gap-4 mb-8">
-        <div className="h-px w-12 bg-gray-300" />
-        <span className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
-          Marketplace Universitario · Bogotá
-        </span>
-        <div className="h-px w-12 bg-border" />
-      </div>
-
-      {/* Título principal */}
-      <h1
-        className="hero-title relative z-10 font-display font-black text-center tracking-tight text-foreground"
-        style={{ fontSize: 'clamp(5rem, 14vw, 11rem)' }}
-        aria-label="CHAZAS UN"
-      >
-        <span className="block overflow-hidden leading-[0.9]">
-          {"CHAZAS".split("").map((l, i) => (
-            <span key={i} className="hero-letter inline-block">{l}</span>
-          ))}
-        </span>
-        <span className="block overflow-hidden leading-[0.9]">
-          {"UN".split("").map((l, i) => (
-            <span key={i} className="hero-letter-red inline-block text-brand-red">{l}</span>
-          ))}
-        </span>
-      </h1>
-
-      {/* Línea horizontal bajo el título */}
-      <div className="relative z-10 mt-6 mb-8 flex items-center gap-4 w-full max-w-xs">
-        <div className="h-px flex-1 bg-border" />
-        <div className="h-1.5 w-1.5 rounded-full bg-brand-red" />
-        <div className="h-px flex-1 bg-border" />
-      </div>
-
-      {/* Subtítulo */}
-      <p className="hero-subtitle relative z-10 text-muted-foreground text-base max-w-sm text-center leading-relaxed">
-        Comida, servicios, libros y más —{" "}
-        <strong className="text-foreground">directo de otros universitarios.</strong>
-      </p>
-
-      {/* CTAs */}
-      <div className="hero-cta relative z-10 flex flex-wrap items-center justify-center gap-3 mt-8">
-        <Link
-          href="/explorar"
-          className="inline-flex items-center gap-2 rounded-full bg-foreground px-8 py-3.5 text-sm font-semibold uppercase tracking-widest text-primary-foreground shadow-lg transition hover:bg-brand-red hover:shadow-xl active:scale-95"
-        >
-          Explorar chazas
-        </Link>
-        <Link
-          href="/publicar-chaza"
-          className="inline-flex items-center gap-2 rounded-full border border-border bg-background px-8 py-3.5 text-sm font-semibold uppercase tracking-widest text-muted-foreground shadow-sm transition hover:border-gray-400 hover:shadow-md active:scale-95"
-        >
-          Publicar mi chaza
-        </Link>
-      </div>
-
-      {/* Zeigarnik progress — solo si hay datos */}
-      {exploredPercent > 0 && (
-        <div className="hero-badge relative z-10 mt-8 w-full max-w-md mx-auto">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-muted-foreground text-xs font-medium flex items-center gap-1.5">
-              <TrendingUp className="w-3.5 h-3.5" />
-              Campus siendo explorado
-            </span>
-            <span className="text-foreground text-xs font-bold">{exploredPercent}%</span>
+      <div className="relative z-10 mx-auto grid min-h-[calc(100dvh-8.5rem)] max-w-7xl items-center gap-10 lg:grid-cols-[0.92fr_1.08fr]">
+        <div className="hero-copy max-w-2xl">
+          <div className="inline-flex items-center gap-2 rounded-full border border-brand-red/15 bg-white/80 px-3.5 py-2 text-xs font-semibold text-brand-red shadow-sm backdrop-blur">
+            <Sparkles className="h-3.5 w-3.5" />
+            Marketplace independiente · UN Bogotá
           </div>
-          <div className="zeigarnik-bar" style={{ "--progress-width": `${exploredPercent}%` } as React.CSSProperties} />
-        </div>
-      )}
 
-      {/* Stats */}
-      <div className="hero-stats relative z-10 mt-12 flex items-center justify-center gap-8 text-center">
-        <div>
-          <div className="stat-chazas-num text-3xl font-black font-display text-foreground leading-none">{stats.chazasPublished}</div>
-          <div className="mt-1 text-xs uppercase tracking-widest text-muted-foreground">Chazas activas</div>
+          <h1 className="font-display text-[clamp(3.25rem,8vw,6.8rem)] font-black leading-[0.88] tracking-tight text-foreground">
+            Come, imprime, repara y compra sin salir del campus.
+          </h1>
+
+          <p className="max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg">
+            Descubre chazas reales con precios, ubicación y contacto directo en segundos.
+          </p>
+
+          <div className="flex flex-col gap-3 sm:flex-row">
+            <Link
+              href="/explorar"
+              className="inline-flex items-center justify-center gap-2 rounded-full bg-brand-red px-7 py-3.5 text-sm font-bold text-white shadow-lg shadow-brand-red/20 transition hover:bg-brand-red-dark active:scale-[0.98]"
+            >
+              Explorar
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+            <Link
+              href="/publicar-chaza"
+              className="inline-flex items-center justify-center gap-2 rounded-full border border-foreground/15 bg-white px-7 py-3.5 text-sm font-bold text-foreground shadow-sm transition hover:border-brand-red/30 hover:text-brand-red active:scale-[0.98]"
+            >
+              Publicar chaza
+            </Link>
+          </div>
         </div>
-        <div className="h-8 w-px bg-border" />
-        <div>
-          <div className="stat-rating-num text-3xl font-black font-display text-foreground leading-none">{stats.averageRating}★</div>
-          <div className="mt-1 text-xs uppercase tracking-widest text-muted-foreground">Calidad promedio</div>
-        </div>
-        <div className="h-8 w-px bg-border" />
-        <div>
-          <div className="text-3xl font-black font-display text-foreground leading-none">∞</div>
-          <div className="mt-1 text-xs uppercase tracking-widest text-muted-foreground">Estudiantes</div>
+
+        <div className="relative mx-auto w-full max-w-[560px] lg:max-w-none">
+          <div className="hero-orbit absolute -left-3 top-8 z-20 hidden rounded-2xl border border-black/10 bg-white px-4 py-3 shadow-xl shadow-black/10 sm:flex sm:items-center sm:gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-red text-white">
+              <Utensils className="h-5 w-5" />
+            </div>
+            <div>
+              <p className="text-xs font-bold uppercase tracking-[0.14em] text-muted-foreground">Ahora cerca</p>
+              <p className="text-sm font-bold text-foreground">Almuerzo desde $8.000</p>
+            </div>
+          </div>
+
+          <div className="hero-orbit absolute -right-2 bottom-24 z-20 hidden rounded-2xl border border-black/10 bg-[#101010] px-4 py-3 text-white shadow-xl shadow-black/20 sm:block">
+            <p className="text-xs font-bold uppercase tracking-[0.14em] text-white/50">Sin filas</p>
+            <p className="text-sm font-bold">Escribe por WhatsApp</p>
+          </div>
+
+          <div className="hero-card relative mx-auto aspect-[4/5] w-full max-w-[390px] overflow-hidden rounded-[2rem] border border-white/80 bg-foreground shadow-2xl shadow-black/25 sm:max-w-[430px]">
+            <img src={image} alt="" className="h-full w-full object-cover" draggable={false} />
+            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/25 to-transparent" />
+            <div className="absolute left-5 right-5 top-5 flex items-center justify-between gap-3">
+              <span className="rounded-full bg-brand-red px-3 py-1.5 text-xs font-bold text-white shadow-lg">Destacada</span>
+              <span className="rounded-full bg-white/95 px-3 py-1.5 text-xs font-bold text-foreground shadow-lg">4.8 ★</span>
+            </div>
+            <div className="absolute bottom-0 left-0 right-0 p-5 text-white sm:p-6">
+              <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1.5 text-xs font-semibold backdrop-blur">
+                <MapPin className="h-3.5 w-3.5" />
+                Cerca de tu facultad
+              </div>
+              <h2 className="font-stencil text-4xl leading-none tracking-wide sm:text-5xl">Desliza y decide</h2>
+              <p className="mt-2 max-w-xs text-sm leading-relaxed text-white/75">
+                Like para recomendar, guardar para volver, mapa para llegar.
+              </p>
+            </div>
+          </div>
+
+          <div className="hero-dock mx-auto mt-5 grid max-w-[430px] grid-cols-3 gap-2 rounded-[1.6rem] border border-black/10 bg-white/90 p-2 shadow-xl shadow-black/10 backdrop-blur">
+            <div className="rounded-[1.1rem] bg-[#f3f3ef] px-3 py-3">
+              <p className="font-display text-2xl font-black text-foreground">{chazasPublished}</p>
+              <p className="text-[11px] font-semibold text-muted-foreground">activas</p>
+            </div>
+            <div className="rounded-[1.1rem] bg-[#f3f3ef] px-3 py-3">
+              <p className="font-display text-2xl font-black text-foreground">{exploredPercent}%</p>
+              <p className="text-[11px] font-semibold text-muted-foreground">explorado</p>
+            </div>
+            <div className="rounded-[1.1rem] bg-brand-red px-3 py-3 text-white">
+              <Store className="mb-1 h-5 w-5" />
+              <p className="text-[11px] font-semibold text-white/80">gratis</p>
+            </div>
+          </div>
+
+          <div className="mt-4 flex items-center justify-center gap-2 text-xs font-semibold text-muted-foreground">
+            <MousePointer2 className="h-4 w-4 text-brand-red" />
+            Primer swipe sin cuenta. Like y guardar protegen tu historial.
+          </div>
         </div>
       </div>
-
     </section>
   )
 }

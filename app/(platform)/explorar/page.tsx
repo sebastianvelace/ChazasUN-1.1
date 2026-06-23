@@ -1,9 +1,9 @@
-import { ExplorarGrid } from "@/components/chazas/explorar-grid"
-import { getChazasAction } from "@/lib/actions/chazas"
+import { ChazaSwiper } from "@/components/chazas"
+import { getChazasAction, getFeaturedChazasAction } from "@/lib/actions/chazas"
 
 export const metadata = {
   title: "Explorar chazas | ChazasUN",
-  description: "Todas las chazas del campus en una parrilla.",
+  description: "Descubre chazas del campus con un feed tipo swiper.",
 }
 
 export default async function ExplorarPage({
@@ -12,7 +12,15 @@ export default async function ExplorarPage({
   searchParams: Promise<{ categoria?: string }>
 }) {
   const { categoria } = await searchParams
-  const chazas = await getChazasAction()
+  const [chazas, featured] = await Promise.all([getChazasAction(), getFeaturedChazasAction()])
 
-  return <ExplorarGrid items={chazas} initialCategory={categoria ?? null} />
+  return (
+    <ChazaSwiper
+      items={chazas}
+      featuredStrip={featured}
+      categoryFilter={categoria ?? null}
+      showNameSearch
+      showViewAllLink={false}
+    />
+  )
 }

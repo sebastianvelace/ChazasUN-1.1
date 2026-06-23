@@ -9,6 +9,7 @@ import { useAnalytics, useCardDwellTime } from "@/hooks/use-analytics"
 import { useChazaCatalog } from "@/hooks/use-chaza-catalog"
 import { useSession } from "@/hooks/use-session"
 import { useFavorites } from "@/hooks/use-favorites"
+import { gsap } from "@/lib/gsap"
 import { inferCategorySlugsFromLabel } from "@/lib/data/chaza-repository"
 import {
   getLikedIdsFromStorage,
@@ -122,9 +123,7 @@ export function ChazaSwiper({
     return list
   }, [featuredStrip, activeCategory, nameQuery])
 
-  const [offset, setOffset] = useState(0)
   const [isDragging, setIsDragging] = useState(false)
-  const [exitDirection, setExitDirection] = useState<"left" | "right" | null>(null)
   const [showInfo, setShowInfo] = useState(false)
   const [authPrompt, setAuthPrompt] = useState<AuthPromptReason | null>(null)
 
@@ -177,11 +176,56 @@ export function ChazaSwiper({
 
   const startX = useRef(0)
   const currentX = useRef(0)
+  const dragOffset = useRef(0)
   const cardRef = useRef<HTMLDivElement>(null)
+  const likeStampRef = useRef<HTMLDivElement>(null)
+  const passStampRef = useRef<HTMLDivElement>(null)
+  const reducedMotion = useRef(false)
 
   useCardDwellTime(current?.id, (durationMs, chazaId) => {
     track("swiper_card_time", { chazaId, durationMs })
   })
+
+  useEffect(() => {
+    reducedMotion.current =
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches
+  }, [])
+
+  useEffect(() => {
+    const card = cardRef.current
+    if (!card) return
+    dragOffset.current = 0
+    gsap.killTweensOf(card)
+    gsap.set(card, { x: 0, y: 0, rotation: 0, scale: 1, opacity: 1, clearProps: "xPercent" })
+    gsap.set([likeStampRef.current, passStampRef.current], { opacity: 0, scale: 0.92 })
+    if (!reducedMotion.current) {
+      gsap.fromTo(card, { y: 18, scale: 0.985 }, { y: 0, scale: 1, duration: 0.38, ease: "power3.out" })
+    }
+  }, [current?.id])
+
+  const resetCard = useCallback(() => {
+    dragOffset.current = 0
+    gsap.to(cardRef.current, { x: 0, rotation: 0, scale: 1, duration: 0.34, ease: "elastic.out(1, 0.72)" })
+    gsap.to([likeStampRef.current, passStampRef.current], { opacity: 0, scale: 0.92, duration: 0.18 })
+  }, [])
+
+  const animateCardExit = useCallback(
+    (direction: "like" | "pass", onComplete: () => void) => {
+      const card = cardRef.current
+      const stamp = direction === "like" ? likeStampRef.current : passStampRef.current
+      if (!card || reducedMotion.current) {
+        onComplete()
+        return
+      }
+      const xPercent = direction === "like" ? 118 : -118
+      const rotation = direction === "like" ? 14 : -14
+      gsap.timeline({ onComplete })
+        .to(stamp, { opacity: 1, scale: 1, duration: 0.12, ease: "power2.out" }, 0)
+        .to(card, { xPercent, x: 0, rotation, opacity: 0, duration: 0.36, ease: "power3.in" }, 0.04)
+    },
+    []
+  )
 
   const handleAdvance = useCallback(
     (direction: "like" | "pass") => {
@@ -191,17 +235,16 @@ export function ChazaSwiper({
       if (direction === "like") {
         if (!isLoggedIn) {
           requireAuth("like")
-          setOffset(0)
+          resetCard()
           return
         }
-        setExitDirection("right")
         track("swiper_like", {
           chazaId: current.id,
           deckIndex: queue.indexOf(current.id),
         })
         setShowInfo(false)
         const likedId = current.id
-        setTimeout(() => {
+        animateCardExit("like", () => {
           deckAdvance("like")
           if (useRemote) {
             void addLike(likedId)
@@ -209,24 +252,19 @@ export function ChazaSwiper({
             toggleLikeInStorage(likedId)
             window.dispatchEvent(new CustomEvent("chazasun-favorites"))
           }
-          setOffset(0)
-          setExitDirection(null)
-        }, 400)
+        })
         return
       }
-      setExitDirection("left")
       track("swiper_pass", {
         chazaId: current.id,
         deckIndex: queue.indexOf(current.id),
       })
       setShowInfo(false)
-      setTimeout(() => {
+      animateCardExit("pass", () => {
         deckAdvance("pass")
-        setOffset(0)
-        setExitDirection(null)
-      }, 400)
+      })
     },
-    [current, deckAdvance, queue, track, requireAuth, isLoggedIn, useRemote, addLike, dismissHint]
+    [current, deckAdvance, queue, track, requireAuth, isLoggedIn, useRemote, addLike, dismissHint, resetCard, animateCardExit]
   )
 
   const handleUndo = useCallback(() => {
@@ -252,6 +290,7 @@ export function ChazaSwiper({
   const onPointerDown = (e: React.PointerEvent) => {
     if ((e.target as HTMLElement).closest("button, a")) return
     if (e.pointerType === "mouse" && e.button !== 0) return
+    gsap.killTweensOf(cardRef.current)
     setIsDragging(true)
     startX.current = e.clientX
     currentX.current = e.clientX
@@ -261,22 +300,25 @@ export function ChazaSwiper({
   const onPointerMove = (e: React.PointerEvent) => {
     if (!isDragging) return
     currentX.current = e.clientX
-    setOffset(currentX.current - startX.current)
+    const delta = currentX.current - startX.current
+    dragOffset.current = delta
+    const rotation = delta / 25
+    const likeOpacity = Math.min(Math.max(delta / SWIPE_THRESHOLD, 0), 1)
+    const passOpacity = Math.min(Math.max(-delta / SWIPE_THRESHOLD, 0), 1)
+    gsap.set(cardRef.current, { x: delta, rotation, scale: 0.992 })
+    gsap.set(likeStampRef.current, { opacity: likeOpacity, scale: 0.92 + likeOpacity * 0.12 })
+    gsap.set(passStampRef.current, { opacity: passOpacity, scale: 0.92 + passOpacity * 0.12 })
   }
 
   const onPointerUp = () => {
     if (!isDragging) return
     setIsDragging(false)
-    const delta = currentX.current - startX.current
+    const delta = dragOffset.current
     if (delta > SWIPE_THRESHOLD) {
       handleAdvance("like")
     } else if (delta < -SWIPE_THRESHOLD) handleAdvance("pass")
-    else setOffset(0)
+    else resetCard()
   }
-
-  const rotation = offset / 25
-  const likeOpacity = Math.min(Math.max(offset / SWIPE_THRESHOLD, 0), 1)
-  const skipOpacity = Math.min(Math.max(-offset / SWIPE_THRESHOLD, 0), 1)
 
   // ── TAREA 1: Category pills component (shared) ──
   const CategoryPills = (
@@ -346,29 +388,6 @@ export function ChazaSwiper({
         </div>
       </section>
     )
-  }
-
-  const getCardStyle = (): React.CSSProperties => {
-    const ease = "cubic-bezier(0.22, 1, 0.36, 1)"
-    if (exitDirection === "right") {
-      return {
-        transform: "translateX(105%) rotate(12deg)",
-        opacity: 0,
-        transition: `transform 0.4s ${ease}, opacity 0.4s ${ease}`,
-      }
-    }
-    if (exitDirection === "left") {
-      return {
-        transform: "translateX(-105%) rotate(-12deg)",
-        opacity: 0,
-        transition: `transform 0.4s ${ease}, opacity 0.4s ${ease}`,
-      }
-    }
-    return {
-      transform: `translateX(${offset}px) rotate(${rotation}deg)`,
-      transition: isDragging ? "none" : `transform 0.35s ${ease}`,
-      touchAction: "pan-y",
-    }
   }
 
   const showLoading = !itemsProp && catalogLoading && cards.length === 0
@@ -481,7 +500,7 @@ export function ChazaSwiper({
               <div
                 ref={cardRef}
                 className="absolute inset-0 bg-white rounded-3xl shadow-2xl overflow-hidden cursor-grab active:cursor-grabbing border border-gray-100"
-                style={getCardStyle()}
+                style={{ touchAction: "pan-y" }}
                 onPointerDown={onPointerDown}
                 onPointerMove={onPointerMove}
                 onPointerUp={onPointerUp}
@@ -518,13 +537,13 @@ export function ChazaSwiper({
                   </button>
                 )}
 
-                <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-20" style={{ opacity: likeOpacity }} aria-hidden>
+                <div ref={likeStampRef} className="absolute inset-0 flex items-center justify-center pointer-events-none z-20 opacity-0" aria-hidden>
                   <div className="border-4 border-green-400 rounded-2xl px-8 py-3 -rotate-[15deg] bg-green-400/20 backdrop-blur-sm shadow-2xl">
                     <span className="text-green-400 font-stencil text-4xl tracking-widest drop-shadow-lg">LIKE</span>
                   </div>
                 </div>
 
-                <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-20" style={{ opacity: skipOpacity }} aria-hidden>
+                <div ref={passStampRef} className="absolute inset-0 flex items-center justify-center pointer-events-none z-20 opacity-0" aria-hidden>
                   <div className="border-4 border-red-400 rounded-2xl px-8 py-3 rotate-[15deg] bg-red-400/20 backdrop-blur-sm shadow-2xl">
                     <span className="text-red-400 font-stencil text-4xl tracking-widest drop-shadow-lg">PASS</span>
                   </div>

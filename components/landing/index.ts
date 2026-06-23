@@ -1,6 +1,7 @@
 export { WavyBackground } from "./wavy-background"
 export { Navbar } from "./navbar"
 export { HeroSection } from "./hero-section"
+export { CampusScrollSection } from "./campus-scroll-section"
 export { ChazaSwiper } from "@/components/chazas"
 export { CategoriesSection } from "./categories-section"
 export { BlogSection } from "./blog-section"

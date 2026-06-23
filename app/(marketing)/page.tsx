@@ -1,9 +1,8 @@
 import {
   Navbar,
   HeroSection,
+  CampusScrollSection,
   CategoriesSection,
-  BlogSection,
-  ReviewsSection,
   HowItWorksSection,
   Footer,
 } from "@/components/landing"
@@ -22,11 +21,10 @@ export default async function HomePage() {
           reviewsPublished={stats.reviewsPublished}
           featuredImage={chazas[0]?.image}
         />
+        <CampusScrollSection />
         <ChazaSwiper sectionId="explorar" showViewAllLink items={chazas} />
         <CategoriesSection />
         <HowItWorksSection />
-        <ReviewsSection />
-        <BlogSection />
       </main>
       <Footer />
     </div>
