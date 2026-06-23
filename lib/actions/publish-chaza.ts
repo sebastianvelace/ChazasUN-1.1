@@ -36,6 +36,10 @@ export async function publishChazaAction(raw: PublishChazaInput): Promise<Publis
   }
 
   const data = parsed.data
+  if (/^data:image\//i.test(data.coverImageUrl.trim())) {
+    return { ok: false, error: "Sube la imagen antes de publicar. No guardamos imagenes base64 en la base de datos." }
+  }
+
   const categorySlugs = data.categorySlugs.filter((s) => categorySlugExists(s))
   if (!categorySlugs.length) {
     return { ok: false, error: "Elige al menos una categoría válida." }
@@ -57,12 +61,6 @@ export async function publishChazaAction(raw: PublishChazaInput): Promise<Publis
   const tags = [...names.slice(0, 3), ...data.products.map((p) => p.name).slice(0, 3)].slice(0, 6)
   const wa = data.whatsapp?.trim()
   const ig = data.instagram?.trim()
-
-  let priceFrom = "Consultar"
-  if (data.products.length > 0) {
-    const first = data.products.find((p) => p.priceLabel.trim())
-    priceFrom = first?.priceLabel?.trim() || "Consultar"
-  }
 
   const MAX_SLUG_ATTEMPTS = 10
   const baseSlug = slugify(data.name.trim()) || "chaza"

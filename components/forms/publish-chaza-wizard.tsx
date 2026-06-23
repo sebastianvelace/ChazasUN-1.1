@@ -24,7 +24,6 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { CHAZA_COVER_PLACEHOLDER, hasChazaCover } from "@/lib/constants/chaza-images"
 import { ImageIcon } from "lucide-react"
 import type { ChazaCard } from "@/types/chaza"
-import { cn } from "@/lib/utils"
 
 const publishAuthNext = encodeURIComponent(siteConfig.urls.publicarChaza)
 

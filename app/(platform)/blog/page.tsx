@@ -53,13 +53,6 @@ export default function BlogPage() {
           </Link>
         ))}
       </div>
-      <p className="text-center text-sm text-gray-400 mt-12">
-        Tambien puedes ver esta seccion en el inicio:{" "}
-        <a href="/#blog" className="text-brand-red hover:underline">
-          ir al blog en la home
-        </a>
-        .
-      </p>
     </PageContainer>
   )
 }

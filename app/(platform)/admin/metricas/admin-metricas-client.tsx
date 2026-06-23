@@ -90,25 +90,27 @@ export function AdminMetricasClient() {
   }
 
   if (mode === "denied") {
+    const canUseLocalDemo = process.env.NODE_ENV === "development"
     return (
       <PageContainer size="md">
         <PageHeader
           eyebrow="Interno"
           title="METRICAS"
-          description="Panel de administracion. Requiere cuenta admin en Supabase o desbloqueo demo."
+          description="Panel de administracion. Requiere cuenta admin en Supabase."
         />
         {dbError && <p className="text-sm text-gray-600 mb-4">{dbError}</p>}
         <p className="text-gray-600 text-sm mb-4">
-          Para demo local, abre con <code className="bg-gray-100 px-1 rounded">?demo=1</code> una vez.
-          En produccion: <code className="bg-gray-100 px-1 rounded">profiles.is_admin = true</code> o{" "}
+          En produccion usa <code className="bg-gray-100 px-1 rounded">profiles.is_admin = true</code> o{" "}
           <code className="bg-gray-100 px-1 rounded">ADMIN_USER_IDS</code> en el servidor.
         </p>
-        <Link
-          href="/admin/metricas?demo=1"
-          className="inline-block font-stencil bg-brand-red text-white px-6 py-2.5 rounded-full hover:bg-brand-red-dark"
-        >
-          Desbloquear demo local
-        </Link>
+        {canUseLocalDemo && (
+          <Link
+            href="/admin/metricas?demo=1"
+            className="inline-block font-stencil bg-brand-red text-white px-6 py-2.5 rounded-full hover:bg-brand-red-dark"
+          >
+            Desbloquear demo local
+          </Link>
+        )}
       </PageContainer>
     )
   }
