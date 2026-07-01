@@ -16,9 +16,10 @@ Leyenda: `[ ]` pendiente · `[~]` en progreso · `[x]` hecho · `[!]` bloqueado/
   con `ease: power2.in`, coincidiendo con el release del pin. Verificado: pin-spacer
   intacto (3964px), shell opacity 1 al top y 0.5 en salida, reversible por scrub.
 
-- [ ] **Eliminar el badge "Marketplace independiente · UN Bogotá" del hero**
-  Componente `components/landing/hero-section.tsx`. Quitar el badge y su ícono
-  `Sparkles` si queda huérfano. Ajustar el espaciado superior del titular.
+- [x] **Eliminar el badge "Marketplace independiente · UN Bogotá" del hero**
+  Hecho: se quitó el badge y el import huérfano de `Sparkles` en
+  `hero-section.tsx`. El `space-y-6` del `.hero-copy` mantiene el ritmo; el
+  titular queda como primer elemento con más aire arriba. Sin errores en consola.
 
 - [ ] **Rediseñar el titular del hero**
   El actual ("Come, imprime, repara y compra sin salir del campus") no es
@@ -64,3 +65,4 @@ Cada iteración deja una línea: fecha · item · commit corto.
 
 <!-- La primera iteración empieza a registrar debajo de esta línea -->
 - 2026-07-01 · Salida suave del pin en CampusScrollSection · `feat(landing): soften campus pin exit`
+- 2026-07-01 · Eliminado badge "Marketplace independiente" del hero · `feat(landing): remove hero eyebrow badge`
