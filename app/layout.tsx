@@ -33,6 +33,20 @@ export const metadata: Metadata = {
   },
   description: 'El marketplace de los estudiantes de la Universidad Nacional. Compra, vende e intercambia con tu comunidad universitaria.',
   applicationName: 'ChazasUN',
+  keywords: ['chazas', 'campus', 'Universidad Nacional', 'UN Bogotá', 'marketplace universitario', 'comida campus'],
+  openGraph: {
+    type: 'website',
+    locale: 'es_CO',
+    url: '/',
+    siteName: 'ChazasUN',
+    title: 'ChazasUN — El marketplace de tu campus',
+    description: 'Descubre las chazas de tu campus: comida, impresiones, reparaciones y más, con precio, ubicación y contacto directo.',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'ChazasUN — El marketplace de tu campus',
+    description: 'Descubre las chazas de tu campus: comida, impresiones, reparaciones y más.',
+  },
   icons: {
     icon: [
       {

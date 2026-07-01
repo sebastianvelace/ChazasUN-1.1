@@ -37,8 +37,14 @@ Leyenda: `[ ]` pendiente · `[~]` en progreso · `[x]` hecho · `[!]` bloqueado/
   (`%s · ChazasUN`) y `applicationName`. Se quitó `generator: 'v0.app'`.
   Verificado: `meta[name=generator]` ya no existe, `application-name` = ChazasUN.
 
-- [ ] **Open Graph + Twitter Card completos**
-  title, description, imagen OG (crear/asignar), locale `es_CO`, type `website`.
+- [x] **Open Graph + Twitter Card — metadata (5a)**
+  Hecho: se agregaron `openGraph` (type website, locale es_CO, url, siteName,
+  title, description), `twitter` (card summary_large_image) y `keywords` en
+  `app/layout.tsx`. Verificado en el `<head>`: og:type/title/site_name/locale/url
+  y twitter:card/title presentes. Falta la imagen (sub-item 5b).
+- [ ] **Open Graph + Twitter Card — imagen dinámica (5b)**
+  `app/opengraph-image.tsx` con `ImageResponse` (tarjeta branded). Next la
+  auto-cablea como og:image y twitter:image. No hay imagen OG estática en public/.
 
 - [ ] **JSON-LD structured data**
   `Organization` + `WebSite` (con SearchAction si aplica) en la landing.
@@ -74,3 +80,4 @@ Cada iteración deja una línea: fecha · item · commit corto.
 - 2026-07-01 · Eliminado badge "Marketplace independiente" del hero · `feat(landing): remove hero eyebrow badge`
 - 2026-07-01 · Nuevo titular del hero (chazas + campus + swipe) · `feat(landing): rework hero headline`
 - 2026-07-01 · metadataBase + title.template, quitado generator v0 · `feat(seo): add metadataBase and title template`
+- 2026-07-01 · Open Graph + Twitter + keywords (metadata) · `feat(seo): add Open Graph and Twitter metadata`
