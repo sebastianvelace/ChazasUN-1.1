@@ -178,3 +178,9 @@ Diagnóstico rápido de "pin que no ancla": `document.body.scrollHeight` no crec
 ### Detalle de chaza (`chaza-detail-client.tsx`)
 
 Reescritura mayor del componente de detalle: galeria de imagenes, botones de accion (compartir, guardar, resenar) y seccion de productos/carta rediseniados. `chaza-share-button.tsx` extraido como componente independiente con Web Share API + fallback clipboard.
+
+## SEO y metadata
+
+- `app/layout.tsx` define la metadata raiz: `metadataBase` (desde `NEXT_PUBLIC_SITE_URL`, fallback `localhost:3001`), `title.template` (`%s · ChazasUN`), `applicationName`, `keywords`, y objetos `openGraph` (type website, locale `es_CO`) y `twitter` (`summary_large_image`).
+- **Imagen OG dinamica**: `app/opengraph-image.tsx` genera la tarjeta social con `ImageResponse` de `next/og` (1200×630, marca oscura + acento rojo). No hay imagen estatica en `public/`. Next la auto-cablea como `og:image` **y** `twitter:image` — no hace falta declararla en la metadata. Para cambiar el arte, editar ese archivo.
+- Las URLs relativas de OG/canonical se resuelven contra `metadataBase`, asi que en produccion basta con setear `NEXT_PUBLIC_SITE_URL`.

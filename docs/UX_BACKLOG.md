@@ -42,9 +42,11 @@ Leyenda: `[ ]` pendiente · `[~]` en progreso · `[x]` hecho · `[!]` bloqueado/
   title, description), `twitter` (card summary_large_image) y `keywords` en
   `app/layout.tsx`. Verificado en el `<head>`: og:type/title/site_name/locale/url
   y twitter:card/title presentes. Falta la imagen (sub-item 5b).
-- [ ] **Open Graph + Twitter Card — imagen dinámica (5b)**
-  `app/opengraph-image.tsx` con `ImageResponse` (tarjeta branded). Next la
-  auto-cablea como og:image y twitter:image. No hay imagen OG estática en public/.
+- [x] **Open Graph + Twitter Card — imagen dinámica (5b)**
+  Hecho: `app/opengraph-image.tsx` con `ImageResponse` (1200×630, marca oscura +
+  glow rojo, wordmark + titular + subtítulo). Verificado: endpoint 200 image/png
+  (109KB), render correcto, y Next lo auto-cableó como og:image + twitter:image
+  (width 1200). Documentado en ARCHITECTURE.md (sección SEO y metadata).
 
 - [ ] **JSON-LD structured data**
   `Organization` + `WebSite` (con SearchAction si aplica) en la landing.
@@ -81,3 +83,4 @@ Cada iteración deja una línea: fecha · item · commit corto.
 - 2026-07-01 · Nuevo titular del hero (chazas + campus + swipe) · `feat(landing): rework hero headline`
 - 2026-07-01 · metadataBase + title.template, quitado generator v0 · `feat(seo): add metadataBase and title template`
 - 2026-07-01 · Open Graph + Twitter + keywords (metadata) · `feat(seo): add Open Graph and Twitter metadata`
+- 2026-07-01 · Imagen OG dinámica con ImageResponse · `feat(seo): add dynamic Open Graph image`
