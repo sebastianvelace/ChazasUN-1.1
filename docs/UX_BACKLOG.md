@@ -31,8 +31,11 @@ Leyenda: `[ ]` pendiente · `[~]` en progreso · `[x]` hecho · `[!]` bloqueado/
 
 ## SEO avanzado (no estructural)
 
-- [ ] **Limpiar metadata base en `app/layout.tsx`**
-  Agregar `metadataBase`, quitar `generator: 'v0.app'`, definir `title.template`.
+- [x] **Limpiar metadata base en `app/layout.tsx`**
+  Hecho: se agregó `metadataBase` (usa `NEXT_PUBLIC_SITE_URL` con fallback a
+  localhost:3001, mismo patrón que `chaza-public-url.ts`), `title.template`
+  (`%s · ChazasUN`) y `applicationName`. Se quitó `generator: 'v0.app'`.
+  Verificado: `meta[name=generator]` ya no existe, `application-name` = ChazasUN.
 
 - [ ] **Open Graph + Twitter Card completos**
   title, description, imagen OG (crear/asignar), locale `es_CO`, type `website`.
@@ -70,3 +73,4 @@ Cada iteración deja una línea: fecha · item · commit corto.
 - 2026-07-01 · Salida suave del pin en CampusScrollSection · `feat(landing): soften campus pin exit`
 - 2026-07-01 · Eliminado badge "Marketplace independiente" del hero · `feat(landing): remove hero eyebrow badge`
 - 2026-07-01 · Nuevo titular del hero (chazas + campus + swipe) · `feat(landing): rework hero headline`
+- 2026-07-01 · metadataBase + title.template, quitado generator v0 · `feat(seo): add metadataBase and title template`

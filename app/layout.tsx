@@ -26,9 +26,13 @@ const dmSans = DM_Sans({
 })
 
 export const metadata: Metadata = {
-  title: 'CHAZAS UN - Marketplace Universitario',
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3001'),
+  title: {
+    default: 'CHAZAS UN - Marketplace Universitario',
+    template: '%s · ChazasUN',
+  },
   description: 'El marketplace de los estudiantes de la Universidad Nacional. Compra, vende e intercambia con tu comunidad universitaria.',
-  generator: 'v0.app',
+  applicationName: 'ChazasUN',
   icons: {
     icon: [
       {
