@@ -21,10 +21,13 @@ Leyenda: `[ ]` pendiente · `[~]` en progreso · `[x]` hecho · `[!]` bloqueado/
   `hero-section.tsx`. El `space-y-6` del `.hero-copy` mantiene el ritmo; el
   titular queda como primer elemento con más aire arriba. Sin errores en consola.
 
-- [ ] **Rediseñar el titular del hero**
-  El actual ("Come, imprime, repara y compra sin salir del campus") no es
-  llamativo. Proponer 2-3 alternativas en este backlog, elegir una, implementarla
-  con jerarquía visual más fuerte. Cuidar que siga siendo un único `<h1>` (SEO).
+- [x] **Rediseñar el titular del hero**
+  Hecho: nuevo H1 "Las chazas de tu campus, a un desliz de distancia." (mantiene
+  keywords chazas + campus para SEO, engancha con el mecanismo swipe y ecoa el
+  "Desliza y decide" de la card). La enumeración de categorías (comida/impresión/
+  reparación/compras) se movió al subtítulo para no perder ese diferencial.
+  Opciones consideradas: A) "Todo el campus, a un desliz…" B) elegida C) "Desliza
+  y descubre las chazas del campus" (descartada por duplicar "Descubre").
 
 ## SEO avanzado (no estructural)
 
@@ -66,3 +69,4 @@ Cada iteración deja una línea: fecha · item · commit corto.
 <!-- La primera iteración empieza a registrar debajo de esta línea -->
 - 2026-07-01 · Salida suave del pin en CampusScrollSection · `feat(landing): soften campus pin exit`
 - 2026-07-01 · Eliminado badge "Marketplace independiente" del hero · `feat(landing): remove hero eyebrow badge`
+- 2026-07-01 · Nuevo titular del hero (chazas + campus + swipe) · `feat(landing): rework hero headline`

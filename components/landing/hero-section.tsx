@@ -57,11 +57,11 @@ export function HeroSection({
       <div className="relative z-10 mx-auto grid min-h-[calc(100dvh-8.5rem)] max-w-7xl items-center gap-10 lg:grid-cols-[0.92fr_1.08fr]">
         <div className="hero-copy max-w-2xl space-y-6">
           <h1 className="font-display text-[clamp(3rem,7.5vw,6.4rem)] font-black leading-[0.95] tracking-tight text-foreground [text-wrap:balance]">
-            Come, imprime, repara y compra sin salir del campus.
+            Las chazas de tu campus, a un desliz de distancia.
           </h1>
 
           <p className="max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg">
-            Descubre chazas reales con precios, ubicación y contacto directo en segundos.
+            Comida, impresiones, reparaciones y más. Con precio, ubicación y contacto directo, en segundos.
           </p>
 
           <div className="flex flex-col gap-3 sm:flex-row">
