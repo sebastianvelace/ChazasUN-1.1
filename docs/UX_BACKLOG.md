@@ -55,9 +55,11 @@ Leyenda: `[ ]` pendiente · `[~]` en progreso · `[x]` hecho · `[!]` bloqueado/
   JSON válido, tipos correctos, url resuelta. BreadcrumbList queda para páginas
   internas (ver item de metadata por página).
 
-- [ ] **`app/sitemap.ts` y `app/robots.ts`**
-  Sitemap con rutas públicas conocidas; robots permitiendo indexación y apuntando
-  al sitemap.
+- [x] **`app/sitemap.ts` y `app/robots.ts`**
+  Hecho: `sitemap.ts` con 11 URLs (7 estáticas + 4 posts vía `getAllBlogSlugs`);
+  `robots.ts` permite `/` y bloquea `/admin`, `/mis-chazas`, `/guardadas`,
+  `/api/`, `/auth/`, con `host` y `sitemap`. Verificado: `/sitemap.xml` 200
+  application/xml (11 `<url>`), `/robots.txt` 200 con las reglas correctas.
 
 - [ ] **Auditar alt text y jerarquía de headings**
   Un solo `<h1>` por página; imágenes con alt descriptivo; orden lógico de H2/H3.
@@ -88,3 +90,4 @@ Cada iteración deja una línea: fecha · item · commit corto.
 - 2026-07-01 · Open Graph + Twitter + keywords (metadata) · `feat(seo): add Open Graph and Twitter metadata`
 - 2026-07-01 · Imagen OG dinámica con ImageResponse · `feat(seo): add dynamic Open Graph image`
 - 2026-07-01 · JSON-LD Organization + WebSite en la home · `feat(seo): add Organization and WebSite JSON-LD`
+- 2026-07-01 · sitemap.ts + robots.ts · `feat(seo): add sitemap and robots`
