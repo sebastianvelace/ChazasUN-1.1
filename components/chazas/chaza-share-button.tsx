@@ -142,7 +142,7 @@ export function ChazaShareButton({ slug, chazaName, className, variant = "defaul
             <div className="flex flex-col items-center gap-3 rounded-2xl border border-gray-100 bg-white p-4">
               <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider self-start">Codigo QR</p>
               {qrDataUrl && (
-                <img src={qrDataUrl} alt="" className="w-48 h-48 rounded-lg border border-gray-100" />
+                <img src={qrDataUrl} alt="Código QR con el enlace a esta chaza" className="w-48 h-48 rounded-lg border border-gray-100" />
               )}
               {open && !qrDataUrl && !qrError && (
                 <p className="text-sm text-gray-500">Generando QR…</p>

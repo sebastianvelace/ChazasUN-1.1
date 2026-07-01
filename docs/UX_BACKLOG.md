@@ -61,8 +61,17 @@ Leyenda: `[ ]` pendiente · `[~]` en progreso · `[x]` hecho · `[!]` bloqueado/
   `/api/`, `/auth/`, con `host` y `sitemap`. Verificado: `/sitemap.xml` 200
   application/xml (11 `<url>`), `/robots.txt` 200 con las reglas correctas.
 
-- [ ] **Auditar alt text y jerarquía de headings**
-  Un solo `<h1>` por página; imágenes con alt descriptivo; orden lógico de H2/H3.
+- [x] **Auditar alt text y jerarquía de headings**
+  Hecho (audit en la home): 1 solo `<h1>` ✓, jerarquía H2/H3 lógica ✓. Imágenes:
+  hero card y card activa del swiper con alt descriptivo; la card "peek" del
+  siguiente ya está bajo un contenedor `aria-hidden` (decorativa, correcto). Gap
+  real corregido fuera del landing: el QR de `chaza-share-button.tsx` tenía
+  `alt=""` → ahora "Código QR con el enlace a esta chaza". El cover de
+  `mis-chaza-list-row.tsx` con `alt=""` es correcto (el nombre va como texto al
+  lado; evita doble anuncio).
+  Nota [!]: la sección campus renderiza 2 variantes de sus 3 H2 (animada +
+  fallback `motion-reduce`), solo 3 visibles a la vez; aceptable, no se toca por
+  el riesgo de romper el fallback de reduced-motion.
 
 - [ ] **Metadata por página en rutas de plataforma**
   Agregar `metadata`/`generateMetadata` donde falte (explorar, mapa, blog, chazas).
@@ -91,3 +100,4 @@ Cada iteración deja una línea: fecha · item · commit corto.
 - 2026-07-01 · Imagen OG dinámica con ImageResponse · `feat(seo): add dynamic Open Graph image`
 - 2026-07-01 · JSON-LD Organization + WebSite en la home · `feat(seo): add Organization and WebSite JSON-LD`
 - 2026-07-01 · sitemap.ts + robots.ts · `feat(seo): add sitemap and robots`
+- 2026-07-01 · Audit alt/headings + alt descriptivo en QR · `fix(a11y): descriptive alt for share QR image`
