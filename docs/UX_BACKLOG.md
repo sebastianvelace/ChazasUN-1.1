@@ -48,9 +48,12 @@ Leyenda: `[ ]` pendiente · `[~]` en progreso · `[x]` hecho · `[!]` bloqueado/
   (109KB), render correcto, y Next lo auto-cableó como og:image + twitter:image
   (width 1200). Documentado en ARCHITECTURE.md (sección SEO y metadata).
 
-- [ ] **JSON-LD structured data**
-  `Organization` + `WebSite` (con SearchAction si aplica) en la landing.
-  `BreadcrumbList` donde tenga sentido. Inyectar vía `<script type="application/ld+json">`.
+- [x] **JSON-LD structured data**
+  Hecho: `@graph` con `Organization` + `WebSite` inyectado en la home vía
+  `<script type="application/ld+json">` (server component). SearchAction omitido
+  a propósito (no hay endpoint de búsqueda real). Verificado: script en el DOM,
+  JSON válido, tipos correctos, url resuelta. BreadcrumbList queda para páginas
+  internas (ver item de metadata por página).
 
 - [ ] **`app/sitemap.ts` y `app/robots.ts`**
   Sitemap con rutas públicas conocidas; robots permitiendo indexación y apuntando
@@ -84,3 +87,4 @@ Cada iteración deja una línea: fecha · item · commit corto.
 - 2026-07-01 · metadataBase + title.template, quitado generator v0 · `feat(seo): add metadataBase and title template`
 - 2026-07-01 · Open Graph + Twitter + keywords (metadata) · `feat(seo): add Open Graph and Twitter metadata`
 - 2026-07-01 · Imagen OG dinámica con ImageResponse · `feat(seo): add dynamic Open Graph image`
+- 2026-07-01 · JSON-LD Organization + WebSite en la home · `feat(seo): add Organization and WebSite JSON-LD`
