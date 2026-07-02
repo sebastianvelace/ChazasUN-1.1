@@ -104,9 +104,15 @@ Leyenda: `[ ]` pendiente · `[~]` en progreso · `[x]` hecho · `[!]` bloqueado/
   (~8.5:1, pasa AA). El label decorativo "01/03" del campus (rojo de marca, 2.5)
   se deja: es un contador decorativo, no contenido de lectura, y cambiarlo
   alteraría la marca. El body del campus (`text-white/62`, ~6.8) ya pasa.
-- [ ] **Auditar espaciados entre secciones de la landing**
-  Revisar consistencia de padding vertical entre hero/campus/swiper/how-it-works/
-  footer y ritmo en mobile.
+- [x] **Auditar espaciados entre secciones de la landing**
+  Auditado: hero `pt-24 pb-10`, campus `py-16`, swiper `py-12 lg:py-20`,
+  how-it-works `py-16 sm:py-24`, footer `pt-16 pb-12`. Ritmo aceptable; hero y
+  campus son full-screen (paddings intencionalmente distintos). Única
+  inconsistencia real: swiper (`py-12/lg:py-20`) vs how-it-works (`py-16/sm:py-24`).
+  NO se cambió: el padding vive en `chaza-swiper.tsx`, componente **compartido**
+  con `/explorar` — cambiarlo tocaría otra ruta (guardrail riesgo). Se deja como
+  [!] deferido: si se quiere unificar, hacerlo vía prop de spacing en el swiper,
+  no hardcodeando.
 
 > Agregá aquí los items nuevos que descubras durante el trabajo, con una nota corta
 > del por qué.
@@ -130,3 +136,4 @@ Cada iteración deja una línea: fecha · item · commit corto.
 - 2026-07-01 · Fix doble marca en títulos (title.template) · `fix(seo): strip redundant brand suffix from page titles` (5ebd443)
 - 2026-07-01 · Anillo :focus-visible global (a11y teclado) · `feat(a11y): global focus-visible ring`
 - 2026-07-02 · Contraste AA del texto del footer (white/70) · `fix(a11y): raise footer text contrast to AA`
+- 2026-07-02 · Audit de espaciados (sin cambio: churn en componente compartido) · `docs(backlog): section spacing audit`
