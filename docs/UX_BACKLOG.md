@@ -91,9 +91,15 @@ Leyenda: `[ ]` pendiente · `[~]` en progreso · `[x]` hecho · `[!]` bloqueado/
 
 ## Pulido visual / UX
 
-- [ ] **Auditar espaciados, contraste y estados hover/focus en la landing**
-  Revisar consistencia de spacing, contraste AA, y que todos los interactivos
-  tengan estado `:focus-visible` accesible.
+- [x] **Estados `:focus-visible` accesibles en toda la app**
+  Hecho: solo `blog-section` tenía focus-visible; el resto dependía del ring por
+  defecto (invisible en botones redondeados). Se agregó un `:focus-visible` global
+  en `app/globals.css` (`outline: 2px solid var(--ring)` = rojo de marca, offset
+  2px, solo teclado). Verificado con Tab real: el CTA matchea `:focus-visible` y
+  muestra el anillo. Componentes con foco propio ganan por especificidad.
+- [ ] **Auditar espaciados y contraste AA en la landing**
+  Revisar consistencia de spacing entre secciones y contraste de texto secundario
+  (p. ej. `text-white/62`, `text-muted-foreground`) contra fondo.
 
 > Agregá aquí los items nuevos que descubras durante el trabajo, con una nota corta
 > del por qué.
@@ -114,4 +120,5 @@ Cada iteración deja una línea: fecha · item · commit corto.
 - 2026-07-01 · JSON-LD Organization + WebSite en la home · `feat(seo): add Organization and WebSite JSON-LD`
 - 2026-07-01 · sitemap.ts + robots.ts · `feat(seo): add sitemap and robots`
 - 2026-07-01 · Audit alt/headings + alt descriptivo en QR · `fix(a11y): descriptive alt for share QR image`
-- 2026-07-01 · [SIN COMMITEAR] Fix doble marca en títulos (title.template) · pendiente por limpieza del working tree preexistente
+- 2026-07-01 · Fix doble marca en títulos (title.template) · `fix(seo): strip redundant brand suffix from page titles` (5ebd443)
+- 2026-07-01 · Anillo :focus-visible global (a11y teclado) · `feat(a11y): global focus-visible ring`

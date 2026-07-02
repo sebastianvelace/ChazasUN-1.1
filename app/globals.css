@@ -115,6 +115,14 @@
   * {
     @apply border-border outline-ring/50;
   }
+  /* Anillo de foco consistente y visible para navegación por teclado.
+     Solo :focus-visible → no aparece al hacer click con el mouse.
+     Los componentes que definen su propio focus-visible ganan por
+     especificidad de las utilities de Tailwind. */
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
   html {
     scroll-behavior: smooth;
   }
