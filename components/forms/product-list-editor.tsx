@@ -79,7 +79,7 @@ export function ProductListEditor({
       </div>
       <div className="rounded-2xl border border-dashed border-gray-200 p-4 bg-gray-50">
         <p className="text-sm font-medium text-gray-700 mb-2">Pegar carta (una linea por producto)</p>
-        <p className="text-xs text-gray-500 mb-2">Ej: Empanada pollo — $2.000</p>
+        <p className="text-xs text-gray-500 mb-2">Ejemplo: Empanada de pollo, $2.000</p>
         <textarea
           rows={4}
           disabled={disabled}

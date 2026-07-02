@@ -55,18 +55,18 @@ const STEPS = [
   "Cuenta",
   "Tu chaza",
   "Productos",
-  "Ubicacion",
+  "Ubicación",
   "Contacto",
   "Vista previa",
 ] as const
 
 const STEP_HELP = [
   "Verifica tu identidad para proteger la comunidad.",
-  "Cuenta que vendes y por que deberian elegirte.",
-  "Convierte tu carta en una experiencia facil de escanear.",
-  "Marca el punto mas claro para encontrarte en el campus.",
-  "Publica solo canales que puedas atender rapido.",
-  "Revisa como te vera alguien antes de guardar.",
+  "Cuenta qué vendes y por qué deberían elegirte.",
+  "Convierte tu carta en una experiencia fácil de escanear.",
+  "Marca el punto más claro para encontrarte en el campus.",
+  "Publica solo canales que puedas atender rápido.",
+  "Revisa cómo te verá alguien antes de guardar.",
 ] as const
 
 export function PublishChazaWizard({ menuVisionEnabled = false }: { menuVisionEnabled?: boolean }) {
@@ -307,8 +307,8 @@ export function PublishChazaWizard({ menuVisionEnabled = false }: { menuVisionEn
             <>
               <p className="text-gray-700">
                 {useSupabase
-                  ? "Listo: tu sesion esta vinculada a Supabase. Continua con los datos de tu chaza."
-                  : "Listo: tienes sesion demo. Continua con los datos de tu chaza."}
+                  ? "Listo: tu sesión está vinculada a Supabase. Continúa con los datos de tu chaza."
+                  : "Listo: tienes sesión demo. Continúa con los datos de tu chaza."}
               </p>
               <button
                 type="button"
@@ -322,8 +322,8 @@ export function PublishChazaWizard({ menuVisionEnabled = false }: { menuVisionEn
             <>
               <p className="text-gray-700">
                 {useSupabase
-                  ? "Para publicar necesitas una cuenta (registro o inicio de sesion)."
-                  : "Para publicar necesitas una cuenta demo (sin servidor). Registrate o inicia sesion."}
+                  ? "Para publicar necesitas una cuenta (registro o inicio de sesión)."
+                  : "Para publicar necesitas una cuenta demo (sin servidor). Regístrate o inicia sesión."}
               </p>
               <div className="flex flex-wrap gap-3">
                 <Link
@@ -336,11 +336,11 @@ export function PublishChazaWizard({ menuVisionEnabled = false }: { menuVisionEn
                   href={`${siteConfig.urls.login}?next=${publishAuthNext}`}
                   className="inline-flex font-stencil border-2 border-brand-red text-brand-red px-6 py-2.5 rounded-full hover:bg-brand-red/5"
                 >
-                  INICIAR SESION
+                  INICIAR SESIÓN
                 </Link>
               </div>
               <p className="text-xs text-gray-500">
-                Solo quieres mirar?{" "}
+                ¿Solo quieres mirar?{" "}
                 <Link href={siteConfig.urls.explorar} className="text-brand-red hover:underline">
                   Explorar sin cuenta
                 </Link>
@@ -363,7 +363,7 @@ export function PublishChazaWizard({ menuVisionEnabled = false }: { menuVisionEn
             )}
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Descripcion</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Descripción</label>
             <textarea
               rows={4}
               className="w-full rounded-xl border border-gray-200 px-4 py-3 text-sm focus:border-brand-red focus:ring-2 focus:ring-brand-red/20 outline-none"
@@ -387,7 +387,7 @@ export function PublishChazaWizard({ menuVisionEnabled = false }: { menuVisionEn
             )}
           </div>
           <div>
-            <p className="text-sm font-medium text-gray-700 mb-2">Categorias (al menos una)</p>
+            <p className="text-sm font-medium text-gray-700 mb-2">Categorías (al menos una)</p>
             <div className="grid sm:grid-cols-2 gap-2">
               {categories.map((c) => (
                 <label key={c.slug} className="flex items-center gap-2 text-sm text-gray-700 cursor-pointer">
@@ -404,7 +404,7 @@ export function PublishChazaWizard({ menuVisionEnabled = false }: { menuVisionEn
             )}
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Donde encontrarte en el campus</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Dónde encontrarte en el campus</label>
             <input
               className="w-full rounded-xl border border-gray-200 px-4 py-3 text-sm focus:border-brand-red focus:ring-2 focus:ring-brand-red/20 outline-none"
               {...form.register("locationText")}
@@ -429,7 +429,7 @@ export function PublishChazaWizard({ menuVisionEnabled = false }: { menuVisionEn
 
       {step === 2 && (
         <div className="space-y-5">
-          <p className="text-sm text-gray-600">Agrega productos uno a uno o pega varias lineas (modo carta).</p>
+          <p className="text-sm text-gray-600">Agrega productos uno a uno o pega varias líneas (modo carta).</p>
           {menuVisionEnabled && (
             <MenuVisionPicker
               onApply={(p) => form.setValue("products", p, { shouldValidate: true })}
@@ -450,8 +450,8 @@ export function PublishChazaWizard({ menuVisionEnabled = false }: { menuVisionEn
         <div className="space-y-4">
           <p className="text-sm text-amber-800 bg-amber-50 border border-amber-100 rounded-xl px-4 py-3">
             {useSupabase
-              ? "WhatsApp e Instagram seran visibles publicamente en el detalle de tu chaza."
-              : "WhatsApp e Instagram seran visibles publicamente en el detalle de tu chaza (modo prototipo local)."}
+              ? "WhatsApp e Instagram serán visibles públicamente en el detalle de tu chaza."
+              : "WhatsApp e Instagram serán visibles públicamente en el detalle de tu chaza (modo prototipo local)."}
           </p>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">WhatsApp (opcional)</label>
@@ -476,7 +476,7 @@ export function PublishChazaWizard({ menuVisionEnabled = false }: { menuVisionEn
         <div className="space-y-6">
           {previewCard ? (
             <div className="max-w-sm mx-auto">
-              <p className="text-center text-sm text-gray-500 mb-4">Asi se vera en el explorador (aprox.)</p>
+              <p className="text-center text-sm text-gray-500 mb-4">Así se verá en el explorador (aprox.)</p>
               <div className="relative rounded-3xl overflow-hidden border border-gray-100 shadow-xl aspect-[4/5]">
                 {hasChazaCover(watched.coverImageUrl) ? (
                   <img src={previewCard.image} alt="" className="absolute inset-0 w-full h-full object-cover" />
@@ -484,7 +484,7 @@ export function PublishChazaWizard({ menuVisionEnabled = false }: { menuVisionEn
                   <div className="absolute inset-0 bg-gradient-to-br from-gray-100 via-gray-50 to-gray-200 flex flex-col items-center justify-center gap-2">
                     <ImageIcon className="w-10 h-10 text-gray-300" aria-hidden />
                     <span className="text-sm font-medium text-gray-400">Sin imagen</span>
-                    <span className="text-xs text-gray-400 px-6 text-center">Puedes publicar sin foto; se usara una portada generica.</span>
+                    <span className="text-xs text-gray-400 px-6 text-center">Puedes publicar sin foto; se usará una portada genérica.</span>
                   </div>
                 )}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
@@ -521,7 +521,7 @@ export function PublishChazaWizard({ menuVisionEnabled = false }: { menuVisionEn
             className="inline-flex items-center gap-2 rounded-full border border-gray-200 px-4 py-2 text-sm font-semibold text-gray-600 hover:border-brand-red/30 hover:text-brand-red"
           >
             <ArrowLeft className="h-4 w-4" aria-hidden />
-            Atras
+            Atrás
           </button>
           {step < STEPS.length - 1 && (
             <button
@@ -537,6 +537,7 @@ export function PublishChazaWizard({ menuVisionEnabled = false }: { menuVisionEn
       )}
       </section>
 
+      {(isLoggedIn || step > 0) && (
       <aside className="space-y-4 lg:sticky lg:top-24 lg:self-start">
         <div className="rounded-[1.75rem] border border-gray-100 bg-gray-950 p-5 text-white shadow-sm">
           <div className="mb-4 flex items-center justify-between">
@@ -555,13 +556,13 @@ export function PublishChazaWizard({ menuVisionEnabled = false }: { menuVisionEn
             <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
             <div className="absolute left-4 top-4">
               <span className="rounded-full bg-brand-red px-3 py-1.5 text-xs font-semibold">
-                {selectedCategoryNames[0] ?? "Categoria"}
+                {selectedCategoryNames[0] ?? "Categoría"}
               </span>
             </div>
             <div className="absolute inset-x-0 bottom-0 p-4">
               <h3 className="font-stencil text-2xl leading-none">{watched.name || "Nombre de tu chaza"}</h3>
               <p className="mt-2 line-clamp-2 text-xs text-white/70">
-                {watched.description || "Una descripcion corta hace que alguien decida mas rapido."}
+                {watched.description || "Una descripción corta ayuda a decidir más rápido."}
               </p>
               <div className="mt-3 flex items-center justify-between text-xs text-white/75">
                 <span>{watched.locationText || "Punto del campus"}</span>
@@ -578,7 +579,7 @@ export function PublishChazaWizard({ menuVisionEnabled = false }: { menuVisionEn
               icon={<Store className="h-4 w-4" aria-hidden />}
               active={Boolean(watched.name.trim() && selectedCategoryNames.length)}
               label="Identidad clara"
-              detail={selectedCategoryNames.join(", ") || "Elige al menos una categoria"}
+              detail={selectedCategoryNames.join(", ") || "Elige al menos una categoría"}
             />
             <PublishSignal
               icon={<ImageIcon className="h-4 w-4" aria-hidden />}
@@ -590,12 +591,12 @@ export function PublishChazaWizard({ menuVisionEnabled = false }: { menuVisionEn
               icon={<PackageOpen className="h-4 w-4" aria-hidden />}
               active={productsCount > 0}
               label="Carta escaneable"
-              detail={productsCount ? `${productsCount} productos cargados` : "Agrega tus mas vendidos"}
+              detail={productsCount ? `${productsCount} productos cargados` : "Agrega tus más vendidos"}
             />
             <PublishSignal
               icon={<MapPin className="h-4 w-4" aria-hidden />}
               active={Boolean(watched.locationText.trim())}
-              label="Ubicacion entendible"
+              label="Ubicación entendible"
               detail={watched.locationText || "Describe el punto de referencia"}
             />
             <PublishSignal
@@ -607,6 +608,7 @@ export function PublishChazaWizard({ menuVisionEnabled = false }: { menuVisionEn
           </div>
         </div>
       </aside>
+      )}
     </div>
   )
 }

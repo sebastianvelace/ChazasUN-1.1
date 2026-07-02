@@ -29,6 +29,8 @@ export function useChazaDeck<T extends { id: string }>({
   const [likedIds, setLikedIds] = useState<string[]>(initialLikedIds)
   const [savedIds, setSavedIds] = useState<string[]>(initialSavedIds)
   const [history, setHistory] = useState<DeckHistoryEntry[]>([])
+  const initialLikedIdsKey = JSON.stringify(initialLikedIds)
+  const initialSavedIdsKey = JSON.stringify(initialSavedIds)
 
   useEffect(() => {
     setQueue(items.map((i) => i.id))
@@ -36,12 +38,12 @@ export function useChazaDeck<T extends { id: string }>({
   }, [items])
 
   useEffect(() => {
-    setLikedIds(initialLikedIds)
-  }, [JSON.stringify(initialLikedIds)])
+    setLikedIds(JSON.parse(initialLikedIdsKey) as string[])
+  }, [initialLikedIdsKey])
 
   useEffect(() => {
-    setSavedIds(initialSavedIds)
-  }, [JSON.stringify(initialSavedIds)])
+    setSavedIds(JSON.parse(initialSavedIdsKey) as string[])
+  }, [initialSavedIdsKey])
 
   const currentId = queue[0]
   const current = currentId ? itemMap.get(currentId) : undefined

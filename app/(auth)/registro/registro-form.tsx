@@ -161,7 +161,7 @@ export function RegistroForm() {
       <p className="text-xs text-gray-400 text-center font-medium">
         {getSupabaseBrowserEnv()
           ? "Puede que recibas un correo de confirmación."
-          : "Modo demo — sin Supabase configurado."}
+          : "Modo demo, sin Supabase configurado."}
       </p>
 
       {/* Hick's Law: solo 2 opciones de navegación post-form */}

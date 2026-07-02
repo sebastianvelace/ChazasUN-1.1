@@ -10,8 +10,14 @@ import { useFavorites } from "@/hooks/use-favorites"
 
 export function BottomNav() {
   const pathname = usePathname()
-  const { isLoggedIn, user } = useSession()
+  const { isLoggedIn } = useSession()
   const { savedIds } = useFavorites()
+
+  const isFocusedTask =
+    pathname === siteConfig.urls.publicarChaza ||
+    /^\/mis-chazas\/[^/]+\/editar\/?$/.test(pathname)
+
+  if (isFocusedTask) return null
 
   const tabs = [
     {
@@ -33,15 +39,16 @@ export function BottomNav() {
   ]
 
   const accountTab = {
-    href: isLoggedIn ? "/perfil" : siteConfig.urls.login,
-    label: isLoggedIn ? (user?.displayName ?? user?.email?.split("@")[0] ?? "Cuenta") : "Entrar",
+    href: isLoggedIn ? siteConfig.urls.misChazas : siteConfig.urls.login,
+    label: isLoggedIn ? "Mis chazas" : "Entrar",
     icon: isLoggedIn ? User : LogIn,
   }
 
   return (
     <nav
-      className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-100 shadow-lg"
+      className="fixed inset-x-0 bottom-0 z-50 border-t border-gray-200/80 bg-white/95 shadow-[0_-8px_24px_rgba(31,41,55,0.06)] backdrop-blur-md md:hidden"
       style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
+      aria-label="Navegación principal"
     >
       <div className="flex h-16 items-stretch">
         {tabs.map((tab) => {
@@ -54,9 +61,10 @@ export function BottomNav() {
               className={cn(
                 "flex flex-col items-center justify-center gap-1 flex-1 py-2 transition-colors",
                 isActive
-                  ? "text-brand-red bg-brand-red/5 rounded-xl mx-1"
+                  ? "text-brand-red"
                   : "text-gray-400 hover:text-gray-600"
               )}
+              aria-current={isActive ? "page" : undefined}
             >
               <div className="relative">
                 <Icon size={22} strokeWidth={isActive ? 2.5 : 2} />
@@ -73,7 +81,9 @@ export function BottomNav() {
 
         {/* Cuenta tab */}
         {(() => {
-          const isActive = pathname === accountTab.href || (isLoggedIn && pathname === "/perfil")
+          const isActive =
+            pathname === accountTab.href ||
+            (isLoggedIn && pathname.startsWith(`${siteConfig.urls.misChazas}/`))
           const Icon = accountTab.icon
           return (
             <Link
@@ -81,9 +91,10 @@ export function BottomNav() {
               className={cn(
                 "flex flex-col items-center justify-center gap-1 flex-1 py-2 transition-colors",
                 isActive
-                  ? "text-brand-red bg-brand-red/5 rounded-xl mx-1"
+                  ? "text-brand-red"
                   : "text-gray-400 hover:text-gray-600"
               )}
+              aria-current={isActive ? "page" : undefined}
             >
               <Icon size={22} strokeWidth={isActive ? 2.5 : 2} />
               <span className="text-[10px] font-semibold tracking-wide leading-none max-w-[60px] truncate">

@@ -34,17 +34,31 @@ export function MapaPageClient() {
         description={
           categoryLabel
             ? `Filtro: ${categoryLabel}. Toca un pin para ver detalle.`
-            : "Plano de la sede Bogota con pins. Filtra por categoria o por tus likes."
+            : "Plano de la sede Bogotá con puntos de ubicación. Filtra por categoría o por tus likes."
         }
       />
 
-      <div className="flex flex-wrap gap-2 mb-4">
-        {categories.slice(0, 6).map((c) => (
+      <div
+        className="-mx-4 mb-5 flex gap-2 overflow-x-auto px-4 pb-2 sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0"
+        aria-label="Filtrar mapa por categoría"
+      >
+        <Link
+          href={siteConfig.urls.mapa}
+          className={cn(
+            "shrink-0 rounded-full border px-3 py-2 text-xs font-semibold transition-colors",
+            !categoryFilter
+              ? "border-brand-red bg-brand-red text-white"
+              : "border-gray-200 text-gray-600 hover:border-brand-red"
+          )}
+        >
+          Todas
+        </Link>
+        {categories.map((c) => (
           <Link
             key={c.slug}
             href={`${siteConfig.urls.mapa}?categoria=${c.slug}`}
             className={cn(
-              "text-xs font-semibold px-3 py-1.5 rounded-full border transition-colors",
+              "shrink-0 rounded-full border px-3 py-2 text-xs font-semibold transition-colors",
               categoryFilter === c.slug
                 ? "bg-brand-red text-white border-brand-red"
                 : "border-gray-200 text-gray-600 hover:border-brand-red"
@@ -53,14 +67,6 @@ export function MapaPageClient() {
             {c.name}
           </Link>
         ))}
-        {categoryFilter && (
-          <Link
-            href={siteConfig.urls.mapa}
-            className="text-xs font-semibold px-3 py-1.5 rounded-full border border-gray-200 text-gray-500 hover:border-brand-red"
-          >
-            Quitar filtro
-          </Link>
-        )}
       </div>
 
       {isLoggedIn && (
@@ -95,7 +101,7 @@ export function MapaPageClient() {
       {showLikesEmpty ? (
         <div className="rounded-2xl border border-amber-100 bg-amber-50 p-6 mb-6 text-center">
           <p className="text-gray-700 text-sm mb-4">
-            Aun no tienes likes. Explora chazas y marca las que te interesen para verlas aqui.
+            Aún no tienes likes. Explora chazas y marca las que te interesen para verlas aquí.
           </p>
           <Link
             href={siteConfig.urls.explorar}

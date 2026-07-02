@@ -2,7 +2,7 @@
 
 import { useState, useRef, useCallback, useEffect, useMemo } from "react"
 import Link from "next/link"
-import { Heart, X, MapPin, Star, Clock, RotateCcw, Info, Bookmark, Search } from "lucide-react"
+import { Heart, X, MapPin, Star, Clock, RotateCcw, Info, Bookmark, Search, ArrowLeft, ArrowRight } from "lucide-react"
 import { useScrollReveal } from "@/hooks/use-scroll-reveal"
 import { useChazaDeck } from "@/hooks/use-chaza-deck"
 import { useAnalytics, useCardDwellTime } from "@/hooks/use-analytics"
@@ -126,6 +126,11 @@ export function ChazaSwiper({
   const [isDragging, setIsDragging] = useState(false)
   const [showInfo, setShowInfo] = useState(false)
   const [authPrompt, setAuthPrompt] = useState<AuthPromptReason | null>(null)
+  const [viewCount, setViewCount] = useState(0)
+
+  useEffect(() => {
+    setViewCount(0)
+  }, [activeCategory, nameQuery])
 
   // ── TAREA 3: Onboarding hint ──
   const [showHint, setShowHint] = useState(false)
@@ -243,6 +248,7 @@ export function ChazaSwiper({
           deckIndex: queue.indexOf(current.id),
         })
         setShowInfo(false)
+        setViewCount((count) => count + 1)
         const likedId = current.id
         animateCardExit("like", () => {
           deckAdvance("like")
@@ -260,6 +266,7 @@ export function ChazaSwiper({
         deckIndex: queue.indexOf(current.id),
       })
       setShowInfo(false)
+      setViewCount((count) => count + 1)
       animateCardExit("pass", () => {
         deckAdvance("pass")
       })
@@ -269,6 +276,7 @@ export function ChazaSwiper({
 
   const handleUndo = useCallback(() => {
     undo()
+    setViewCount((count) => Math.max(0, count - 1))
     track("swiper_undo")
     setShowInfo(false)
   }, [undo, track])
@@ -322,11 +330,16 @@ export function ChazaSwiper({
 
   // ── TAREA 1: Category pills component (shared) ──
   const CategoryPills = (
-    <div className="flex flex-wrap gap-2 justify-center lg:justify-start">
+    <div
+      className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden lg:mx-0 lg:flex-wrap lg:justify-start lg:overflow-visible lg:px-0"
+      role="group"
+      aria-label="Filtrar por categoría"
+    >
       <button
         type="button"
         onClick={() => setActiveCategory(null)}
-        className={`px-3 sm:px-4 py-1.5 rounded-full text-xs sm:text-sm font-medium transition-colors ${
+        aria-pressed={activeCategory === null}
+        className={`shrink-0 rounded-full px-3 py-1.5 text-xs font-medium transition-colors sm:px-4 sm:text-sm ${
           activeCategory === null
             ? "bg-brand-red text-white font-semibold"
             : "bg-gray-100 text-gray-600 hover:bg-gray-200"
@@ -339,7 +352,8 @@ export function ChazaSwiper({
           key={cat.slug}
           type="button"
           onClick={() => setActiveCategory(cat.slug === activeCategory ? null : cat.slug)}
-          className={`px-3 sm:px-4 py-1.5 rounded-full text-xs sm:text-sm font-medium transition-colors ${
+          aria-pressed={activeCategory === cat.slug}
+          className={`shrink-0 rounded-full px-3 py-1.5 text-xs font-medium transition-colors sm:px-4 sm:text-sm ${
             activeCategory === cat.slug
               ? "bg-brand-red text-white font-semibold"
               : "bg-gray-100 text-gray-600 hover:bg-gray-200"
@@ -356,7 +370,7 @@ export function ChazaSwiper({
       <section
         ref={sectionRef}
         {...(sectionId ? { id: sectionId } : {})}
-        className="py-20 px-4 bg-white overflow-hidden"
+        className="overflow-hidden bg-white px-4 py-12 lg:py-20"
       >
         <div className="mx-auto max-w-lg text-center">
           {featuredVisible.length > 0 && (
@@ -397,7 +411,7 @@ export function ChazaSwiper({
       <section
         ref={sectionRef}
         {...(sectionId ? { id: sectionId } : {})}
-        className="py-20 px-4 bg-white overflow-hidden"
+        className="overflow-hidden bg-white px-4 py-12 lg:py-20"
       >
         <div className="mx-auto max-w-lg">
           {showSectionHeader && (
@@ -406,7 +420,7 @@ export function ChazaSwiper({
               <div className="h-4 w-64 bg-gray-100 rounded mx-auto animate-pulse" />
             </div>
           )}
-          <div className="relative w-full max-w-[340px] mx-auto h-[520px] rounded-3xl bg-gray-100 animate-pulse" />
+          <div className="relative mx-auto h-[clamp(340px,calc(100dvh_-_410px_-_env(safe-area-inset-bottom)),520px)] w-full max-w-[340px] animate-pulse rounded-3xl bg-gray-100 lg:h-[620px]" />
         </div>
       </section>
     )
@@ -414,19 +428,20 @@ export function ChazaSwiper({
 
   if (!current) return null
 
-  const currentIndexInQueue = queue.indexOf(current.id)
+  const progressPosition = queue.length > 0 ? (viewCount % queue.length) + 1 : 0
+  const progressPercent = queue.length > 0 ? (progressPosition / queue.length) * 100 : 0
   const isSaved = savedIds.includes(current.id)
 
   return (
     <section
       ref={sectionRef}
       {...(sectionId ? { id: sectionId } : {})}
-      className="py-20 px-4 bg-white overflow-hidden"
+      className="overflow-hidden bg-white px-4 pb-4 pt-3 md:py-14 lg:py-20"
     >
       <div className="mx-auto max-w-6xl">
         {/* Featured strip */}
         {featuredVisible.length > 0 && (
-          <div className="mb-10 max-w-full">
+          <div className="mb-10 hidden max-w-full lg:block">
             <p className="font-stencil text-sm text-gray-500 tracking-wide mb-1 text-center sm:text-left">
               DESTACADAS
             </p>
@@ -451,23 +466,22 @@ export function ChazaSwiper({
 
             {/* Mobile-only header (above card) */}
             {showSectionHeader && (
-              <div className="lg:hidden text-center mb-6 animate-auth-in">
-                <span className="inline-block bg-brand-red/10 text-brand-red text-xs font-semibold uppercase tracking-widest px-4 py-1.5 rounded-full mb-4">
-                  Descubre
-                </span>
-                <h2 className="font-stencil text-4xl sm:text-5xl text-brand-red mb-3 tracking-wide">
-                  EXPLORA CHAZAS
-                </h2>
-                <p className="text-gray-500 max-w-sm mx-auto text-sm leading-relaxed">
-                  Desliza a la derecha si te interesa. Al pasar, la chaza vuelve al final del mazo — como flashcards.
-                </p>
+              <div className="mb-3 text-left lg:hidden">
+                <div className="flex items-end justify-between gap-3">
+                  <h2 className="whitespace-nowrap font-stencil text-2xl leading-none tracking-wide text-brand-red sm:text-4xl">
+                    EXPLORA CHAZAS
+                  </h2>
+                  <p className="shrink-0 text-xs font-medium text-gray-600">
+                    Desliza o usa los botones
+                  </p>
+                </div>
                 {showViewAllLink && (
-                  <Link href={siteConfig.urls.explorar} className="inline-block mt-4 font-stencil text-sm text-brand-red hover:underline">
+                  <Link href={siteConfig.urls.explorar} className="mt-2 inline-block font-stencil text-sm text-brand-red hover:underline">
                     VER EXPLORACION COMPLETA →
                   </Link>
                 )}
                 {showNameSearch && (
-                  <div className="relative max-w-sm mx-auto mt-6 text-left">
+                  <div className="relative mt-3 text-left">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
                     <input
                       type="search"
@@ -483,12 +497,12 @@ export function ChazaSwiper({
             )}
 
             {/* Mobile-only: category pills (between header and card stack) */}
-            <div className="lg:hidden mb-4">
+            <div className="mb-3 lg:hidden">
               {CategoryPills}
             </div>
 
             {/* Card stack */}
-            <div className="relative w-full max-w-[340px] lg:max-w-none mx-auto h-[520px] lg:h-[620px] select-none mb-8 lg:mb-0">
+            <div className="relative mx-auto h-[clamp(340px,calc(100dvh_-_410px_-_env(safe-area-inset-bottom)),520px)] w-full max-w-[340px] select-none lg:mb-0 lg:h-[620px] lg:max-w-none">
               <div className="absolute inset-x-4 top-4 bottom-4 bg-white rounded-3xl shadow-sm border border-gray-100 scale-90 opacity-50" aria-hidden />
 
               {next && (
@@ -530,7 +544,7 @@ export function ChazaSwiper({
                   <button
                     type="button"
                     onClick={(e) => { e.stopPropagation(); handleUndo() }}
-                    className="absolute top-3 right-3 z-30 w-9 h-9 rounded-full bg-white flex items-center justify-center shadow-md text-yellow-500 hover:bg-yellow-50 transition-colors"
+                    className="absolute right-4 top-14 z-30 flex h-9 w-9 items-center justify-center rounded-full bg-white text-brand-red shadow-md transition-colors hover:bg-red-50"
                     aria-label="Deshacer"
                   >
                     <RotateCcw className="w-4 h-4" />
@@ -539,13 +553,13 @@ export function ChazaSwiper({
 
                 <div ref={likeStampRef} className="absolute inset-0 flex items-center justify-center pointer-events-none z-20 opacity-0" aria-hidden>
                   <div className="border-4 border-green-400 rounded-2xl px-8 py-3 -rotate-[15deg] bg-green-400/20 backdrop-blur-sm shadow-2xl">
-                    <span className="text-green-400 font-stencil text-4xl tracking-widest drop-shadow-lg">LIKE</span>
+                    <span className="text-green-400 font-stencil text-4xl tracking-widest drop-shadow-lg">INTERESA</span>
                   </div>
                 </div>
 
                 <div ref={passStampRef} className="absolute inset-0 flex items-center justify-center pointer-events-none z-20 opacity-0" aria-hidden>
                   <div className="border-4 border-red-400 rounded-2xl px-8 py-3 rotate-[15deg] bg-red-400/20 backdrop-blur-sm shadow-2xl">
-                    <span className="text-red-400 font-stencil text-4xl tracking-widest drop-shadow-lg">PASS</span>
+                    <span className="text-red-400 font-stencil text-4xl tracking-widest drop-shadow-lg">PASAR</span>
                   </div>
                 </div>
 
@@ -554,15 +568,15 @@ export function ChazaSwiper({
                   <div className="absolute inset-0 z-30 flex flex-col items-center justify-center rounded-3xl bg-black/30 backdrop-blur-[2px] pointer-events-none">
                     <div className="flex items-center gap-8 mb-4">
                       <div className="flex flex-col items-center gap-1 animate-pulse">
-                        <span className="text-white text-3xl">←</span>
-                        <span className="text-white font-stencil text-sm tracking-widest">PASS</span>
+                        <ArrowLeft className="h-8 w-8 text-white" aria-hidden />
+                        <span className="text-white font-stencil text-sm tracking-widest">PASAR</span>
                       </div>
                       <div className="flex flex-col items-center gap-1">
                         <span className="text-white/70 text-sm font-stencil tracking-wide">desliza</span>
                       </div>
                       <div className="flex flex-col items-center gap-1 animate-pulse">
-                        <span className="text-white text-3xl">→</span>
-                        <span className="text-white font-stencil text-sm tracking-widest">LIKE</span>
+                        <ArrowRight className="h-8 w-8 text-white" aria-hidden />
+                        <span className="text-white font-stencil text-sm tracking-widest">ME INTERESA</span>
                       </div>
                     </div>
                     <button
@@ -611,31 +625,42 @@ export function ChazaSwiper({
               </div>
             </div>
 
-            {/* Mobile-only: buttons + dots + stats */}
-            {/* ── TAREA 2: 3 buttons (Pass · Like · Guardar) on mobile ── */}
-            <div className="lg:hidden mt-8">
-              <div className="flex items-center justify-center gap-4">
-                <button type="button" onClick={() => handleAdvance("pass")} className="btn-swiper-action w-16 h-16 rounded-full bg-white border-2 border-gray-200 flex items-center justify-center shadow-md hover:border-red-300 hover:bg-red-50/80" aria-label="Pasar">
-                  <X className="w-8 h-8 text-red-400" />
-                </button>
-                <button type="button" onClick={() => handleAdvance("like")} className="btn-swiper-action w-16 h-16 rounded-full bg-gradient-to-br from-green-400 to-emerald-500 flex items-center justify-center shadow-md" aria-label="Me interesa">
-                  <Heart className="w-8 h-8 text-white" />
-                </button>
-                <button type="button" onClick={handleSave} className={`btn-swiper-action w-14 h-14 rounded-full bg-white border-2 flex items-center justify-center shadow-md ${isSaved ? "border-blue-400 bg-blue-50" : "border-gray-200"}`} aria-label="Guardar">
-                  <Bookmark className={`w-5 h-5 ${isSaved ? "text-blue-500 fill-blue-500" : "text-blue-400"}`} />
-                </button>
+            {/* Mobile-only: explicit actions and compact progress */}
+            <div className="mt-3 lg:hidden">
+              <div className="flex items-start justify-center gap-7">
+                <div className="flex flex-col items-center gap-1">
+                  <button type="button" onClick={() => handleAdvance("pass")} className="btn-swiper-action flex h-12 w-12 items-center justify-center rounded-full border-2 border-gray-200 bg-white shadow-sm hover:border-gray-300 hover:bg-gray-50" aria-label="Pasar">
+                    <X className="h-6 w-6 text-gray-600" />
+                  </button>
+                  <span className="text-[11px] font-medium text-gray-600">Pasar</span>
+                </div>
+                <div className="flex flex-col items-center gap-1">
+                  <button type="button" onClick={() => handleAdvance("like")} className="btn-swiper-action flex h-14 w-14 items-center justify-center rounded-full bg-brand-red shadow-md shadow-brand-red/20 hover:bg-brand-red-dark" aria-label="Me interesa">
+                    <Heart className="h-7 w-7 text-white" />
+                  </button>
+                  <span className="text-[11px] font-semibold text-brand-red">Me interesa</span>
+                </div>
+                <div className="flex flex-col items-center gap-1">
+                  <button type="button" onClick={handleSave} className={`btn-swiper-action flex h-12 w-12 items-center justify-center rounded-full border-2 bg-white shadow-sm ${isSaved ? "border-brand-red bg-red-50" : "border-gray-200 hover:border-brand-red/40"}`} aria-label={isSaved ? "Quitar de guardadas" : "Guardar"}>
+                    <Bookmark className={`h-5 w-5 ${isSaved ? "fill-brand-red text-brand-red" : "text-gray-600"}`} />
+                  </button>
+                  <span className="text-[11px] font-medium text-gray-600">Guardar</span>
+                </div>
               </div>
-              <div className="flex justify-center gap-1.5 mt-6">
-                {queue.map((id, i) => (
-                  <div key={id} className={`h-1.5 rounded-full transition-all duration-500 ${i === currentIndexInQueue ? "w-8 bg-brand-red" : "w-1.5 bg-gray-200"}`} />
-                ))}
+              <div className="mx-auto mt-3 flex max-w-[260px] items-center gap-3" aria-label={`Tarjeta ${progressPosition} de ${queue.length}`}>
+                <div className="h-1 flex-1 overflow-hidden rounded-full bg-gray-200">
+                  <div className="h-full rounded-full bg-brand-red transition-[width] duration-300" style={{ width: `${progressPercent}%` }} />
+                </div>
+                <span className="min-w-9 text-right text-[11px] font-semibold tabular-nums text-gray-600">
+                  {progressPosition}/{queue.length}
+                </span>
               </div>
-              <div className="flex items-center justify-center gap-8 mt-6 text-center">
+              <div className="mt-4 flex items-center justify-center gap-8 text-center">
                 {likedIds.length > 0 && <div><p className="font-stencil text-2xl text-green-500">{likedIds.length}</p><p className="text-gray-400 text-xs">Likes</p></div>}
                 {savedIds.length > 0 && <div><p className="font-stencil text-2xl text-blue-500">{savedIds.length}</p><p className="text-gray-400 text-xs">Guardadas</p></div>}
               </div>
-              <p className="text-center text-gray-300 text-xs mt-6">
-                Arrastra la tarjeta o usa los botones · Las chazas vuelven al mazo · Like y guardar requieren cuenta
+              <p className="mt-3 text-center text-xs text-gray-600">
+                Las chazas vuelven al mazo. Me interesa y guardar requieren cuenta.
               </p>
             </div>
           </div>
@@ -652,7 +677,7 @@ export function ChazaSwiper({
                   EXPLORA<br />CHAZAS
                 </h2>
                 <p className="text-gray-500 text-sm leading-relaxed mb-5">
-                  Desliza a la derecha si te interesa. Al pasar, la chaza vuelve al final del mazo — como flashcards.
+                  Desliza a la derecha si te interesa. Al pasar, la chaza vuelve al final del mazo, como una flashcard.
                 </p>
                 {showViewAllLink && (
                   <Link href={siteConfig.urls.explorar} className="inline-block font-stencil text-sm text-brand-red hover:underline">
@@ -686,11 +711,14 @@ export function ChazaSwiper({
               </div>
             )}
 
-            {/* Progress dots */}
-            <div className="flex gap-1.5 mb-8">
-              {queue.map((id, i) => (
-                <div key={id} className={`h-1.5 rounded-full transition-all duration-500 ${i === currentIndexInQueue ? "w-8 bg-brand-red" : "w-1.5 bg-gray-200"}`} />
-              ))}
+            {/* Compact progress remains legible with large decks. */}
+            <div className="mb-8 flex max-w-[260px] items-center gap-3" aria-label={`Tarjeta ${progressPosition} de ${queue.length}`}>
+              <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-gray-200">
+                <div className="h-full rounded-full bg-brand-red transition-[width] duration-300" style={{ width: `${progressPercent}%` }} />
+              </div>
+              <span className="text-xs font-semibold tabular-nums text-gray-600">
+                {progressPosition}/{queue.length}
+              </span>
             </div>
 
             {/* ── TAREA 2: 3 action buttons on desktop ── */}
@@ -714,8 +742,8 @@ export function ChazaSwiper({
               </div>
             )}
 
-            <p className="text-gray-300 text-xs">
-              Arrastra la tarjeta o usa los botones · Las chazas vuelven al mazo · Like y guardar requieren cuenta
+            <p className="text-xs text-gray-600">
+              Arrastra la tarjeta o usa los botones. Las chazas vuelven al mazo. Me interesa y guardar requieren cuenta.
             </p>
           </div>
 

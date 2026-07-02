@@ -263,7 +263,7 @@ export function ChazaDetailClient({ slug }: { slug: string }) {
               </p>
 
               <div className="mt-7 grid max-w-2xl grid-cols-2 gap-2 sm:grid-cols-4">
-                <MetricPill icon={<Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />} label="Rating" value={`${displayRating}`} />
+                <MetricPill icon={<Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />} label="Calificación" value={`${displayRating}`} />
                 <MetricPill icon={<MessageCircle className="h-4 w-4" />} label="Reseñas" value={`${displayReviewCount}`} />
                 <MetricPill icon={<Clock className="h-4 w-4" />} label="Horario" value={chaza.schedule} />
                 <MetricPill icon={<MapPin className="h-4 w-4" />} label="Zona" value={chaza.location} />

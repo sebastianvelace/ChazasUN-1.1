@@ -1,9 +1,9 @@
 "use client"
 
-import { useMemo, useState } from "react"
+import { useMemo, useRef, useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
-import { MapPin, ExternalLink, Star } from "lucide-react"
+import { MapPin, ExternalLink, RotateCcw, Star } from "lucide-react"
 import { campusConfig } from "@/config/campus"
 import { useChazaCatalog } from "@/hooks/use-chaza-catalog"
 import {
@@ -32,9 +32,29 @@ export function CampusMap({
   const [selected, setSelected] = useState<ChazaCard | null>(null)
   const { track } = useAnalytics()
   const [zoom, setZoom] = useState(1)
+  const [offset, setOffset] = useState({ x: 0, y: 0 })
+  const viewportRef = useRef<HTMLDivElement>(null)
+  const dragRef = useRef<{ pointerId: number; x: number; y: number; originX: number; originY: number } | null>(null)
   const MIN_ZOOM = 1
   const MAX_ZOOM = 3
   const ZOOM_STEP = 0.5
+
+  const clampOffset = (x: number, y: number) => {
+    const rect = viewportRef.current?.getBoundingClientRect()
+    if (!rect || zoom <= 1) return { x: 0, y: 0 }
+    const maxX = (rect.width * (zoom - 1)) / 2
+    const maxY = (rect.height * (zoom - 1)) / 2
+    return {
+      x: Math.max(-maxX, Math.min(maxX, x)),
+      y: Math.max(-maxY, Math.min(maxY, y)),
+    }
+  }
+
+  const changeZoom = (nextZoom: number) => {
+    const value = Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, nextZoom))
+    setZoom(value)
+    if (value === 1) setOffset({ x: 0, y: 0 })
+  }
 
   const chazasWithMap = useMemo(() => {
     let withPins = cards.filter((c) => c.mapPosition)
@@ -51,10 +71,44 @@ export function CampusMap({
   return (
     <div className={cn("flex flex-col lg:flex-row gap-6", className)}>
       <div className="relative flex-1 rounded-3xl border border-gray-100 overflow-hidden bg-gray-50 shadow-lg">
-        <div className="relative w-full aspect-[3/2] sm:aspect-[16/9] min-h-[360px] sm:min-h-[480px] lg:min-h-[540px] overflow-hidden">
+        <div
+          ref={viewportRef}
+          className={cn(
+            "relative min-h-[360px] w-full overflow-hidden aspect-[3/2] sm:min-h-[480px] sm:aspect-[16/9] lg:min-h-[540px]",
+            zoom > 1 ? "cursor-grab active:cursor-grabbing" : "cursor-default"
+          )}
+          style={{ touchAction: zoom > 1 ? "none" : "pan-y" }}
+          onPointerDown={(event) => {
+            if (zoom <= 1 || (event.target as HTMLElement).closest("button, a")) return
+            dragRef.current = {
+              pointerId: event.pointerId,
+              x: event.clientX,
+              y: event.clientY,
+              originX: offset.x,
+              originY: offset.y,
+            }
+            event.currentTarget.setPointerCapture(event.pointerId)
+          }}
+          onPointerMove={(event) => {
+            const drag = dragRef.current
+            if (!drag || drag.pointerId !== event.pointerId) return
+            setOffset(
+              clampOffset(
+                drag.originX + event.clientX - drag.x,
+                drag.originY + event.clientY - drag.y
+              )
+            )
+          }}
+          onPointerUp={(event) => {
+            if (dragRef.current?.pointerId === event.pointerId) dragRef.current = null
+          }}
+          onPointerCancel={() => {
+            dragRef.current = null
+          }}
+        >
           <div
             style={{
-              transform: `scale(${zoom})`,
+              transform: `translate3d(${offset.x}px, ${offset.y}px, 0) scale(${zoom})`,
               transformOrigin: "center center",
               transition: "transform 0.2s ease-out",
             }}
@@ -62,7 +116,7 @@ export function CampusMap({
           >
             <Image
               src={campusConfig.mapImageUrl}
-              alt="Mapa del campus UN Bogota"
+              alt="Mapa del campus UN Bogotá"
               fill
               className="object-contain"
               priority
@@ -86,17 +140,17 @@ export function CampusMap({
                   }}
                   aria-label={`Chaza ${chaza.name}`}
                 >
-                  <span className="relative flex h-9 w-9 items-center justify-center">
+                  <span className="relative flex h-11 w-11 items-center justify-center">
                     {isActive && (
-                      <span className="absolute inset-0 rounded-full bg-brand-red animate-ping opacity-30" />
+                      <span className="absolute inset-1 rounded-full bg-brand-red animate-ping opacity-30" />
                     )}
                     <span
                       className={cn(
-                        "flex h-9 w-9 items-center justify-center rounded-full border-2 border-white shadow-lg",
+                        "flex h-7 w-7 items-center justify-center rounded-full border-2 border-white shadow-lg sm:h-9 sm:w-9",
                         isActive ? "bg-brand-red" : "bg-brand-red/90"
                       )}
                     >
-                      <MapPin className="h-5 w-5 text-white" />
+                      <MapPin className="h-4 w-4 text-white sm:h-5 sm:w-5" />
                     </span>
                   </span>
                 </button>
@@ -108,7 +162,7 @@ export function CampusMap({
           <div className="absolute bottom-4 right-4 z-20 flex flex-col gap-2">
             <button
               type="button"
-              onClick={() => setZoom((z) => Math.min(z + ZOOM_STEP, MAX_ZOOM))}
+              onClick={() => changeZoom(zoom + ZOOM_STEP)}
               disabled={zoom >= MAX_ZOOM}
               className="w-10 h-10 rounded-full bg-white shadow-lg border border-gray-200 flex items-center justify-center text-gray-700 font-bold text-lg hover:bg-gray-50 disabled:opacity-40"
               aria-label="Acercar"
@@ -117,17 +171,30 @@ export function CampusMap({
             </button>
             <button
               type="button"
-              onClick={() => setZoom((z) => Math.max(z - ZOOM_STEP, MIN_ZOOM))}
+              onClick={() => changeZoom(zoom - ZOOM_STEP)}
               disabled={zoom <= MIN_ZOOM}
               className="w-10 h-10 rounded-full bg-white shadow-lg border border-gray-200 flex items-center justify-center text-gray-700 font-bold text-lg hover:bg-gray-50 disabled:opacity-40"
               aria-label="Alejar"
             >
               −
             </button>
+            {zoom > 1 && (
+              <button
+                type="button"
+                onClick={() => {
+                  setZoom(1)
+                  setOffset({ x: 0, y: 0 })
+                }}
+                className="flex h-10 w-10 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-700 shadow-lg hover:bg-gray-50"
+                aria-label="Restablecer mapa"
+              >
+                <RotateCcw className="h-4 w-4" />
+              </button>
+            )}
           </div>
         </div>
-        <p className="text-xs text-gray-400 px-4 py-2 border-t bg-white">
-          Plano UN Bogota. Chazas con pin aparecen al publicar o en datos de demo.
+        <p className="border-t bg-white px-4 py-2 text-xs text-gray-500">
+          Plano UN Bogotá. Acerca y arrastra para recorrer el campus.
         </p>
       </div>
 
@@ -181,7 +248,7 @@ function ChazaMapCard({ chaza, onClose }: { chaza: ChazaCard; onClose: () => voi
       <p className="text-sm text-gray-600 mb-3">{chaza.location}</p>
       <div className="flex items-center gap-1 text-sm text-gray-500 mb-4">
         <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-        {chaza.rating} · {chaza.reviews} reseñas
+        {chaza.rating} ({chaza.reviews} reseñas)
       </div>
       <div className="flex flex-col gap-2">
         <Link

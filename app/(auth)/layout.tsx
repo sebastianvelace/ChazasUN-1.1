@@ -9,7 +9,7 @@ const stats = [
 
 const testimonial = {
   quote: "Encontré mi chaza de tinto favorita en 10 segundos. No volvería a buscar de otra forma.",
-  author: "Laura G. — Ing. de Sistemas",
+  author: "Laura G. - Ing. de Sistemas",
 }
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
@@ -75,7 +75,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
 
           {/* Bottom */}
           <p className="text-white/30 text-xs">
-            Proyecto estudiantil independiente — no afiliado a la Universidad Nacional.
+            Proyecto estudiantil independiente, no afiliado a la Universidad Nacional.
           </p>
         </div>
       </aside>

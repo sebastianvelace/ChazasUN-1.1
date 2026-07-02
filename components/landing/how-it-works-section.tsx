@@ -1,53 +1,31 @@
 "use client"
 
 import Link from "next/link"
+import { Heart, MapPinned, MessageCircle } from "lucide-react"
 import { useGSAPSafe } from "@/hooks/use-gsap-reduced"
 import { siteConfig } from "@/config/site"
 
 const steps = [
   {
     number: "01",
-    title: "REGISTRATE",
-    description: "Crea tu cuenta en segundos. Sin carnet, sin datos sensibles — solo un correo.",
+    title: "DESCUBRE",
+    description: "Explora puestos, productos y servicios del campus sin crear una cuenta.",
     cta: null,
-    icon: (
-      <svg viewBox="0 0 64 64" className="w-12 h-12" aria-hidden="true">
-        <circle cx="32" cy="20" r="10" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
-        <path d="M14,54 Q14,38 32,38 Q50,38 50,54" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
-        <circle cx="48" cy="48" r="8" fill="none" stroke="currentColor" strokeWidth="2" />
-        <path d="M44,48 L47,51 L52,45" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none" />
-      </svg>
-    ),
+    icon: MapPinned,
   },
   {
     number: "02",
-    title: "EXPLORA",
-    description: "Desliza chazas como flashcards. Dale like a las que te interesan y guarda tus favoritas.",
+    title: "DECIDE",
+    description: "Compara fotos, precios y ubicación. Guarda o recomienda cuando quieras volver.",
     cta: null,
-    icon: (
-      <svg viewBox="0 0 64 64" className="w-12 h-12" aria-hidden="true">
-        <rect x="14" y="10" width="36" height="44" rx="6" fill="none" stroke="currentColor" strokeWidth="2.5" />
-        <path d="M22,22 L42,22" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-        <path d="M22,30 L38,30" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-        <path d="M22,38 L34,38" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-        <path d="M40,34 L52,34 M46,28 L52,34 L46,40" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none" />
-      </svg>
-    ),
+    icon: Heart,
   },
   {
     number: "03",
-    title: "CONECTA",
-    description: "Contacta al vendedor directo por WhatsApp o Instagram. Rápido, sin intermediarios.",
-    cta: { label: "Explorar ahora →", href: siteConfig.urls.explorar },
-    icon: (
-      <svg viewBox="0 0 64 64" className="w-12 h-12" aria-hidden="true">
-        <circle cx="20" cy="22" r="8" fill="none" stroke="currentColor" strokeWidth="2.5" />
-        <path d="M8,48 Q8,36 20,36 Q28,36 31,42" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
-        <circle cx="44" cy="22" r="8" fill="none" stroke="currentColor" strokeWidth="2.5" />
-        <path d="M33,42 Q36,36 44,36 Q56,36 56,48" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
-        <path d="M28,26 Q32,30 36,26" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-      </svg>
-    ),
+    title: "CONTACTA",
+    description: "Escribe directamente por WhatsApp o Instagram, sin comisiones ni intermediarios.",
+    cta: { label: "Explorar ahora", href: siteConfig.urls.explorar },
+    icon: MessageCircle,
   },
 ]
 
@@ -55,24 +33,25 @@ export function HowItWorksSection() {
   const sectionRef = useGSAPSafe(({ isReduced, gsap, ScrollTrigger }) => {
     if (isReduced) return
 
-    // Header fade + clip-path reveal for the title
-    ScrollTrigger.batch(".hiw-header", {
-      onEnter: (els) => gsap.fromTo(els,
-        { opacity: 0, y: 28 },
-        { opacity: 1, y: 0, duration: 0.6, ease: "expo.out" }
-      ),
-      once: true,
-      start: "top bottom",
-    })
+    // Header fade + clip-path reveal for the title.
+    // Uses direct scrollTriggers (not batch) — batch could leave the title
+    // stuck at clipPath inset(0 100% 0 0) (fully clipped = invisible H2) when
+    // trigger positions were stale on first paint.
+    gsap.fromTo(".hiw-header",
+      { opacity: 0, y: 28 },
+      {
+        opacity: 1, y: 0, duration: 0.6, ease: "expo.out",
+        scrollTrigger: { trigger: ".hiw-header", start: "top 88%", once: true },
+      }
+    )
 
-    ScrollTrigger.batch(".hiw-title", {
-      onEnter: (els) => gsap.fromTo(els,
-        { clipPath: "inset(0 100% 0 0)" },
-        { clipPath: "inset(0 0% 0 0)", duration: 0.85, ease: "power2.inOut", delay: 0.1 }
-      ),
-      once: true,
-      start: "top bottom",
-    })
+    gsap.fromTo(".hiw-title",
+      { clipPath: "inset(0 100% 0 0)" },
+      {
+        clipPath: "inset(0 0% 0 0)", duration: 0.85, ease: "power2.inOut", delay: 0.1,
+        scrollTrigger: { trigger: ".hiw-header", start: "top 88%", once: true },
+      }
+    )
 
     // Connector line draws progressively as user scrolls
     gsap.from("#connector-line", {
@@ -151,54 +130,63 @@ export function HowItWorksSection() {
           </div>
 
           <div className="hiw-steps-container grid grid-cols-1 md:grid-cols-3 gap-4">
-            {steps.map((step, i) => (
-              <div
-                key={step.number}
-                className="hiw-step group relative overflow-hidden rounded-2xl border border-border bg-background p-8 shadow-sm hover:shadow-md hover:border-gray-200 transition-all"
-              >
-                <div className="h-full flex flex-col">
-                  <div className="mb-6 flex items-center gap-4">
-                    <span className="hiw-ghost-number font-display font-black text-[7rem] leading-none text-muted/30 select-none absolute -top-4 -left-2 transition-colors group-hover:text-brand-red/10">
-                      {step.number}
-                    </span>
-                    <div className="relative z-10 w-10 h-10 rounded-full border-2 border-brand-red flex items-center justify-center text-brand-red font-bold font-display">
-                      {step.number}
+            {steps.map((step, i) => {
+              const StepIcon = step.icon
+
+              return (
+                <div
+                  key={step.number}
+                  className="hiw-step group relative overflow-hidden rounded-2xl border border-border bg-background p-8 shadow-sm hover:shadow-md hover:border-gray-200 transition-all"
+                >
+                  <div className="h-full flex flex-col">
+                    <div className="mb-6 flex items-center gap-4">
+                      <span className="hiw-ghost-number font-display font-black text-[7rem] leading-none text-muted/30 select-none absolute -top-4 -left-2 transition-colors group-hover:text-brand-red/10">
+                        {step.number}
+                      </span>
+                      <div className="relative z-10 w-10 h-10 rounded-full border-2 border-brand-red flex items-center justify-center text-brand-red font-bold font-display">
+                        {step.number}
+                      </div>
+                      {i < steps.length - 1 && (
+                        <div className="md:hidden flex-1 h-px bg-gradient-to-r from-border to-transparent" aria-hidden="true" />
+                      )}
                     </div>
-                    {i < steps.length - 1 && (
-                      <div className="md:hidden flex-1 h-px bg-gradient-to-r from-border to-transparent" aria-hidden="true" />
+
+                    <div className="text-muted-foreground group-hover:text-brand-red transition-colors duration-300 mb-6">
+                      <StepIcon className="h-12 w-12" strokeWidth={1.6} aria-hidden="true" />
+                    </div>
+
+                    <h3 className="font-display font-bold text-foreground text-xl mb-3">
+                      {step.title}
+                    </h3>
+
+                    <p className="text-muted-foreground text-sm leading-relaxed flex-1">
+                      {step.description}
+                    </p>
+
+                    {step.cta && (
+                      <Link
+                        href={step.cta.href}
+                        className="inline-flex items-center gap-1.5 mt-6 text-sm font-bold text-brand-red hover:text-brand-red-dark transition-colors"
+                      >
+                        <span>{step.cta.label}</span>
+                        <span aria-hidden="true">→</span>
+                      </Link>
                     )}
                   </div>
-
-                  <div className="text-muted-foreground group-hover:text-brand-red transition-colors duration-300 mb-6">
-                    {step.icon}
-                  </div>
-
-                  <h3 className="font-display font-bold text-foreground text-xl mb-3">
-                    {step.title}
-                  </h3>
-
-                  <p className="text-muted-foreground text-sm leading-relaxed flex-1">
-                    {step.description}
-                  </p>
-
-                  {step.cta && (
-                    <Link
-                      href={step.cta.href}
-                      className="inline-flex items-center gap-1.5 mt-6 text-sm font-bold text-brand-red hover:text-brand-red-dark transition-colors"
-                    >
-                      <span>{step.cta.label}</span>
-                    </Link>
-                  )}
                 </div>
-              </div>
-            ))}
+              )
+            })}
           </div>
         </div>
 
         <div className="mt-12 text-center">
-          <p className="text-muted-foreground text-xs font-semibold uppercase tracking-widest">
-            ¿Tienes una chaza? Publícala en menos de 3 minutos →
-          </p>
+          <Link
+            href={siteConfig.urls.publicarChaza}
+            className="inline-flex items-center gap-2 text-sm font-bold text-foreground underline decoration-brand-red decoration-2 underline-offset-4 transition-colors hover:text-brand-red"
+          >
+            ¿Vendes en el campus? Publica tu chaza
+            <span aria-hidden="true">→</span>
+          </Link>
         </div>
       </div>
     </section>

@@ -11,7 +11,7 @@ export type PublicStats = {
 }
 
 export async function getPublicStatsAction(): Promise<PublicStats> {
-  if (!getSupabaseBrowserEnv()) {
+  if (process.env.CHAZAS_USE_MOCK_DATA === "true" || !getSupabaseBrowserEnv()) {
     return {
       chazasPublished: mockChazaCards.length,
       reviewsPublished: mockSeedReviews.length,

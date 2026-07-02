@@ -261,7 +261,7 @@ export function PinPicker({ value, onChange, className }: PinPickerProps) {
         </div>
       </div>
       <p className="text-xs text-gray-400">
-        Posicion: {value.x.toFixed(0)}%, {value.y.toFixed(0)}% · Ajustable al validar con datos reales.
+        Posición: {value.x.toFixed(0)}%, {value.y.toFixed(0)}%. Ajustable al validar con datos reales.
       </p>
     </div>
   )

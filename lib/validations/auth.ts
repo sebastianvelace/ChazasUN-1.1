@@ -1,27 +1,27 @@
 import { z } from "zod"
 
 export const registerSchema = z.object({
-  displayName: z.string().min(2, "Minimo 2 caracteres").max(60),
-  email: z.string().email("Correo invalido"),
-  password: z.string().min(6, "Minimo 6 caracteres"),
+  displayName: z.string().min(2, "Mínimo 2 caracteres").max(60),
+  email: z.string().email("Correo inválido"),
+  password: z.string().min(6, "Mínimo 6 caracteres"),
 })
 
 export const loginSchema = z.object({
-  email: z.string().email("Correo invalido"),
-  password: z.string().min(1, "Ingresa tu contrasena"),
+  email: z.string().email("Correo inválido"),
+  password: z.string().min(1, "Ingresa tu contraseña"),
 })
 
 export const forgotPasswordSchema = z.object({
-  email: z.string().email("Correo invalido"),
+  email: z.string().email("Correo inválido"),
 })
 
 export const updatePasswordSchema = z
   .object({
-    password: z.string().min(6, "Minimo 6 caracteres"),
-    confirm: z.string().min(1, "Confirma la contrasena"),
+    password: z.string().min(6, "Mínimo 6 caracteres"),
+    confirm: z.string().min(1, "Confirma la contraseña"),
   })
   .refine((data) => data.password === data.confirm, {
-    message: "Las contrasenas no coinciden",
+    message: "Las contraseñas no coinciden",
     path: ["confirm"],
   })
 

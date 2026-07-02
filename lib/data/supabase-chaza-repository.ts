@@ -39,6 +39,22 @@ const CHAZA_SELECT = `
   )
 `
 
+export class ChazaRepositoryError extends Error {
+  readonly operation: string
+
+  constructor(operation: string, message: string) {
+    super(`No fue posible consultar las chazas (${operation}).`)
+    this.name = "ChazaRepositoryError"
+    this.operation = operation
+    this.cause = new Error(message)
+  }
+}
+
+function throwRepositoryError(operation: string, message: string): never {
+  console.error(`[supabase-chaza-repository] ${operation}`, message)
+  throw new ChazaRepositoryError(operation, message)
+}
+
 function normalizeRows(data: unknown): ChazaWithRelations[] {
   if (!Array.isArray(data)) return []
   return data as ChazaWithRelations[]
@@ -52,8 +68,7 @@ export async function listPublishedChazas(supabase: SupabaseClient): Promise<Cha
     .order("created_at", { ascending: true })
 
   if (error) {
-    console.error("[supabase-chaza-repository] listPublishedChazas", error.message)
-    return []
+    throwRepositoryError("listPublishedChazas", error.message)
   }
   return chazaDbRowsToCards(normalizeRows(data))
 }
@@ -69,8 +84,7 @@ export async function listFeaturedChazasNow(supabase: SupabaseClient): Promise<C
     .order("featured_rank", { ascending: true })
 
   if (error) {
-    console.error("[supabase-chaza-repository] listFeaturedChazasNow", error.message)
-    return []
+    throwRepositoryError("listFeaturedChazasNow", error.message)
   }
   const rows = normalizeRows(data)
   const cards = chazaDbRowsToCards(rows)
@@ -87,8 +101,7 @@ export async function getChazaBySlugDb(supabase: SupabaseClient, slug: string): 
   const { data, error } = await supabase.from("chazas").select(CHAZA_SELECT).eq("slug", slug).maybeSingle()
 
   if (error) {
-    console.error("[supabase-chaza-repository] getChazaBySlugDb", error.message)
-    return null
+    throwRepositoryError("getChazaBySlugDb", error.message)
   }
   if (!data) return null
   return chazaDbToCard(data as unknown as ChazaWithRelations)
@@ -104,6 +117,9 @@ export async function getChazasByCategorySlugDb(
 
 export async function listAllPublishedSlugs(supabase: SupabaseClient): Promise<string[]> {
   const { data, error } = await supabase.from("chazas").select("slug").eq("status", "published")
-  if (error || !data) return []
+  if (error) {
+    throwRepositoryError("listAllPublishedSlugs", error.message)
+  }
+  if (!data) return []
   return data.map((r: { slug: string }) => r.slug)
 }

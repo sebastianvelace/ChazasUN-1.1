@@ -10,14 +10,10 @@ import { useSession } from "@/hooks/use-session"
 import { useFavorites } from "@/hooks/use-favorites"
 import { siteConfig } from "@/config/site"
 
-import { getSupabaseBrowserEnv } from "@/lib/supabase/env"
-
 export function GuardadasClient() {
   const { cards } = useChazaCatalog()
   const { isLoggedIn } = useSession()
   const { savedIds } = useFavorites()
-  const useSupabase = Boolean(getSupabaseBrowserEnv())
-
   const saved = useMemo(() => {
     const set = new Set(savedIds)
     return cards.filter((c) => set.has(c.id))

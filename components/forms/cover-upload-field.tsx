@@ -93,7 +93,7 @@ export function CoverUploadField({
             <p className="text-sm font-medium text-gray-700">
               {uploading ? "Subiendo foto…" : "Arrastra una foto o toca para elegir"}
             </p>
-            <p className="text-xs text-gray-400 mt-1">JPEG, PNG, WebP o GIF · max 5 MB</p>
+            <p className="text-xs text-gray-500 mt-1">JPEG, PNG, WebP o GIF. Máx. 5 MB</p>
           </div>
         )}
         <input

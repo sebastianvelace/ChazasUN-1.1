@@ -2,7 +2,7 @@
 
 export const campusConfig = {
   id: "bogota",
-  name: "Universidad Nacional de Colombia — Sede Bogotá",
+  name: "Universidad Nacional de Colombia - Sede Bogotá",
   /** Plano esquematico (numeracion de edificios, porterias). */
   mapImageUrl: "/maps/campus-bogota.png",
   /** Centro aproximado del campus para Google Maps. */
