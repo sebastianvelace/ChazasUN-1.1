@@ -1,7 +1,7 @@
 import { AuthPageShell } from "@/components/auth/auth-page-shell"
 import { RestablecerContrasenaForm } from "./restablecer-form"
 
-export const metadata = { title: "Nueva contraseña | ChazasUN" }
+export const metadata = { title: "Nueva contraseña" }
 
 export default function RestablecerContrasenaPage() {
   return (

@@ -9,7 +9,7 @@ interface PageProps {
 
 export async function generateMetadata({ params }: PageProps) {
   const { slug } = await params
-  return { title: `Editar ${slug} | ChazasUN` }
+  return { title: `Editar ${slug}` }
 }
 
 export default async function EditarChazaPage({ params }: PageProps) {

@@ -15,8 +15,8 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: PageProps) {
   const { slug } = await params
   const post = getBlogPostBySlug(slug)
-  if (!post) return { title: "Articulo | ChazasUN" }
-  return { title: `${post.title} | ChazasUN`, description: post.excerpt }
+  if (!post) return { title: "Articulo" }
+  return { title: `${post.title}`, description: post.excerpt }
 }
 
 export default async function BlogPostPage({ params }: PageProps) {

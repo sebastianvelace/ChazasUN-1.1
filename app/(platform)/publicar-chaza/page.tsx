@@ -3,12 +3,12 @@ import { PageContainer, PageHeader } from "@/components/layout"
 import { PublishChazaWizard } from "@/components/forms/publish-chaza-wizard"
 
 export const metadata = {
-  title: "Publicar mi chaza | ChazasUN",
+  title: "Publicar mi chaza",
 }
 
 export default function PublicarChazaPage() {
   return (
-    <PageContainer size="md">
+    <PageContainer size="lg">
       <PageHeader
         eyebrow="Chazeros"
         title="PUBLICA TU CHAZA"
@@ -19,7 +19,9 @@ export default function PublicarChazaPage() {
         <Link href={`/registro?next=${encodeURIComponent("/publicar-chaza")}`} className="text-brand-red font-medium hover:underline">
           Crea una cuenta
         </Link>
-        {" "}·{" "}
+        {" "}
+        <span aria-hidden="true">/</span>
+        {" "}
         <Link href="/explorar" className="text-gray-500 hover:text-brand-red hover:underline">
           Explorar sin cuenta
         </Link>

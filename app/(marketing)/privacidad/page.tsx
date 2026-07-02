@@ -1,7 +1,7 @@
 import { PageContainer, PageHeader } from "@/components/layout"
 
 export const metadata = {
-  title: "Privacidad | ChazasUN",
+  title: "Privacidad",
 }
 
 export default function PrivacidadPage() {

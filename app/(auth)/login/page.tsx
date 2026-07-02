@@ -2,7 +2,7 @@ import { Suspense } from "react"
 import { AuthPageShell } from "@/components/auth/auth-page-shell"
 import { LoginForm } from "./login-form"
 
-export const metadata = { title: "Entrar | ChazasUN" }
+export const metadata = { title: "Entrar" }
 
 export default function LoginPage() {
   return (

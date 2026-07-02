@@ -73,8 +73,22 @@ Leyenda: `[ ]` pendiente · `[~]` en progreso · `[x]` hecho · `[!]` bloqueado/
   fallback `motion-reduce`), solo 3 visibles a la vez; aceptable, no se toca por
   el riesgo de romper el fallback de reduced-motion.
 
-- [ ] **Metadata por página en rutas de plataforma**
-  Agregar `metadata`/`generateMetadata` donde falte (explorar, mapa, blog, chazas).
+- [~] **Metadata por página en rutas de plataforma**
+  Auditado: TODAS las páginas ya tenían `metadata`/`generateMetadata`. Se detectó
+  una regresión introducida por el `title.template` (item metadataBase): las
+  páginas traían el sufijo `| ChazasUN`, así que el template lo duplicaba
+  ("Explorar chazas | ChazasUN · ChazasUN"). Fix aplicado en working tree (quitar
+  el sufijo en ~17 archivos). **SIN COMMITEAR**: esos archivos también tienen
+  cambios preexistentes del working tree sucio → hay que limpiar el árbol antes
+  de commitear atómicamente. Ver nota de incidente abajo.
+
+> **⚠️ Incidente (2026-07-01):** el working tree ya estaba sucio al iniciar la
+> sesión (~47 archivos de "Mejoras estructurales" sin commitear). Algunos commits
+> del loop (`hero-section`, `campus-scroll-section`, `how-it-works-section`,
+> `(platform)/layout`, `(marketing)/page`) bundlearon esos cambios preexistentes
+> bajo mensajes que no los describen. Los commits de archivos NUEVOS
+> (opengraph-image, sitemap, robots) sí son atómicos. Pendiente decidir cómo
+> separar el trabajo preexistente antes de seguir.
 
 ## Pulido visual / UX
 
@@ -101,3 +115,4 @@ Cada iteración deja una línea: fecha · item · commit corto.
 - 2026-07-01 · JSON-LD Organization + WebSite en la home · `feat(seo): add Organization and WebSite JSON-LD`
 - 2026-07-01 · sitemap.ts + robots.ts · `feat(seo): add sitemap and robots`
 - 2026-07-01 · Audit alt/headings + alt descriptivo en QR · `fix(a11y): descriptive alt for share QR image`
+- 2026-07-01 · [SIN COMMITEAR] Fix doble marca en títulos (title.template) · pendiente por limpieza del working tree preexistente

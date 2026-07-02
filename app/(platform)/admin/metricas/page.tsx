@@ -1,7 +1,7 @@
 import { AdminMetricasClient } from "./admin-metricas-client"
 
 export const metadata = {
-  title: "Metricas | ChazasUN",
+  title: "Metricas",
 }
 
 export default function AdminMetricasPage() {

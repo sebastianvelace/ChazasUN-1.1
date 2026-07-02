@@ -4,7 +4,7 @@ import { AuthPageShell } from "@/components/auth/auth-page-shell"
 import { RegistroForm } from "./registro-form"
 import { siteConfig } from "@/config/site"
 
-export const metadata = { title: "Crear cuenta | ChazasUN" }
+export const metadata = { title: "Crear cuenta" }
 
 export default function RegistroPage() {
   return (

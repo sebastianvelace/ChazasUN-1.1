@@ -4,7 +4,7 @@ import { blogPosts } from "@/lib/constants/blog-posts"
 import { Calendar, User, Clock } from "lucide-react"
 
 export const metadata = {
-  title: "Blog | ChazasUN",
+  title: "Blog",
 }
 
 export default function BlogPage() {

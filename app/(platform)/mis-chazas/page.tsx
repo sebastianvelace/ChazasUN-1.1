@@ -6,7 +6,7 @@ import { PageContainer, PageHeader } from "@/components/layout"
 import { siteConfig } from "@/config/site"
 
 export const metadata = {
-  title: "Mis chazas | ChazasUN",
+  title: "Mis chazas",
 }
 
 export default async function MisChazasPage() {

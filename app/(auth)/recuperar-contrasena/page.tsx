@@ -1,7 +1,7 @@
 import { AuthPageShell } from "@/components/auth/auth-page-shell"
 import { RecuperarContrasenaForm } from "./recuperar-form"
 
-export const metadata = { title: "Recuperar contraseña | ChazasUN" }
+export const metadata = { title: "Recuperar contraseña" }
 
 export default function RecuperarContrasenaPage() {
   return (

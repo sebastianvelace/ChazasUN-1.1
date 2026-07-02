@@ -1,7 +1,7 @@
 import { PageContainer, PageHeader } from "@/components/layout"
 
 export const metadata = {
-  title: "Terminos de uso | ChazasUN",
+  title: "Terminos de uso",
 }
 
 export default function TerminosPage() {
