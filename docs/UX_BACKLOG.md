@@ -97,9 +97,16 @@ Leyenda: `[ ]` pendiente · `[~]` en progreso · `[x]` hecho · `[!]` bloqueado/
   en `app/globals.css` (`outline: 2px solid var(--ring)` = rojo de marca, offset
   2px, solo teclado). Verificado con Tab real: el CTA matchea `:focus-visible` y
   muestra el anillo. Componentes con foco propio ganan por especificidad.
-- [ ] **Auditar espaciados y contraste AA en la landing**
-  Revisar consistencia de spacing entre secciones y contraste de texto secundario
-  (p. ej. `text-white/62`, `text-muted-foreground`) contra fondo.
+- [x] **Auditar contraste AA en la landing (texto secundario)**
+  Auditado midiendo ratios reales. Pasan: hero subtítulo (5.14), footer links del
+  wordmark (blanco). Fallaba: `text-muted-foreground` (#6b6b6b) sobre el footer
+  oscuro (3.6 < 4.5) en descripción, nav y copyright → cambiado a `text-white/70`
+  (~8.5:1, pasa AA). El label decorativo "01/03" del campus (rojo de marca, 2.5)
+  se deja: es un contador decorativo, no contenido de lectura, y cambiarlo
+  alteraría la marca. El body del campus (`text-white/62`, ~6.8) ya pasa.
+- [ ] **Auditar espaciados entre secciones de la landing**
+  Revisar consistencia de padding vertical entre hero/campus/swiper/how-it-works/
+  footer y ritmo en mobile.
 
 > Agregá aquí los items nuevos que descubras durante el trabajo, con una nota corta
 > del por qué.
@@ -122,3 +129,4 @@ Cada iteración deja una línea: fecha · item · commit corto.
 - 2026-07-01 · Audit alt/headings + alt descriptivo en QR · `fix(a11y): descriptive alt for share QR image`
 - 2026-07-01 · Fix doble marca en títulos (title.template) · `fix(seo): strip redundant brand suffix from page titles` (5ebd443)
 - 2026-07-01 · Anillo :focus-visible global (a11y teclado) · `feat(a11y): global focus-visible ring`
+- 2026-07-02 · Contraste AA del texto del footer (white/70) · `fix(a11y): raise footer text contrast to AA`

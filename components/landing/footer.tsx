@@ -51,7 +51,7 @@ export function Footer() {
                 <SquiggleIcon width={48} height={24} className="text-brand-red" />
                 <span className="font-display font-extrabold text-2xl text-white tracking-tight">CHAZAS UN</span>
               </div>
-              <p className="text-muted-foreground text-base leading-relaxed max-w-xs font-medium mb-8">
+              <p className="text-white/70 text-base leading-relaxed max-w-xs font-medium mb-8">
                 El marketplace de los estudiantes de la Universidad Nacional de Colombia.
                 Gratuito para todos.
               </p>
@@ -68,17 +68,17 @@ export function Footer() {
               <div>
                 <p className="text-white font-semibold text-sm uppercase tracking-widest mb-4">Plataforma</p>
                 <nav className="flex flex-col gap-3">
-                  <Link href={siteConfig.urls.explorar} className="text-muted-foreground hover:text-white text-sm font-semibold transition-colors">Explorar chazas</Link>
-                  <Link href={siteConfig.urls.mapa} className="text-muted-foreground hover:text-white text-sm font-semibold transition-colors">Mapa del campus</Link>
-                  <Link href={siteConfig.urls.publicarChaza} className="text-muted-foreground hover:text-white text-sm font-semibold transition-colors">Publicar mi chaza</Link>
+                  <Link href={siteConfig.urls.explorar} className="text-white/70 hover:text-white text-sm font-semibold transition-colors">Explorar chazas</Link>
+                  <Link href={siteConfig.urls.mapa} className="text-white/70 hover:text-white text-sm font-semibold transition-colors">Mapa del campus</Link>
+                  <Link href={siteConfig.urls.publicarChaza} className="text-white/70 hover:text-white text-sm font-semibold transition-colors">Publicar mi chaza</Link>
                 </nav>
               </div>
               <div>
                 <p className="text-white font-semibold text-sm uppercase tracking-widest mb-4">Legal</p>
                 <nav className="flex flex-col gap-3">
-                  <Link href="/terminos" className="text-muted-foreground hover:text-white text-sm font-semibold transition-colors">Términos de uso</Link>
-                  <Link href="/privacidad" className="text-muted-foreground hover:text-white text-sm font-semibold transition-colors">Privacidad</Link>
-                  <Link href={siteConfig.urls.blog} className="text-muted-foreground hover:text-white text-sm font-semibold transition-colors">Blog</Link>
+                  <Link href="/terminos" className="text-white/70 hover:text-white text-sm font-semibold transition-colors">Términos de uso</Link>
+                  <Link href="/privacidad" className="text-white/70 hover:text-white text-sm font-semibold transition-colors">Privacidad</Link>
+                  <Link href={siteConfig.urls.blog} className="text-white/70 hover:text-white text-sm font-semibold transition-colors">Blog</Link>
                 </nav>
               </div>
             </div>
@@ -86,8 +86,8 @@ export function Footer() {
         </div>
 
         <div className="border-t border-white/10 py-6">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-3 text-muted-foreground text-xs">
-            <p>© 2026 ChazasUN — Proyecto estudiantil independiente · UN Bogotá</p>
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-3 text-white/70 text-xs">
+            <p>© 2026 ChazasUN. Proyecto estudiantil independiente, UN Bogotá.</p>
           </div>
         </div>
       </div>
