@@ -73,14 +73,13 @@ Leyenda: `[ ]` pendiente · `[~]` en progreso · `[x]` hecho · `[!]` bloqueado/
   fallback `motion-reduce`), solo 3 visibles a la vez; aceptable, no se toca por
   el riesgo de romper el fallback de reduced-motion.
 
-- [~] **Metadata por página en rutas de plataforma**
+- [x] **Metadata por página en rutas de plataforma**
   Auditado: TODAS las páginas ya tenían `metadata`/`generateMetadata`. Se detectó
-  una regresión introducida por el `title.template` (item metadataBase): las
-  páginas traían el sufijo `| ChazasUN`, así que el template lo duplicaba
-  ("Explorar chazas | ChazasUN · ChazasUN"). Fix aplicado en working tree (quitar
-  el sufijo en ~17 archivos). **SIN COMMITEAR**: esos archivos también tienen
-  cambios preexistentes del working tree sucio → hay que limpiar el árbol antes
-  de commitear atómicamente. Ver nota de incidente abajo.
+  y corrigió una regresión del `title.template`: las páginas traían el sufijo
+  `| ChazasUN` y el template lo duplicaba ("Explorar chazas | ChazasUN ·
+  ChazasUN"). Se quitó el sufijo en 17 archivos → "Explorar chazas · ChazasUN".
+  Verificado en navegador. Commit `5ebd443` (el usuario aceptó bundlear los
+  cambios preexistentes de explorar/chazas/publicar-chaza; ver incidente).
 
 > **⚠️ Incidente (2026-07-01):** el working tree ya estaba sucio al iniciar la
 > sesión (~47 archivos de "Mejoras estructurales" sin commitear). Algunos commits
