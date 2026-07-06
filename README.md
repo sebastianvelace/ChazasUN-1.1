@@ -582,15 +582,13 @@ Pasos detallados (migraciones, variables `NEXT_PUBLIC_*`, **Site URL** y **Redir
 
 | Documento | Contenido |
 |-----------|-----------|
+| [`docs/PROBLEMAS_Y_SOLUCIONES.md`](docs/PROBLEMAS_Y_SOLUCIONES.md) | **Registro técnico de problemas y soluciones** — bitácora rigurosa (síntoma → causa raíz → solución → porqué) reconstruida de commits, sesiones y auditoría |
 | [`docs/INFORME_ACADEMICO.md`](docs/INFORME_ACADEMICO.md) | **Informe académico técnico** — 10 secciones (abstract, diseño, pruebas, viabilidad, referencias IEEE) |
 | [`docs/GUIA_COMPLETA.md`](docs/GUIA_COMPLETA.md) | **Guía completa del proyecto** — arquitectura, flujos, seguridad y FAQ para externos |
-| [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) | Carpetas, rutas, flujo de datos |
-| [`docs/CALENDARIO_8_SEMANAS.md`](docs/CALENDARIO_8_SEMANAS.md) | **Calendario 8 semanas** (desarrollo sin IA + marketing semanas 7–8) |
+| [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) | Carpetas, rutas, flujo de datos, gotchas de GSAP y SEO |
 | [`docs/BUILD_PLAN.md`](docs/BUILD_PLAN.md) | Fases 0–5, checklists |
-| [`docs/FASE_2_PLAN.md`](docs/FASE_2_PLAN.md) | Plan Fase 2 (referencia historica) |
-| [`docs/FASE_3_PLAN.md`](docs/FASE_3_PLAN.md) | Plan Fase 3 (moderacion, mis-chazas) |
-| [`docs/FASE_4_PLAN.md`](docs/FASE_4_PLAN.md) | Plan Fase 4 (CSV, carta, Groq, blog) |
 | [`docs/FASE_5_PLAN.md`](docs/FASE_5_PLAN.md) | **Siguiente:** QR, verificada, destacados, ops |
+| [`docs/UX_BACKLOG.md`](docs/UX_BACKLOG.md) | Backlog de mejoras visuales/UX/SEO con bitácora de commits |
 | [`docs/VERCEL_DEPLOY.md`](docs/VERCEL_DEPLOY.md) | **Deploy Vercel + Supabase Auth** (paso a paso, Google, URLs, troubleshooting) |
 | [`docs/SUPABASE_SETUP.md`](docs/SUPABASE_SETUP.md) | Variables, migraciones, seed, auth |
 | [`docs/MAPS.md`](docs/MAPS.md) | Mapa del campus |
@@ -609,6 +607,8 @@ Repositorio vinculado a [v0](https://v0.app). Merge a `main` despliega en Vercel
 | 2026-05 | Documento de contexto consolidado con respuestas del fundador |
 | 2026-05 | Endurecimiento de seguridad: redirect auth, uploads, contacto, CSP, CHECK portada |
 | 2026-05 | Fase 4 en codigo: CSV admin, carta de productos, blog estatico por slug, vision carta opcional (Groq) |
+| 2026-07 | Auditoria de seguridad: cierre de escalada `is_admin`, rating inflable y backdoor de cuenta seed (ver [`docs/PROBLEMAS_Y_SOLUCIONES.md`](docs/PROBLEMAS_Y_SOLUCIONES.md)) |
+| 2026-07 | Verificacion E2E del registro de chazas + fixes de UX del wizard de publicacion |
 | — | Solo sede Bogota; plataforma abierta; sin chat in-app; swiper como UX principal |
 | — | Supabase + Vercel; blog estatico en MVP; siguiente foco operativo: Fase 5 (QR, confianza, campo) |
 
