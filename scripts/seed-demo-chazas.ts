@@ -1,6 +1,8 @@
 /**
  * Pobla chazas demo desde lib/constants/mock-chazas.ts (idempotente por slug).
- * Requiere NEXT_PUBLIC_SUPABASE_URL y SUPABASE_SERVICE_ROLE_KEY en .env o .env.local
+ * Requiere NEXT_PUBLIC_SUPABASE_URL y SUPABASE_SERVICE_ROLE_KEY en .env o .env.local.
+ * Para CREAR el usuario demo (primera corrida) tambien requiere SEED_DEMO_PASSWORD
+ * en el entorno. Nunca hardcodear la contrasena aca: termina en el historial de git.
  */
 
 import { config } from "dotenv"
@@ -12,14 +14,20 @@ import type { SupabaseClient } from "@supabase/supabase-js"
 config({ path: resolve(process.cwd(), ".env.local") })
 config({ path: resolve(process.cwd(), ".env") })
 
-const DEMO_EMAIL = "demo@chazasun.local"
-const DEMO_PASSWORD = "DemoChazasUN_Seed_Only_22!"
+const DEMO_EMAIL = process.env.SEED_DEMO_EMAIL ?? "demo@chazasun.local"
+const DEMO_PASSWORD = process.env.SEED_DEMO_PASSWORD
 
 async function getOrCreateDemoOwnerId(admin: SupabaseClient): Promise<string> {
   const { data: list, error: listErr } = await admin.auth.admin.listUsers({ page: 1, perPage: 200 })
   if (listErr) throw listErr
   const found = list.users.find((u) => u.email?.toLowerCase() === DEMO_EMAIL)
   if (found) return found.id
+
+  if (!DEMO_PASSWORD) {
+    throw new Error(
+      "Falta SEED_DEMO_PASSWORD en el entorno para crear el usuario demo. Definila con un valor secreto (no la hardcodees en el repo)."
+    )
+  }
 
   const { data, error } = await admin.auth.admin.createUser({
     email: DEMO_EMAIL,
