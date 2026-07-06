@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { toast } from "sonner"
 import { useCallback, useMemo, useState } from "react"
-import { publishChazaSchema, type PublishChazaInput } from "@/lib/validations/chaza"
+import { publishChazaSchema, whatsappSchema, instagramSchema, type PublishChazaInput } from "@/lib/validations/chaza"
 import { useSession } from "@/hooks/use-session"
 import { siteConfig } from "@/config/site"
 import { categories } from "@/config/categories"
@@ -68,6 +68,22 @@ const STEP_HELP = [
   "Publica solo canales que puedas atender rápido.",
   "Revisa cómo te verá alguien antes de guardar.",
 ] as const
+
+/** Mapea cada campo del formulario al paso del wizard donde se edita. Se usa
+    para llevar al usuario al primer paso con error cuando falla la publicacion
+    (el boton de publicar vive en el ultimo paso, pero el campo puede estar en otro). */
+const FIELD_STEP: Partial<Record<keyof PublishChazaInput, number>> = {
+  name: 1,
+  description: 1,
+  coverImageUrl: 1,
+  categorySlugs: 1,
+  locationText: 1,
+  schedule: 1,
+  products: 2,
+  mapPosition: 3,
+  whatsapp: 4,
+  instagram: 4,
+}
 
 export function PublishChazaWizard({ menuVisionEnabled = false }: { menuVisionEnabled?: boolean }) {
   const router = useRouter()
@@ -218,7 +234,16 @@ export function PublishChazaWizard({ menuVisionEnabled = false }: { menuVisionEn
       toast.success("Chaza publicada (solo en este navegador).")
       router.push(`/chazas/${card.slug}`)
     },
-    () => toast.error("Revisa los campos resaltados.")
+    (errors) => {
+      // El boton de publicar esta en el ultimo paso, pero un campo invalido
+      // puede vivir en un paso anterior. Llevamos al usuario al primer paso
+      // que tiene error para que pueda ver y corregir el campo resaltado.
+      const errorSteps = Object.keys(errors)
+        .map((field) => FIELD_STEP[field as keyof PublishChazaInput])
+        .filter((value): value is number => typeof value === "number")
+      if (errorSteps.length) setStep(Math.min(...errorSteps))
+      toast.error("Revisa los campos resaltados.")
+    }
   )
 
   const previewCard = useMemo(() => {
@@ -237,7 +262,11 @@ export function PublishChazaWizard({ menuVisionEnabled = false }: { menuVisionEn
     .filter(Boolean) as string[]
   const coverReady = hasChazaCover(watched.coverImageUrl)
   const productsCount = watched.products.length
-  const contactChannels = [watched.whatsapp, watched.instagram].filter((value) => value?.trim()).length
+  // Cuenta solo canales presentes Y con formato valido, para que el checklist
+  // no marque "Contacto accionable" en verde cuando el submit lo va a rechazar.
+  const whatsappValid = Boolean(watched.whatsapp?.trim()) && whatsappSchema.safeParse(watched.whatsapp).success
+  const instagramValid = Boolean(watched.instagram?.trim()) && instagramSchema.safeParse(watched.instagram).success
+  const contactChannels = (whatsappValid ? 1 : 0) + (instagramValid ? 1 : 0)
 
   return (
     <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_340px]">
@@ -458,16 +487,24 @@ export function PublishChazaWizard({ menuVisionEnabled = false }: { menuVisionEn
             <input
               className="w-full rounded-xl border border-gray-200 px-4 py-3 text-sm"
               placeholder="+57 3..."
+              aria-invalid={Boolean(form.formState.errors.whatsapp)}
               {...form.register("whatsapp")}
             />
+            {form.formState.errors.whatsapp && (
+              <p className="text-red-600 text-xs mt-1">{form.formState.errors.whatsapp.message}</p>
+            )}
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Instagram (opcional)</label>
             <input
               className="w-full rounded-xl border border-gray-200 px-4 py-3 text-sm"
               placeholder="@tu_cuenta"
+              aria-invalid={Boolean(form.formState.errors.instagram)}
               {...form.register("instagram")}
             />
+            {form.formState.errors.instagram && (
+              <p className="text-red-600 text-xs mt-1">{form.formState.errors.instagram.message}</p>
+            )}
           </div>
         </div>
       )}
