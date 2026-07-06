@@ -468,7 +468,7 @@ Arbol y convenciones: **[docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)**.
 
 Checklist vivo: [`docs/BUILD_PLAN.md`](docs/BUILD_PLAN.md). **Siguiente:** [`docs/FASE_5_PLAN.md`](docs/FASE_5_PLAN.md).
 
-**Planificación en el tiempo (8 semanas, sin IA en código):** [`docs/CALENDARIO_8_SEMANAS.md`](docs/CALENDARIO_8_SEMANAS.md) — semanas 1–6 desarrollo alineado a Fases 0–5; semanas 7–8 marketing y publicidad en campus.
+**Planificación en el tiempo (8 semanas, sin IA en código):** semanas 1–6 desarrollo alineado a Fases 0–5; semanas 7–8 marketing y publicidad en campus.
 
 ### Fase 0 — Estructura frontend
 
@@ -486,7 +486,6 @@ Checklist vivo: [`docs/BUILD_PLAN.md`](docs/BUILD_PLAN.md). **Siguiente:** [`doc
 
 - [x] Analytics en `analytics_events`, panel admin
 - [x] Mapa y metadata/slugs (evolucion continua en recomendados)
-- Ver [`docs/FASE_2_PLAN.md`](docs/FASE_2_PLAN.md)
 
 ### Fase 3 — Comunidad y admin
 
@@ -495,7 +494,6 @@ Checklist vivo: [`docs/BUILD_PLAN.md`](docs/BUILD_PLAN.md). **Siguiente:** [`doc
 ### Fase 4 — Contenido, metricas exportables e IA opcional
 
 - [x] Export CSV admin, productos/carta, vision Groq opcional, blog por slug
-- Ver [`docs/FASE_4_PLAN.md`](docs/FASE_4_PLAN.md)
 
 ### Fase 5 — Campo y crecimiento
 
