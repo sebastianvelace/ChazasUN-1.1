@@ -141,7 +141,7 @@ export function CampusScrollSection() {
           </div>
         </div>
 
-        <div className="relative mx-auto h-[560px] w-full max-w-[560px]">
+        <div className="relative mx-auto h-[560px] w-full max-w-[560px] origin-center scale-[0.72] sm:scale-90 lg:scale-100">
           <div className="campus-card-a absolute left-2 top-10 z-10 w-48 rounded-[1.5rem] border border-white/12 bg-white/10 p-4 shadow-2xl shadow-black/30 backdrop-blur">
             <ScanLine className="mb-8 h-6 w-6 text-brand-red" />
             <p className="text-xs font-bold uppercase tracking-[0.16em] text-white/45">QR en puesto</p>
