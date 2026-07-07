@@ -34,15 +34,15 @@ export function Footer() {
 
   return (
     <footer ref={footerRef} id="contacto" className="relative bg-foreground text-primary-foreground w-full overflow-hidden">
-      <div className="relative h-12 bg-background">
-        <svg viewBox="0 0 1440 48" fill="none" xmlns="http://www.w3.org/2000/svg" className="absolute bottom-0 w-full" preserveAspectRatio="none" aria-hidden="true">
+      <div className="relative -mb-px h-12 bg-background">
+        <svg viewBox="0 0 1440 48" fill="none" xmlns="http://www.w3.org/2000/svg" className="absolute inset-x-0 -bottom-px h-[49px] w-full" preserveAspectRatio="none" aria-hidden="true">
           <path d="M0 0 Q360 48 720 24 Q1080 0 1440 48 L1440 48 L0 48 Z" fill="var(--foreground)" />
         </svg>
       </div>
 
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <div className="pt-16 pb-12 relative">
-          <div className="footer-blob absolute top-[-60px] right-[-80px] w-[300px] h-[300px] rounded-full bg-brand-red/20 blur-3xl pointer-events-none" aria-hidden="true" />
+          <div className="footer-blob absolute top-10 right-[-90px] w-[320px] h-[320px] rounded-full bg-brand-red/20 blur-3xl pointer-events-none" aria-hidden="true" />
           <div className="footer-blob absolute bottom-[-40px] left-[-60px] w-[250px] h-[250px] rounded-full bg-muted-foreground/20 blur-3xl pointer-events-none" aria-hidden="true" />
 
           <div className="footer-content relative grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
