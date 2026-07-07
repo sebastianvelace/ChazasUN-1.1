@@ -2,6 +2,7 @@ import type { SupabaseClient } from "@supabase/supabase-js"
 import type { ChazaWithRelations } from "@/types/database"
 import { chazaDbToCard, chazaDbRowsToCards } from "@/lib/data/chaza-mapper"
 import type { ChazaCard } from "@/types/chaza"
+import { getPageRange, buildPageResult, type PageParams, type PageResult } from "@/lib/data/pagination"
 
 const CHAZA_SELECT = `
   id,
@@ -71,6 +72,30 @@ export async function listPublishedChazas(supabase: SupabaseClient): Promise<Cha
     throwRepositoryError("listPublishedChazas", error.message)
   }
   return chazaDbRowsToCards(normalizeRows(data))
+}
+
+/**
+ * Página de chazas publicadas. Usa `.range()` + `count: "exact"` para traer solo
+ * un tramo del catálogo en vez de todas las filas (escala cuando hay muchas chazas).
+ * El feed del swiper todavía usa `listPublishedChazas`; migrar a esta función es el
+ * siguiente paso (scroll infinito + filtros del lado del servidor).
+ */
+export async function listPublishedChazasPage(
+  supabase: SupabaseClient,
+  params: PageParams = {}
+): Promise<PageResult<ChazaCard>> {
+  const { page, pageSize, from, to } = getPageRange(params)
+  const { data, error, count } = await supabase
+    .from("chazas")
+    .select(CHAZA_SELECT, { count: "exact" })
+    .eq("status", "published")
+    .order("created_at", { ascending: true })
+    .range(from, to)
+
+  if (error) {
+    throwRepositoryError("listPublishedChazasPage", error.message)
+  }
+  return buildPageResult(chazaDbRowsToCards(normalizeRows(data)), count ?? 0, page, pageSize)
 }
 
 /** Chazas con campaña destacada vigente (franja en /explorar); no altera el mazo del swiper. */
