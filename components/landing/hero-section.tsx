@@ -57,7 +57,7 @@ export function HeroSection({
       <div className="relative z-10 mx-auto grid min-h-[calc(100dvh-8.5rem)] max-w-7xl items-center gap-10 lg:grid-cols-[0.92fr_1.08fr]">
         <div className="hero-copy max-w-2xl space-y-6">
           <h1 className="font-display text-[clamp(3rem,7.5vw,6.4rem)] font-black leading-[0.95] tracking-tight text-foreground [text-wrap:balance]">
-            Las chazas de tu campus, a un desliz de distancia.
+            las chazas de la nacho a un click de distancia
           </h1>
 
           <p className="max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg">
