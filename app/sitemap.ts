@@ -1,5 +1,4 @@
 import type { MetadataRoute } from "next"
-import { getAllBlogSlugs } from "@/lib/constants/blog-posts"
 
 const base = process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") ?? "http://localhost:3001"
 
@@ -12,7 +11,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: "", changeFrequency: "daily", priority: 1 },
     { path: "/explorar", changeFrequency: "daily", priority: 0.9 },
     { path: "/mapa", changeFrequency: "weekly", priority: 0.7 },
-    { path: "/blog", changeFrequency: "weekly", priority: 0.6 },
     { path: "/publicar-chaza", changeFrequency: "weekly", priority: 0.7 },
     { path: "/terminos", changeFrequency: "weekly", priority: 0.3 },
     { path: "/privacidad", changeFrequency: "weekly", priority: 0.3 },
@@ -25,12 +23,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority,
   }))
 
-  const blogEntries: MetadataRoute.Sitemap = getAllBlogSlugs().map(({ slug }) => ({
-    url: `${base}/blog/${slug}`,
-    lastModified: now,
-    changeFrequency: "monthly",
-    priority: 0.5,
-  }))
-
-  return [...routeEntries, ...blogEntries]
+  // Blog oculto hasta el lanzamiento: no se indexa por ahora.
+  return routeEntries
 }

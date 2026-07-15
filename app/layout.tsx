@@ -28,23 +28,23 @@ const dmSans = DM_Sans({
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3001'),
   title: {
-    default: 'CHAZAS UN - Marketplace Universitario',
-    template: '%s · ChazasUN',
+    default: 'CHASEEK - Marketplace Universitario',
+    template: '%s · Chaseek',
   },
   description: 'El marketplace de los estudiantes de la Universidad Nacional. Compra, vende e intercambia con tu comunidad universitaria.',
-  applicationName: 'ChazasUN',
+  applicationName: 'Chaseek',
   keywords: ['chazas', 'campus', 'Universidad Nacional', 'UN Bogotá', 'marketplace universitario', 'comida campus'],
   openGraph: {
     type: 'website',
     locale: 'es_CO',
     url: '/',
-    siteName: 'ChazasUN',
-    title: 'ChazasUN — El marketplace de tu campus',
+    siteName: 'Chaseek',
+    title: 'Chaseek — El marketplace de tu campus',
     description: 'Descubre las chazas de tu campus: comida, impresiones, reparaciones y más, con precio, ubicación y contacto directo.',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'ChazasUN — El marketplace de tu campus',
+    title: 'Chaseek — El marketplace de tu campus',
     description: 'Descubre las chazas de tu campus: comida, impresiones, reparaciones y más.',
   },
   icons: {

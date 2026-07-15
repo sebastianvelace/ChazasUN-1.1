@@ -2,7 +2,7 @@ import { ImageResponse } from 'next/og'
 
 // Imagen Open Graph dinamica (se auto-cablea como og:image y twitter:image).
 // No hay imagen OG estatica en public/, asi que se genera con ImageResponse.
-export const alt = 'ChazasUN — El marketplace de tu campus'
+export const alt = 'Chaseek — El marketplace de tu campus'
 export const size = { width: 1200, height: 630 }
 export const contentType = 'image/png'
 
@@ -40,7 +40,7 @@ export default function OpengraphImage() {
             C
           </div>
           <div style={{ fontSize: '30px', fontWeight: 700, letterSpacing: '0.06em' }}>
-            CHAZAS UN
+            CHASEEK
           </div>
         </div>
 

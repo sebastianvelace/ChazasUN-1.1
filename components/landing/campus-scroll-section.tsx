@@ -20,7 +20,7 @@ const moments = [
   {
     label: "03",
     title: "Contacta por fuera, sin comisiones ni fricción.",
-    body: "ChazasUN no intenta ser un chat ni procesar pagos: conecta rápido y deja que la venta pase donde ya ocurre.",
+    body: "Chaseek no intenta ser un chat ni procesar pagos: conecta rápido y deja que la venta pase donde ya ocurre.",
     stat: "sin comisión",
   },
 ]

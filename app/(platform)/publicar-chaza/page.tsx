@@ -12,7 +12,7 @@ export default function PublicarChazaPage() {
       <PageHeader
         eyebrow="Chazeros"
         title="PUBLICA TU CHAZA"
-        description="Completa el asistente para registrar tu puesto en ChazasUN."
+        description="Completa el asistente para registrar tu puesto en Chaseek."
       />
       <p className="text-sm text-gray-500 mb-8">
         ¿Primera vez?{" "}

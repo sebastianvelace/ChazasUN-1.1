@@ -72,8 +72,8 @@ const reviews: Review[] = [
     faculty: "Biologia",
     avatar: "FM",
     rating: 4,
-    comment: "ChazasUN me cambio la forma de ver el campus. Antes pasaba por los puestos sin saber que ofrecian. Ahora conozco cada chaza y sus especialidades.",
-    chaza: "Plataforma ChazasUN",
+    comment: "Chaseek me cambio la forma de ver el campus. Antes pasaba por los puestos sin saber que ofrecian. Ahora conozco cada chaza y sus especialidades.",
+    chaza: "Plataforma Chaseek",
     date: "Hace 1 mes",
   },
 ]

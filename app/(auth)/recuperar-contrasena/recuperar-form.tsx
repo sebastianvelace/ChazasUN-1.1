@@ -64,7 +64,7 @@ export function RecuperarContrasenaForm() {
         ENVIAR ENLACE
       </button>
       <p className="text-xs text-gray-500 text-center">
-        Revisa spam. El enlace abrira ChazasUN para que elijas una contrasena nueva.
+        Revisa spam. El enlace abrira Chaseek para que elijas una contrasena nueva.
       </p>
       <div className="text-center">
         <Link href={siteConfig.urls.login} className="text-sm text-brand-red hover:underline">

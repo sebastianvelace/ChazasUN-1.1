@@ -35,7 +35,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
           {/* Logo */}
           <Link href="/" className="flex items-center gap-3 group w-fit">
             <SquiggleIcon width={48} height={24} className="text-white/80 transition-transform duration-300 group-hover:scale-105" />
-            <span className="font-stencil text-2xl text-white tracking-wider">CHAZAS UN</span>
+            <span className="font-stencil text-2xl text-white tracking-wider">CHASEEK</span>
           </Link>
 
           {/* Center content */}
@@ -86,7 +86,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
         <header className="lg:hidden py-6 px-6 border-b border-gray-100">
           <Link href="/" className="flex items-center gap-3">
             <SquiggleIcon width={40} height={20} className="text-brand-red" />
-            <span className="font-stencil text-xl text-brand-red tracking-wider">CHAZAS UN</span>
+            <span className="font-stencil text-xl text-brand-red tracking-wider">CHASEEK</span>
           </Link>
         </header>
 
@@ -102,7 +102,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
         </main>
 
         <footer className="hidden lg:block px-10 pb-8">
-          <p className="text-xs text-gray-300">© 2026 ChazasUN</p>
+          <p className="text-xs text-gray-300">© 2026 Chaseek</p>
         </footer>
       </div>
     </div>

@@ -39,7 +39,7 @@ export default async function HomePage() {
       {
         "@type": "Organization",
         "@id": `${siteUrl}/#organization`,
-        name: "ChazasUN",
+        name: "Chaseek",
         url: siteUrl,
         logo: `${siteUrl}/opengraph-image`,
         description:
@@ -49,7 +49,7 @@ export default async function HomePage() {
       {
         "@type": "WebSite",
         "@id": `${siteUrl}/#website`,
-        name: "ChazasUN",
+        name: "Chaseek",
         url: siteUrl,
         inLanguage: "es-CO",
         publisher: { "@id": `${siteUrl}/#organization` },

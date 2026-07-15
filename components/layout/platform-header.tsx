@@ -25,9 +25,8 @@ export function PlatformHeader() {
     ]
     if (isLoggedIn) {
       base.push({ href: siteConfig.urls.misChazas, label: "Mis chazas" })
-    } else {
-      base.push({ href: siteConfig.urls.blog, label: "Blog" })
     }
+    // Blog oculto hasta el lanzamiento.
     return base
   }, [isLoggedIn])
 
@@ -47,7 +46,7 @@ export function PlatformHeader() {
               height={18}
               className="text-brand-red transition-transform duration-300 group-hover:scale-110"
             />
-            <span className="font-stencil text-xl sm:text-2xl text-brand-red tracking-wider">CHAZAS UN</span>
+            <span className="font-stencil text-xl sm:text-2xl text-brand-red tracking-wider">CHASEEK</span>
           </Link>
 
           {/* Desktop nav */}

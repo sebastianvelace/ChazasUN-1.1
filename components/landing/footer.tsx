@@ -49,7 +49,7 @@ export function Footer() {
             <div>
               <div className="flex items-center gap-3 mb-5">
                 <SquiggleIcon width={48} height={24} className="text-brand-red" />
-                <span className="font-display font-extrabold text-2xl text-white tracking-tight">CHAZAS UN</span>
+                <span className="font-display font-extrabold text-2xl text-white tracking-tight">CHASEEK</span>
               </div>
               <p className="text-white/70 text-base leading-relaxed max-w-xs font-medium mb-8">
                 El marketplace de los estudiantes de la Universidad Nacional de Colombia.
@@ -78,7 +78,6 @@ export function Footer() {
                 <nav className="flex flex-col gap-3">
                   <Link href="/terminos" className="text-white/70 hover:text-white text-sm font-semibold transition-colors">Términos de uso</Link>
                   <Link href="/privacidad" className="text-white/70 hover:text-white text-sm font-semibold transition-colors">Privacidad</Link>
-                  <Link href={siteConfig.urls.blog} className="text-white/70 hover:text-white text-sm font-semibold transition-colors">Blog</Link>
                 </nav>
               </div>
             </div>
@@ -87,7 +86,7 @@ export function Footer() {
 
         <div className="border-t border-white/10 py-6">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-3 text-white/70 text-xs">
-            <p>© 2026 ChazasUN. Proyecto estudiantil independiente, UN Bogotá.</p>
+            <p>© 2026 Chaseek. Proyecto estudiantil independiente, UN Bogotá.</p>
           </div>
         </div>
       </div>

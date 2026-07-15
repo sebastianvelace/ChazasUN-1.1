@@ -9,11 +9,11 @@ type Props = {
   size?: "default" | "compact"
 }
 
-/** Sello: el equipo de ChazasUN valido el puesto (no aval institucional). */
+/** Sello: el equipo de Chaseek valido el puesto (no aval institucional). */
 export function ChazaVerifiedBadge({ className, size = "default" }: Props) {
   return (
     <span
-      title="Verificada por ChazasUN: el equipo reviso datos del puesto. No es aval de la universidad."
+      title="Verificada por Chaseek: el equipo reviso datos del puesto. No es aval de la universidad."
       className={cn(
         "inline-flex items-center gap-1 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200/80 font-semibold",
         size === "compact" ? "text-[10px] px-2 py-0.5" : "text-xs px-2.5 py-1",

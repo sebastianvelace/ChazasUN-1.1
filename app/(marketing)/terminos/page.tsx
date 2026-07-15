@@ -14,7 +14,7 @@ export default function TerminosPage() {
       />
       <div className="prose prose-gray max-w-none text-gray-600 text-sm space-y-4">
         <p>
-          ChazasUN es un proyecto independiente elaborado por estudiantes y no representa a la Universidad Nacional
+          Chaseek es un proyecto independiente elaborado por estudiantes y no representa a la Universidad Nacional
           de Colombia ni a sus autoridades.
         </p>
         <p>
@@ -23,7 +23,7 @@ export default function TerminosPage() {
           convivencia o la ley aplicable cuando exista backend y moderacion.
         </p>
         <p>
-          El sello <strong>Verificada</strong> en una ficha indica que el equipo de ChazasUN reviso datos basicos del
+          El sello <strong>Verificada</strong> en una ficha indica que el equipo de Chaseek reviso datos basicos del
           puesto; <strong>no</strong> constituye aval oficial de la Universidad Nacional de Colombia ni certifica
           calidad sanitaria ni legal del negocio.
         </p>

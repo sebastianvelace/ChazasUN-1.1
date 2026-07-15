@@ -41,7 +41,7 @@ export default async function EditarChazaPage({ params }: PageProps) {
           description="Un administrador suspendio esta publicacion por moderacion."
         />
         <p className="text-sm text-gray-600 mb-6">
-          Si crees que fue un error, escribe al equipo de ChazasUN desde los canales oficiales.
+          Si crees que fue un error, escribe al equipo de Chaseek desde los canales oficiales.
         </p>
         <Link href="/mis-chazas" className="text-brand-red font-semibold hover:underline">
           Volver a mis chazas

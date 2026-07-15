@@ -10,7 +10,7 @@ export default function PrivacidadPage() {
       <PageHeader
         eyebrow="Legal"
         title="PRIVACIDAD"
-        description="Resumen de como tratamos datos en ChazasUN."
+        description="Resumen de como tratamos datos en Chaseek."
       />
       <div className="prose prose-gray max-w-none text-gray-600 text-sm space-y-4">
         <p>
@@ -21,7 +21,7 @@ export default function PrivacidadPage() {
         <p>
           Si abres la app <strong>sin</strong> variables de Supabase en el entorno, algunas funciones siguen un
           modo demo: sesion simulada, likes/guardados o reseñas pueden guardarse solo en el{" "}
-          <strong>localStorage</strong> de tu navegador. Ese modo no envia esos datos a un backend de ChazasUN.
+          <strong>localStorage</strong> de tu navegador. Ese modo no envia esos datos a un backend de Chaseek.
         </p>
         <p>
           Las metricas anonimas de producto (por ejemplo tiempo en tarjeta del swiper) pueden enviarse como

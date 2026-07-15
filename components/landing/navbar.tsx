@@ -13,7 +13,7 @@ import { useMagnetic } from "@/hooks/use-magnetic"
 const navLinks = [
   { href: siteConfig.urls.explorar, label: "Explorar", isRoute: true },
   { href: siteConfig.urls.mapa,     label: "Mapa",     isRoute: true },
-  { href: siteConfig.urls.blog,     label: "Blog",     isRoute: true },
+  // Blog oculto hasta el lanzamiento (rutas en app/(platform)/blog siguen existiendo).
 ]
 
 export function Navbar() {
@@ -41,7 +41,7 @@ export function Navbar() {
               className="text-brand-red transition-transform duration-300 group-hover:scale-110"
             />
             <span className="font-display font-black text-base tracking-[0.06em] text-foreground">
-              CHAZAS UN
+              CHASEEK
             </span>
           </Link>
 

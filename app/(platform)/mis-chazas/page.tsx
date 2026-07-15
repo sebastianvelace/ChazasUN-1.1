@@ -23,7 +23,7 @@ export default async function MisChazasPage() {
                 PUBLICA TU CHAZA
               </h1>
               <p className="text-gray-500 max-w-sm mx-auto text-sm leading-relaxed">
-                Registra tu puesto en ChazasUN y llega a cientos de estudiantes del campus.
+                Registra tu puesto en Chaseek y llega a cientos de estudiantes del campus.
               </p>
             </div>
             <ul className="flex flex-col gap-3 text-sm text-gray-600 text-left">
@@ -69,7 +69,7 @@ export default async function MisChazasPage() {
         <PageHeader
           eyebrow="Chazero"
           title="MIS CHAZAS"
-          description="Gestiona tus puestos publicados en ChazasUN."
+          description="Gestiona tus puestos publicados en Chaseek."
         />
         <div className="rounded-2xl border border-amber-100 bg-amber-50 px-4 py-3 text-sm text-amber-900">
           {res.error}
