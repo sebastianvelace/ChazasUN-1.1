@@ -57,9 +57,20 @@ export function ChazaAssistant() {
           aria-label="Asistente de chazas"
           className="fixed bottom-36 right-4 z-50 flex h-[28rem] w-[calc(100vw-2rem)] max-w-sm flex-col overflow-hidden rounded-2xl border bg-background shadow-2xl md:bottom-24"
         >
-          <div className="border-b bg-muted/40 px-4 py-3">
-            <p className="text-sm font-semibold">Asistente de chazas</p>
-            <p className="text-xs text-muted-foreground">Responde solo con las chazas registradas.</p>
+          <div className="flex items-start justify-between border-b bg-muted/40 px-4 py-3">
+            <div>
+              <p className="text-sm font-semibold">Asistente de chazas</p>
+              <p className="text-xs text-muted-foreground">Responde solo con las chazas registradas.</p>
+            </div>
+            {turns.length > 0 && (
+              <button
+                type="button"
+                onClick={() => setTurns([])}
+                className="text-xs text-muted-foreground underline-offset-2 hover:underline"
+              >
+                Limpiar
+              </button>
+            )}
           </div>
 
           <div ref={scrollRef} className="flex-1 space-y-3 overflow-y-auto px-4 py-3">
