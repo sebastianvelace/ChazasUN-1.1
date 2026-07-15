@@ -1,5 +1,7 @@
 const GROQ_URL = "https://api.groq.com/openai/v1/chat/completions"
-const DEFAULT_VISION_MODEL = "llama-3.2-90b-vision-preview"
+// Modelo vision vigente en Groq (los llama-3.2-vision-preview fueron dados de baja).
+// Verificado contra https://console.groq.com/docs/vision (2026-07). Override con GROQ_VISION_MODEL.
+const DEFAULT_VISION_MODEL = "meta-llama/llama-4-scout-17b-16e-instruct"
 
 export type GroqMenuVisionConfig = {
   apiKey: string

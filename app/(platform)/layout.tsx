@@ -1,4 +1,8 @@
 import { PlatformHeader, BottomNav } from "@/components/layout"
+import { ChazaAssistant } from "@/components/chazas/chaza-assistant"
+
+const assistantEnabled =
+  process.env.ENABLE_ASSISTANT === "true" && Boolean(process.env.GROQ_API_KEY)
 
 export default function PlatformLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -6,6 +10,7 @@ export default function PlatformLayout({ children }: { children: React.ReactNode
       <PlatformHeader />
       <main className="flex-1 pb-[calc(4rem+env(safe-area-inset-bottom))] md:pb-0">{children}</main>
       <BottomNav />
+      {assistantEnabled && <ChazaAssistant />}
     </div>
   )
 }
