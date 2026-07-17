@@ -1,7 +1,15 @@
+// Capa anticorrupción (mapper): traduce la fila cruda de la base de datos
+// (snake_case, columnas jsonb sin garantía de forma) al tipo de dominio ChazaCard
+// (camelCase, tipado y con valores por defecto seguros). Aísla el resto de la app
+// de cómo está guardada la información: si mañana cambia el esquema, solo se toca
+// este archivo, no cada componente que consume una chaza.
 import type { ChazaCard } from "@/types/chaza"
 import type { ChazaWithRelations } from "@/types/database"
 import { getCategoryBySlug } from "@/config/categories"
 
+// map_position es una columna jsonb: Postgres NO valida su forma, así que puede
+// llegar cualquier cosa. Validamos que x/y sean números finitos antes de confiar
+// en ellos; si no, devolvemos undefined en vez de propagar datos corruptos.
 function parseMapPosition(raw: unknown): { x: number; y: number } | undefined {
   if (!raw || typeof raw !== "object") return undefined
   const o = raw as Record<string, unknown>
@@ -20,6 +28,10 @@ function parseGeo(raw: unknown): { lat: number; lng: number } | undefined {
   return undefined
 }
 
+// La tarjeta muestra un "precio desde". Como no hay una columna de precio en la
+// chaza, lo derivamos del producto con la etiqueta de precio más corta (heurística:
+// la más corta suele ser la más barata/simple). Si ningún producto tiene precio,
+// caemos a "Consultar" en vez de dejar la tarjeta vacía.
 function priceFromProducts(products: ChazaWithRelations["chaza_products"]): string {
   if (!products?.length) return "Consultar"
   const withPrice = products
